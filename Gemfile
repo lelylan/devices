@@ -10,6 +10,7 @@ gem 'validate_url', '0.1.6'
 gem 'email_validator'
 gem 'chronic'
 gem 'jquery-rails'
+gem 'typhoeus'
 
 group :development, :test do
   gem 'rspec-rails', '2.4.1'
@@ -18,6 +19,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'launchy'
   gem 'shoulda'
+  gem 'webmock'
   gem 'factory_girl_rails', '1.1.beta1'
   gem 'database_cleaner'
   gem 'fuubar'

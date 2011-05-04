@@ -1,6 +1,6 @@
 host: <%= host = "http://www.iana.org/domains/example" %>
 another_host: <%= another_host = "http://www.anotherhost.com" %>
-type_host: <%= type_host = "http://www.lelylan.com/types" %>
+type_host: <%= type_host = "http://types.lelylan.com" %>
 user: 
   uri: <%= "#{host}/users/alice" %>
   email: 'alice@example.com'
