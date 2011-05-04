@@ -1,5 +1,13 @@
 {
-  "request": "<%=raw request.url%>",
-  "message": "<%=raw @message%>",
-  "info":    <%=raw @info%>
+  "meta": 
+  { 
+    "status": "422",
+    "request": "<%=raw request.url%>" 
+  },
+  "error": 
+  {
+    "code": "<%=raw @error_code%>",
+    "message": "<%=raw @message%>",
+    "info":    <%=raw @info%>
+  }
 }

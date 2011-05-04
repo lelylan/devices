@@ -3,16 +3,22 @@ module Lelylan
     module Helpers
 
       def self.included(base)
-        base.rescue_from BSON::InvalidObjectId,        with: :bson_invalid_object_id
-        base.rescue_from JSON::ParserError,            with: :json_parse_error
+        base.rescue_from Mongoid::Errors::DocumentNotFound, with: :document_not_found
+        base.rescue_from BSON::InvalidObjectId, with: :bson_invalid_object_id
+        base.rescue_from JSON::ParserError, with: :json_parse_error
         base.rescue_from Mongoid::Errors::InvalidType, with: :mongoid_errors_invalid_type
-        base.rescue_from WillPaginate::InvalidPage,    with: :will_paginate_invalid_page
-        base.rescue_from ZeroDivisionError,            with: :zero_division_error
+        base.rescue_from WillPaginate::InvalidPage, with: :will_paginate_invalid_page
+        base.rescue_from ZeroDivisionError, with: :zero_division_error
+      end
+
+      # Document not found
+      def document_not_found
+        render_404 "notifications.document.not_found", {id: params[:id]}
       end
 
       # Wrong ID for MongoDB
       def bson_invalid_object_id(e)
-        render_404 "notifications.document.not_found", params[:id]
+        render_404 "notifications.document.not_found", {id: params[:id]}
       end
 
       # Parsing error on JSON body

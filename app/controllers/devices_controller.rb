@@ -40,8 +40,5 @@ class DevicesController < ApplicationController
 
     def find_resource
       @device = @devices.find(params[:id])
-      unless @device
-        render_404 "notifications.document.not_found", params[:id]   
-      end
     end
 end

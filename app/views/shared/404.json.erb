@@ -1,6 +1,14 @@
 {
-  "request": "<%=raw request.url%>",
-  "message": "<%=raw @message%>",
-  "info": "<%=@info%>"
+  "meta": 
+  { 
+    "status": "404",
+    "request": "<%=raw request.url%>" 
+  },
+  "error": 
+  {
+    "code": "<%=raw @error_code%>",
+    "message": "<%=raw @message%>",
+    "info": <%=raw @info%> 
+  }
 }
 

@@ -34,6 +34,7 @@ feature "DevicesController" do
   context ".show" do
     before { @device = Factory(:device) }
     before { @uri =  "/devices/#{@device.id.as_json}" }
+    before { @not_owned_device = Factory(:not_owned_device) }
 
     context "when not logged in" do
       before { basic_auth_cleanup }
@@ -54,16 +55,26 @@ feature "DevicesController" do
 
       context "with not existing resource" do
         scenario "is not found" do
+          @device.destroy
+          visit @uri
+          should_have_a_not_found_resource(@uri)
         end
       end
 
       context "with not owned resource" do
         scenario "is not found" do
+          @uri = "/devices/#{@not_owned_device.id.as_json}"
+          visit @uri
+          should_have_a_not_found_resource(@uri)
         end
       end
 
       context "with illegal id" do
         scenario "is not found" do
+          @uri = "/devices/0"
+          visit @uri
+          save_and_open_page
+          should_have_a_not_found_resource(@uri)
         end
       end
     end
