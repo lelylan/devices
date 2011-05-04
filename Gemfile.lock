@@ -103,6 +103,8 @@ GEM
       activesupport (= 3.0.7)
       bundler (~> 1.0)
       railties (= 3.0.7)
+    rails_config (0.2.3)
+      activesupport (~> 3.0)
     railties (3.0.7)
       actionpack (= 3.0.7)
       activesupport (= 3.0.7)
@@ -161,6 +163,7 @@ DEPENDENCIES
   launchy
   mongoid (~> 2.0)
   rails (= 3.0.7)
+  rails_config
   rspec-rails (= 2.4.1)
   selenium-webdriver
   shoulda

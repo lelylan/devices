@@ -23,5 +23,6 @@ group :development, :test do
   gem 'fuubar'
   gem 'watchr'
   gem 'delorean'
+  gem "rails_config"
 end
 
