@@ -1,6 +1,20 @@
 host: "http://www.iana.org/domains/example"
 another_host: "http://www.anotherhost.com"
-user: <%= "#{host}/users/example" %>
-another:user: <%= "#{host}/users/another" %>
-valid_uri: 'http://example.com'
-not_valid_uri: 'example'
+type_host: "http://types.dev"
+user: 
+  uri: <%= "#{host}/users/alice" %>
+  email: 'alice@example.com'
+another_user: 
+  uri: <%= "#{host}/users/bob" %>
+  email: 'bob@example.com'
+type:
+  uri: <%= "#{type_host}/types/dimmer" %>
+  name: 'Dimmer'
+device:
+  uri: <%= "#{host}/devices/closet_dimmer" %>
+  name: 'Closet dimmer'
+validation: 
+  valid_uri: 'http://example.com'
+  not_valid_uri: 'example'
+messages:
+  access_denied: 'Access denied'
