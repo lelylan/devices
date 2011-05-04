@@ -16,4 +16,9 @@ RSpec.configure do |config|
       collection.name !~ /system/
     end.each(&:drop)
   end
+
+  # Load variables and settings shared around tests
+  SETTINGS = HashWithIndifferentAccess.new(
+    YAML.load_file("#{Rails.root}/spec/support/settings.yml")
+  )
 end
