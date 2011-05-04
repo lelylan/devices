@@ -86,7 +86,7 @@ feature "DevicesController" do
     end
   end
 
-  # POST /devices
+  # POST /devis
   context ".create" do
     before { @uri =  "/devices/" }
 
@@ -105,7 +105,6 @@ feature "DevicesController" do
       scenario "view owned resource" do
         params = { name: "Closet dimmer", type_uri: Settings.type.uri }
         page.driver.post(@uri, params.to_json)
-        save_and_open_page
         page.status_code.should == 201
         should_have_device(Device.last)
       end
