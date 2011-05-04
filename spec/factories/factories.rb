@@ -1,25 +1,23 @@
-SETTINGS = HashWithIndifferentAccess.new(
-  YAML.load(ERB.new(File.new("#{Rails.root}/spec/support/settings.yml")).result)
-)
+Settings.add_source!("#{Rails.root}/config/settings/test.yml")
+Settings.reload!
 
 FactoryGirl.define do
   factory :user do
-    uri SETTINGS[:user][:uri]
-    email "alice@example.com"
+    uri Settings.user.uri
+    email Settings.user.email
     password "example"
   end
 
   factory :device do
-    puts "::::::" + SETTINGS[:user][:uri].inspect
-    uri SETTINGS[:device][:uri]
-    created_from SETTINGS[:user][:uri]
+    uri Settings.device.uri
+    created_from Settings.user.uri
     name "Dimmer"
-    type_uri SETTINGS[:type][:uri]
-    type_name SETTINGS[:type][:name]
+    type_uri Settings.type.uri
+    type_name Settings.type.name
   end
 
   factory :not_owned_device, parent: :device do
-    created_from SETTINGS[:another_user][:uri]
+    created_from Settings.another_user.uri
   end
 end
 

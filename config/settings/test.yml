@@ -1,9 +1,10 @@
-host: "http://www.iana.org/domains/example"
-another_host: "http://www.anotherhost.com"
-type_host: "http://www.lelylan.com/types"
+host: <%= host = "http://www.iana.org/domains/example" %>
+another_host: <%= another_host = "http://www.anotherhost.com" %>
+type_host: <%= type_host = "http://www.lelylan.com/types" %>
 user: 
   uri: <%= "#{host}/users/alice" %>
   email: 'alice@example.com'
+  password: 'example'
 another_user: 
   uri: <%= "#{host}/users/bob" %>
   email: 'bob@example.com'

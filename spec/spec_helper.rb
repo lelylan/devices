@@ -20,9 +20,4 @@ RSpec.configure do |config|
   config.after :each do
     User.destroy_all
   end
-
-  # Load variables and settings shared around tests
-  SETTINGS = HashWithIndifferentAccess.new(
-    YAML.load_file("#{Rails.root}/spec/support/settings.yml")
-  )
 end
