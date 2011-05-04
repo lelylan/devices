@@ -10,7 +10,7 @@ class DevicesController < ApplicationController
   end
 
   def create
-    @device = device.base(json_body, request, current_user)
+    @device = Device.base(json_body, request, current_user)
     if @device.save
       render "show", status: 201, location: @device.uri
     else

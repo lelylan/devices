@@ -8,6 +8,8 @@ class Device
   field :name
   field :type_uri
   field :type_name
+  
+  attr_accessible :name
 
   embeds_many :device_properties  # device properties (inherited from type)
   embeds_many :device_functions   # device functions (inherited from type)

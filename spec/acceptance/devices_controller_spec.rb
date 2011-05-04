@@ -4,7 +4,8 @@ feature "DevicesController" do
   before { host! "http://" + host }
   before { @user = Factory(:user) }
 
-  # /devices/
+
+  # GET /devices/
   context ".index" do
     before { @uri = "/devices" }
     before { @device = Factory(:device) }
@@ -18,6 +19,7 @@ feature "DevicesController" do
       end
     end
 
+    # /devices
     context "when logged in" do
       before { basic_auth(@user) } 
       scenario "view all resources" do
@@ -30,7 +32,8 @@ feature "DevicesController" do
     end
   end
 
-  # /devices/{device-id}
+
+  # GET /devices/{device-id}
   context ".show" do
     before { @device = Factory(:device) }
     before { @uri =  "/devices/#{@device.id.as_json}" }
@@ -47,12 +50,14 @@ feature "DevicesController" do
     context "when logged in" do
       before { basic_auth(@user) } 
 
+      # /devices/{device-id}
       scenario "view owned resource" do
         visit @uri
         page.status_code.should == 200
         should_have_device(@device)
       end
 
+      # /device/{not-existing-device-id}
       context "with not existing resource" do
         scenario "is not found" do
           @device.destroy
@@ -61,6 +66,7 @@ feature "DevicesController" do
         end
       end
 
+      # /device/{not-owned-device-id}
       context "with not owned resource" do
         scenario "is not found" do
           @uri = "/devices/#{@not_owned_device.id.as_json}"
@@ -69,15 +75,41 @@ feature "DevicesController" do
         end
       end
 
+      # /device/{illegal-device-id}
       context "with illegal id" do
         scenario "is not found" do
           @uri = "/devices/0"
           visit @uri
-          save_and_open_page
           should_have_a_not_found_resource(@uri)
         end
       end
     end
-
   end
+
+  # POST /devices
+  context ".create" do
+    before { @uri =  "/devices/" }
+
+    context "when not logged in" do
+      before { basic_auth_cleanup }
+      scenario "is not authorized" do
+        visit @uri
+        should_not_be_authorized
+      end
+    end
+
+    context "when logged in" do
+      before { basic_auth(@user) } 
+
+      # /devices
+      scenario "view owned resource" do
+        params = { name: "Closet dimmer", type_uri: Settings.type.uri }
+        page.driver.post(@uri, params.to_json)
+        save_and_open_page
+        page.status_code.should == 201
+        should_have_device(Device.last)
+      end
+    end
+  end
+
 end
