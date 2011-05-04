@@ -1,7 +1,7 @@
 class DevicesController < ApplicationController
-  before_filter :parse_json_body, only: %w(create, update)
+  before_filter :parse_json_body, only: %w(create update)
   before_filter :find_owned_resources
-  before_filter :find_resource, only: %w(show, update, destroy)
+  before_filter :find_resource, only: %w(show update destroy)
 
   def index
   end

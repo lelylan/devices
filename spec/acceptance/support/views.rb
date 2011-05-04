@@ -1,6 +1,7 @@
 module ViewMethods
   # Device resource representation
   def should_have_device(device)
+    page.should have_content device.id.as_json
     page.should have_content device.uri
     page.should have_content device.name
     page.should have_content device.created_from
