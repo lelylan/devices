@@ -34,12 +34,12 @@ class DevicesController < ApplicationController
 
   private
 
-    def find_resources
-      @devices = device.where(created_from: current_user.uri)
+    def find_owned_resources
+      @devices = Device.where(created_from: current_user.uri)
     end
 
     def find_resource
-      @device = @devices.id(params[:id]).first
+      @device = @devices.find(params[:id])
       unless @device
         render_404 "notifications.document.not_found", params[:id]   
       end
