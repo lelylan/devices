@@ -1,9 +1,8 @@
 {
-  "id": "<%=device.id.as_json%>",
   "uri": "<%=device.uri%>",
   "name": "<%=device.name%>",
-  "type": "<%=device.type_uri%>",
-  "scope": "<%=device.type_name%>",
+  "created_from": "<%=device.created_from%>",
+  "type": { "uri": "<%=device.type_uri%>", "name": "<%=device.type_name%>" },
   "created_at": "<%=device.created_at%>",
   "updated_at": "<%=device.updated_at%>"
 }

@@ -11,7 +11,7 @@ FactoryGirl.define do
   factory :device do
     uri Settings.device.uri
     created_from Settings.user.uri
-    name "Dimmer"
+    name Settings.device.name
     type_uri Settings.type.uri
     type_name Settings.type.name
   end
