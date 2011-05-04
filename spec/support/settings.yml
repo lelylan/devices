@@ -1,0 +1,6 @@
+host: "http://www.iana.org/domains/example"
+another_host: "http://www.anotherhost.com"
+user: <%= "#{host}/users/example" %>
+another:user: <%= "#{host}/users/another" %>
+valid_uri: 'http://example.com'
+not_valid_uri: 'example'
