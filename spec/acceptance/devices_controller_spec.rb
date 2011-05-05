@@ -86,7 +86,7 @@ feature "DevicesController" do
     end
   end
 
-  # POST /devis
+  # POST /devices
   context ".create" do
     before { @uri =  "/devices/" }
 
@@ -100,14 +100,24 @@ feature "DevicesController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
+      
+      let(:params) {{ 
+        name: Settings.type.name,
+        type_uri: Settings.type.uri 
+      }}
 
-      # /devices
-      scenario "view owned resource" do
-        params = { name: "Closet dimmer", type_uri: Settings.type.uri }
+      # /devices { params }
+      scenario "create resource" do
         page.driver.post(@uri, params.to_json)
         page.status_code.should == 201
         should_have_device(Device.last)
       end
+
+      scenario "not valid params" do
+        page.driver.post(@uri, {}.to_json)
+        page.status_code.should == 422
+      end
+
     end
   end
 

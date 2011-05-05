@@ -5,7 +5,6 @@ describe Device do
 
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:type_uri) }
-  it { should validate_presence_of(:type_name) }
 
   it { should allow_value(Settings.validation.valid_uri).for(:uri) }
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:uri) }
@@ -16,14 +15,15 @@ describe Device do
 
   it { should_not allow_mass_assignment_of(:uri) }
   it { should_not allow_mass_assignment_of(:created_from) }
-  it { should_not allow_mass_assignment_of(:type_uri) }
   it { should_not allow_mass_assignment_of(:type_name) }
 
   context ".sync_type" do
     before  { @device.sync_type(Settings.type.uri) }
     subject { @device.reload }
+
     its(:device_properties) { should have(2).properties }
     its(:device_functions) { should have(3).functions }
+    its(:type_name) { should == Settings.type.name }
   end
 
   context ".type_representation" do

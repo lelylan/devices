@@ -12,6 +12,7 @@ class DevicesController < ApplicationController
   def create
     @device = Device.base(json_body, request, current_user)
     if @device.save
+      @device.sync_type(json_body[:type_uri])
       render "show", status: 201, location: @device.uri
     else
       render_422 "notifications.document.not_valid", @device.errors
