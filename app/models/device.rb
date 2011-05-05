@@ -37,10 +37,33 @@ class Device
 
   # Sync properties
   def sync_properties(properties)
-    
+    properties.each do |property|
+      create_device_property(property)
+    end
   end
 
   # Sync functions
   def sync_functions(functions)
+    functions.each do |function|
+      create_device_function(function)
+    end
   end
+
+  private 
+
+    def create_device_property(property)
+      device_properties.create!(
+        uri: property[:uri],
+        name: property[:name],
+        value: property[:default]
+      )
+    end
+
+    def create_device_function(function)
+      device_functions.create!(
+        uri: function[:uri],
+        name: function[:name],
+      )
+    end
+
 end

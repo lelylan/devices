@@ -21,12 +21,20 @@ describe Device do
 
   context ".type_representation" do
     before { @type = @device.type_representation(Settings.type.uri) }
-    it { @type[:name].should == Settings.type.name }
+    it "gets json representation" do
+      @type[:name].should == Settings.type.name
+    end
     
     context ".sync_properties" do
+      before  { @device.sync_properties(@type[:properties]) }
+      subject { @device.reload.device_properties }
+      it { should have(2).properties }
     end
 
     context ".sync_functions" do
+      before  { @device.sync_functions(@type[:functions]) }
+      subject { @device.reload.device_functions }
+      it { should have(3).functions }
     end
   end
 end
