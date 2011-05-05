@@ -84,7 +84,7 @@ feature "DevicesController" do
   end
 
 
-  # PUT /devices
+  # PUT /devices/{device-id}
   context ".update" do
     before { @resource = Factory(:device) }
     before { @uri =  "/devices/#{@resource.id.as_json}" }
@@ -111,6 +111,29 @@ feature "DevicesController" do
         params[:type_uri] = "not-an-uri"
         page.driver.put(@uri, params.to_json)
         should_have_a_not_valid_resource
+      end
+
+      it_should_behave_like "rescued when not found"
+    end
+  end
+
+
+  # DELETE /devices/{device-id}
+  context ".destroy" do
+    before { @resource = Factory(:device) }
+    before { @uri =  "/devices/#{@resource.id.as_json}" }
+    before { @not_owned_resource = Factory(:not_owned_device) }
+
+    it_should_behave_like "protected resource"
+
+    context "when logged in" do
+      before { basic_auth(@user) } 
+
+      scenario "delete resource" do
+        lambda {
+          page.driver.delete(@uri, {}.to_json)
+          page.status_code.should == 204
+        }.should change{ Device.count }.by(-1)
       end
 
       it_should_behave_like "rescued when not found"
