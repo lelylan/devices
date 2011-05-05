@@ -59,19 +59,21 @@ class Device
     self.save
   end
 
-  # FUNCTION APPLY
-
+  # FUNCTION TO PROPERTY FILLMENT
+  # Transform the function and the received body in the params
+  # to send to the physical device (if existing)
   def sync_physical_device(function_uri, json_body)
     function = function_representation(function_uri)
-    populate_properties(function, json_body)
-
+    properties = populate_properties(function[:properties], json_body)
   end
 
+  # Get the JSON function representation
   def function_representation(function_uri)
     json = JSON.parse(HTTParty.get(function_uri).body)
     HashWithIndifferentAccess.new(json)
   end
 
+  # Populate the params to send to the physical device
   def populate_properties(function_properties, params_properties)
     keys = find_missing_keys(function_properties, params_properties)
     params_properties += add_missing_properties(keys, function_properties)

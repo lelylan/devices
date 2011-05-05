@@ -17,7 +17,7 @@ describe Device do
   it { should_not allow_mass_assignment_of(:created_from) }
   it { should_not allow_mass_assignment_of(:type_name) }
 
-
+  # Type population of properties and functions
   context "#sync_type" do
     before  { @device.sync_type(Settings.type.uri) }
     subject { @device.reload }
@@ -46,19 +46,23 @@ describe Device do
     end
   end
 
+  # Function to properties
+  context "#function_representation" do
+    before { @function = @device.function_representation(Settings.functions.intensity.uri) }
+    it "gets json representation" do
+      @function[:name].should == Settings.functions.intensity.name
+    end
 
-  context "#sync_physical_device" do
-    context "#function_representation" do
-      before { @function = @device.function_representation(Settings.functions.intensity.uri) }
-      it "gets json representation" do
-        @function[:name].should == Settings.functions.intensity.name
-      end
+    context "#populate_properties" do
+      before { @params = [{ uri: @function[:properties][0][:uri], value: "4.0" }] }
+      before { @properties = @device.populate_properties(@function[:properties], @params) }
+      subject { @properties }
+      it { should have(2).properties }
 
-      context "#populate_properties" do
-        let(:params) {[{ uri: @function[:properties][0][:uri], value: "4.0" }]}
-        before { @properties = @device.populate_properties(@function[:properties], params) }
-        it "populate properties" do
-        end
+      context "#sync_physical_device" do
+        before { @properties = @device.sync_physical_device(Settings.functions.intensity.uri, @params) }
+        subject { @properties }
+        it { should have(2).properties }
       end
     end
   end
