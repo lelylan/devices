@@ -20,7 +20,6 @@ class Device
   validates :created_from, url: true
   validates :name, presence: true
   validates :type_uri, presence: true, url: true
-  #validates :type_name, presence: true
 
   # Inherit properties and functions from the selected type
   def sync_type(type_uri)

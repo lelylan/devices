@@ -109,14 +109,17 @@ feature "DevicesController" do
       # /devices { params }
       scenario "create resource" do
         page.driver.post(@uri, params.to_json)
+        @device = Device.last
         page.status_code.should == 201
-        should_have_device(Device.last)
+        should_have_device(@device)
+        should_have_device_properties(@device.device_properties)
+        should_have_device_functions(@device.device_functions)
         save_and_open_page
       end
 
       scenario "not valid params" do
         page.driver.post(@uri, {}.to_json)
-        page.status_code.should == 422
+        should_have_a_not_valid_resource
       end
 
     end

@@ -14,6 +14,23 @@ module ViewMethods
     page.should_not have_content device.created_from
   end
 
+  # Device properties representation
+  def should_have_device_properties(properties)
+    properties.each do |property|
+      page.should have_content property.uri
+      page.should have_content property.name
+      page.should have_content property.value
+    end
+  end
+
+  # Device functions representation
+  def should_have_device_functions(functions)
+    functions.each do |function|
+      page.should have_content function.uri
+      page.should have_content function.name
+    end
+  end
+
   # Resource not found
   def should_have_a_not_found_resource(uri)
     page.status_code.should == 404
@@ -21,6 +38,11 @@ module ViewMethods
     page.should have_content uri
     page.should have_content "notifications.document.not_found"
     page.should have_content "not found"
+  end
+
+  # Resource not valid
+  def should_have_a_not_valid_resource
+    page.status_code.should == 422
   end
 end
 
