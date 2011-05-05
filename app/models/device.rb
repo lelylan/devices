@@ -37,6 +37,7 @@ class Device
 
   # Sync properties
   def sync_properties(properties)
+    device_properties.destroy_all
     properties.each do |property|
       create_device_property(property)
     end
@@ -44,6 +45,7 @@ class Device
 
   # Sync functions
   def sync_functions(functions)
+    device_functions.destroy_all
     functions.each do |function|
       create_device_function(function)
     end

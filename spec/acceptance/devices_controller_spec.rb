@@ -86,6 +86,7 @@ feature "DevicesController" do
     end
   end
 
+
   # POST /devices
   context ".create" do
     before { @uri =  "/devices/" }
@@ -114,9 +115,9 @@ feature "DevicesController" do
         should_have_device(@device)
         should_have_device_properties(@device.device_properties)
         should_have_device_functions(@device.device_functions)
-        save_and_open_page
       end
 
+      # /devices { no-params }
       scenario "not valid params" do
         page.driver.post(@uri, {}.to_json)
         should_have_a_not_valid_resource
