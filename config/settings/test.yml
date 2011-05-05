@@ -1,0 +1,124 @@
+host: <%= host = "http://www.iana.org/domains/example" %>
+another_host: <%= another_host = "http://www.anotherhost.com" %>
+type_host: <%= type_host = "http://types.lelylan.com" %>
+user: 
+  uri: <%= "#{host}/users/alice" %>
+  email: 'alice@example.com'
+  password: 'example'
+another_user: 
+  uri: <%= "#{host}/users/bob" %>
+  email: 'bob@example.com'
+type:
+  uri: <%= type_uri = "#{type_host}/types/dimmer" %>
+  name: 'Dimmer'
+device:
+  uri: <%= "#{host}/devices/closet_dimmer" %>
+  name: 'Closet dimmer'
+validation: 
+  valid_uri: 'http://example.com'
+  not_valid_uri: 'example'
+messages:
+  access_denied: 'Access denied'
+type_json: |
+  {
+    "id": "4dc24833d033a9778500000a",
+    "uri": "http://localhost:3000/types/4dc24833d033a9778500000a",
+    "name": "Dimmer",
+    "created_at": "2011-05-05 08:48:19 +0200",
+    "updated_at": "2011-05-05 08:48:19 +0200",
+    "properties": [
+        {
+            "id": "4db94c2fd033a917e7000001",
+            "uri": "http://localhost:3000/properties/4db94c2fd033a917e7000001",
+            "name": "Intensity",
+            "default": "0.0",
+            "values": [
+                "0.0",
+                "2.0",
+                "4.0",
+                "6.0",
+                "8.0",
+                "10.0" 
+            ],
+            "created_at": "2011-04-28 13:14:55 +0200",
+            "updated_at": "2011-05-05 08:32:20 +0200" 
+        },
+        {
+            "id": "4dc2441ad033a97785000001",
+            "uri": "http://localhost:3000/properties/4dc2441ad033a97785000001",
+            "name": "Status",
+            "default": "off",
+            "values": [
+                "on",
+                "off" 
+            ],
+            "created_at": "2011-05-05 08:30:50 +0200",
+            "updated_at": "2011-05-05 08:30:50 +0200" 
+        } 
+    ],
+    "functions": [
+        {
+            "id": "4dc24514d033a97785000002",
+            "uri": "http://localhost:3000/functions/4dc24514d033a97785000002",
+            "name": "Turn on",
+            "created_at": "2011-05-05 08:35:00 +0200",
+            "updated_at": "2011-05-05 08:43:59 +0200",
+            "properties": [
+                {
+                    "uri": "http://localhost:3000/properties/4dc2441ad033a97785000001",
+                    "values": [
+                        "on" 
+                    ],
+                    "secret": "false",
+                    "before": "false",
+                    "created_at": "",
+                    "updated_at": "" 
+                } 
+            ] 
+        },
+        {
+            "id": "4dc24522d033a97785000003",
+            "uri": "http://localhost:3000/functions/4dc24522d033a97785000003",
+            "name": "Turn off",
+            "created_at": "2011-05-05 08:35:14 +0200",
+            "updated_at": "2011-05-05 08:45:04 +0200",
+            "properties": [
+                {
+                    "uri": "http://localhost:3000/properties/4dc2441ad033a97785000001",
+                    "values": [
+                        "off" 
+                    ],
+                    "secret": "false",
+                    "before": "false",
+                    "created_at": "",
+                    "updated_at": "" 
+                } 
+            ] 
+        },
+        {
+            "id": "4dc24532d033a97785000004",
+            "uri": "http://localhost:3000/functions/4dc24532d033a97785000004",
+            "name": "Set intensity",
+            "created_at": "2011-05-05 08:35:30 +0200",
+            "updated_at": "2011-05-05 08:45:57 +0200",
+            "properties": [
+                {
+                    "uri": "http://localhost:3000/properties/4db94c2fd033a917e7000001",
+                    "values": "",
+                    "secret": "false",
+                    "before": "false",
+                    "created_at": "",
+                    "updated_at": "" 
+                } 
+            ] 
+        } 
+    ],
+    "statuses": [
+        {
+            "uri": "http://localhost:3000/statuses/4dc24833d033a9778500000b",
+            "created_at": "",
+            "updated_at": "" 
+        } 
+    ]
+  }
+
