@@ -72,7 +72,6 @@ feature "DevicesController" do
         should_have_device(@resource)
         should_have_device_properties(@resource.device_properties)
         should_have_device_functions(@resource.device_functions)
-        save_and_open_page
       end
 
       scenario "not valid params" do

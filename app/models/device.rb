@@ -21,6 +21,8 @@ class Device
   validates :name, presence: true
   validates :type_uri, presence: true, url: true
 
+  # TYPE SYNC
+
   # Inherit properties and functions from the selected type
   def sync_type(type_uri)
     type = type_representation(type_uri)
@@ -57,6 +59,24 @@ class Device
     self.save
   end
 
+  # FUNCTION APPLY
+
+  def sync_physical_device(function_uri, json_body)
+    function = function_representation(function_uri)
+    populate_properties(function, json_body)
+
+  end
+
+  def function_representation(function_uri)
+    json = JSON.parse(HTTParty.get(function_uri).body)
+    HashWithIndifferentAccess.new(json)
+  end
+
+  def populate_properties(function_properties, params_properties)
+    keys = find_missing_keys(function_properties, params_properties)
+    params_properties += add_missing_properties(keys, function_properties)
+  end
+
   private 
 
     # Create a device property relation
@@ -80,6 +100,22 @@ class Device
     def function_uri_for_device(function_uri)
       function_uri = Addressable::URI.parse(function_uri)
       uri + function_uri.path
+    end
+
+
+    def find_missing_keys(function_properties, params_properties)
+      params_keys = params_properties.map{ |p| p[:uri] }
+      function_keys = function_properties.map{ |p| p[:uri] }
+      function_keys - params_keys
+    end
+
+    def add_missing_properties(missing_keys, function_properties)
+      result = function_properties.collect do |property|
+        if missing_keys.include?(property[:uri])
+          {uri: property[:uri], value: property[:value]}
+        end
+      end
+      return result.delete_if {|r| r.nil? }
     end
 
 end

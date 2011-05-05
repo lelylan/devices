@@ -10,5 +10,8 @@ Devices::Application.routes.draw do
   resources :sessions
 
   # API Resources
-  resources :devices, defaults: {format: 'json'}
+  resources :devices, defaults: {format: 'json'} do
+    resources :functions, only: :update
+  end
+
 end
