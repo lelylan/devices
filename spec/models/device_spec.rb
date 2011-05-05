@@ -19,6 +19,13 @@ describe Device do
   it { should_not allow_mass_assignment_of(:type_uri) }
   it { should_not allow_mass_assignment_of(:type_name) }
 
+  context ".sync_type" do
+    before  { @device.sync_type(Settings.type.uri) }
+    subject { @device.reload }
+    its(:device_properties) { should have(2).properties }
+    its(:device_functions) { should have(3).functions }
+  end
+
   context ".type_representation" do
     before { @type = @device.type_representation(Settings.type.uri) }
     it "gets json representation" do

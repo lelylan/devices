@@ -51,6 +51,7 @@ class Device
 
   private 
 
+    # Create a device property relation
     def create_device_property(property)
       device_properties.create!(
         uri: property[:uri],
@@ -59,6 +60,7 @@ class Device
       )
     end
 
+    # Create a device function relation
     def create_device_function(function)
       device_functions.create!(
         uri: function[:uri],
