@@ -59,8 +59,8 @@ describe Device do
       subject { @properties }
       it { should have(2).properties }
 
-      context "#sync_physical_device" do
-        before { @properties = @device.sync_physical_device(Settings.functions.intensity.uri, @params) }
+      context "#function_to_parameters" do
+        before { @properties = @device.function_to_parameters(Settings.functions.intensity.uri, @params) }
         subject { @properties }
         it { should have(2).properties }
       end

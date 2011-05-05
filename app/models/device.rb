@@ -62,7 +62,7 @@ class Device
   # FUNCTION TO PROPERTY FILLMENT
   # Transform the function and the received body in the params
   # to send to the physical device (if existing)
-  def sync_physical_device(function_uri, json_body)
+  def function_to_parameters(function_uri, json_body)
     function = function_representation(function_uri)
     properties = populate_properties(function[:properties], json_body)
   end
