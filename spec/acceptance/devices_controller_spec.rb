@@ -8,81 +8,41 @@ feature "DevicesController" do
   # GET /devices/
   context ".index" do
     before { @uri = "/devices" }
-    before { @device = Factory(:device) }
-    before { @not_owned_device = Factory(:not_owned_device) }
+    before { @resource = Factory(:device) }
+    before { @not_owned_resource = Factory(:not_owned_device) }
 
-    context "when not logged in" do
-      before { basic_auth_cleanup }
-      scenario "is not authorized" do
-        visit @uri
-        should_not_be_authorized
-      end
-    end
+    it_should_behave_like "protected resource"
 
-    # /devices
     context "when logged in" do
       before { basic_auth(@user) } 
       scenario "view all resources" do
         visit @uri
         page.status_code.should == 200
-        should_have_device(@device)
-        should_not_have_device(@not_owned_device)
+        should_have_device(@resource)
+        should_not_have_device(@not_owned_resource)
       end
-      
     end
   end
 
 
   # GET /devices/{device-id}
   context ".show" do
-    before { @device = Factory(:device) }
-    before { @uri =  "/devices/#{@device.id.as_json}" }
-    before { @not_owned_device = Factory(:not_owned_device) }
+    before { @resource = Factory(:device) }
+    before { @uri =  "/devices/#{@resource.id.as_json}" }
+    before { @not_owned_resource = Factory(:not_owned_device) }
 
-    context "when not logged in" do
-      before { basic_auth_cleanup }
-      scenario "is not authorized" do
-        visit @uri
-        should_not_be_authorized
-      end
-    end
+    it_should_behave_like "protected resource"
 
     context "when logged in" do
       before { basic_auth(@user) } 
 
-      # /devices/{device-id}
       scenario "view owned resource" do
         visit @uri
         page.status_code.should == 200
-        should_have_device(@device)
+        should_have_device(@resource)
       end
 
-      # /device/{not-existing-device-id}
-      context "with not existing resource" do
-        scenario "is not found" do
-          @device.destroy
-          visit @uri
-          should_have_a_not_found_resource(@uri)
-        end
-      end
-
-      # /device/{not-owned-device-id}
-      context "with not owned resource" do
-        scenario "is not found" do
-          @uri = "/devices/#{@not_owned_device.id.as_json}"
-          visit @uri
-          should_have_a_not_found_resource(@uri)
-        end
-      end
-
-      # /device/{illegal-device-id}
-      context "with illegal id" do
-        scenario "is not found" do
-          @uri = "/devices/0"
-          visit @uri
-          should_have_a_not_found_resource(@uri)
-        end
-      end
+      it_should_behave_like "rescued when not found"
     end
   end
 
@@ -107,22 +67,53 @@ feature "DevicesController" do
         type_uri: Settings.type.uri 
       }}
 
-      # /devices { params }
       scenario "create resource" do
         page.driver.post(@uri, params.to_json)
-        @device = Device.last
+        @resource = Device.last
         page.status_code.should == 201
-        should_have_device(@device)
-        should_have_device_properties(@device.device_properties)
-        should_have_device_functions(@device.device_functions)
+        should_have_device(@resource)
+        should_have_device_properties(@resource.device_properties)
+        should_have_device_functions(@resource.device_functions)
       end
 
-      # /devices { no-params }
       scenario "not valid params" do
         page.driver.post(@uri, {}.to_json)
         should_have_a_not_valid_resource
       end
+    end
+  end
 
+
+  # PUT /devices
+  context ".update" do
+    before { @resource = Factory(:device) }
+    before { @uri =  "/devices/#{@resource.id.as_json}" }
+    before { @not_owned_resource = Factory(:not_owned_device) }
+
+    it_should_behave_like "protected resource"
+
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      
+      let(:params) {{ 
+        name: "Set intensity updated",
+        type_uri: Settings.type.uri
+      }}
+
+      scenario "create resource" do
+        page.driver.put(@uri, params.to_json)
+        page.status_code.should == 200
+        should_have_device(@resource.reload)
+        page.should have_content "updated"
+      end
+
+      scenario "not valid params" do
+        params[:type_uri] = "not-an-uri"
+        page.driver.put(@uri, params.to_json)
+        should_have_a_not_valid_resource
+      end
+
+      it_should_behave_like "rescued when not found"
     end
   end
 

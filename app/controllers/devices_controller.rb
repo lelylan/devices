@@ -21,7 +21,7 @@ class DevicesController < ApplicationController
 
   def update
     if @device.update_attributes(json_body)
-      @device.sync_type(@device.type_uri) if device.type_uri_changed?
+      @device.sync_type(@device.type_uri) if @device.type_uri_changed?
       render "show", status: 200, location: @device.uri
     else
       render_422 "notifications.document.not_valid", @device.errors
