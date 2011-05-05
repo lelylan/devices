@@ -19,9 +19,6 @@ validation:
   not_valid_uri: 'example'
 messages:
   access_denied: 'Access denied'
-type_stub:
-  host: <%= type_host.gsub("http://", "") %>
-  path: <%= type_uri.gsub(type_host, "") %>
 type_json: |
   {
     "id": "4dc24833d033a9778500000a",

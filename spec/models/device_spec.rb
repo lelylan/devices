@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Device do
+  before { @device = Factory(:device) }
+
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:type_uri) }
   it { should validate_presence_of(:type_name) }
@@ -16,4 +18,15 @@ describe Device do
   it { should_not allow_mass_assignment_of(:created_from) }
   it { should_not allow_mass_assignment_of(:type_uri) }
   it { should_not allow_mass_assignment_of(:type_name) }
+
+  context ".type_representation" do
+    before { @type = @device.type_representation(Settings.type.uri) }
+    it { @type[:name].should == Settings.type.name }
+    
+    context ".sync_properties" do
+    end
+
+    context ".sync_functions" do
+    end
+  end
 end

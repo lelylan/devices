@@ -23,16 +23,24 @@ class Device
   validates :type_name, presence: true
 
   # Inherit properties and functions from the selected type
-  def sync_type(uri)
+  def sync_type(type_uri)
+    type = type_representation(type_uri)
+    sync_properties(type[:properties])
+    sync_functions(type[:functions])
   end
 
-  private
+  # Get the JSON type representation
+  def type_representation(type_uri)
+    json = JSON.parse(HTTParty.get(type_uri).body)
+    HashWithIndifferentAccess.new(json)
+  end
 
-    # Sync properties
-    def sync_properties
-    end
+  # Sync properties
+  def sync_properties(properties)
+    
+  end
 
-    # Sync functions
-    def sync_functions
-    end
+  # Sync functions
+  def sync_functions(functions)
+  end
 end
