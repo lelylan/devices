@@ -17,7 +17,7 @@ module ViewMethods
   # Device properties representation
   def should_have_device_properties(properties)
     properties.each do |property|
-      page.should have_content property.uri
+      page.should have_content property.property_uri
       page.should have_content property.name
       page.should have_content property.value
     end
@@ -27,6 +27,7 @@ module ViewMethods
   def should_have_device_functions(functions)
     functions.each do |function|
       page.should have_content function.uri
+      page.should have_content function.function_uri
       page.should have_content function.name
     end
   end

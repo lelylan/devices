@@ -1,3 +1,4 @@
+# Not authorized requests
 shared_examples_for "protected resource" do
   context "when not logged in" do
     before { basic_auth_cleanup }
@@ -8,6 +9,7 @@ shared_examples_for "protected resource" do
   end
 end
 
+# Not found resources
 shared_examples_for "rescued when not found" do
   context "with not existing resource" do
     scenario "is not found" do

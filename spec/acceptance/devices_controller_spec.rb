@@ -28,14 +28,13 @@ feature "DevicesController" do
   # GET /devices/{device-id}
   context ".show" do
     before { @resource = Factory(:device) }
-    before { @uri =  "/devices/#{@resource.id.as_json}" }
+    before { @uri = "/devices/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_device) }
 
     it_should_behave_like "protected resource"
 
     context "when logged in" do
       before { basic_auth(@user) } 
-
       scenario "view owned resource" do
         visit @uri
         page.status_code.should == 200
@@ -61,7 +60,6 @@ feature "DevicesController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      
       let(:params) {{ 
         name: Settings.type.name,
         type_uri: Settings.type.uri 
@@ -74,6 +72,7 @@ feature "DevicesController" do
         should_have_device(@resource)
         should_have_device_properties(@resource.device_properties)
         should_have_device_functions(@resource.device_functions)
+        save_and_open_page
       end
 
       scenario "not valid params" do
@@ -85,6 +84,9 @@ feature "DevicesController" do
 
 
   # PUT /devices/{device-id}
+  # TODO: Add a test when you update a device with another type 
+  # uri. Another solution is that type can not be updated, and 
+  # that in that case you probably want to create a new device.
   context ".update" do
     before { @resource = Factory(:device) }
     before { @uri =  "/devices/#{@resource.id.as_json}" }
@@ -94,7 +96,6 @@ feature "DevicesController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      
       let(:params) {{ 
         name: "Set intensity updated",
         type_uri: Settings.type.uri
@@ -105,6 +106,8 @@ feature "DevicesController" do
         page.status_code.should == 200
         should_have_device(@resource.reload)
         page.should have_content "updated"
+        should_have_device_properties(@resource.device_properties)
+        should_have_device_functions(@resource.device_functions)
       end
 
       scenario "not valid params" do
@@ -128,7 +131,6 @@ feature "DevicesController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
-
       scenario "delete resource" do
         lambda {
           page.driver.delete(@uri, {}.to_json)

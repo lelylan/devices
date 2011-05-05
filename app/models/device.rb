@@ -62,7 +62,7 @@ class Device
     # Create a device property relation
     def create_device_property(property)
       device_properties.create!(
-        uri: property[:uri],
+        property_uri: property[:uri],
         name: property[:name],
         value: property[:default]
       )
@@ -71,9 +71,15 @@ class Device
     # Create a device function relation
     def create_device_function(function)
       device_functions.create!(
-        uri: function[:uri],
-        name: function[:name],
+        function_uri: function[:uri],
+        uri: function_uri_for_device(function[:uri]),
+        name: function[:name]
       )
+    end
+
+    def function_uri_for_device(function_uri)
+      function_uri = Addressable::URI.parse(function_uri)
+      uri + function_uri.path
     end
 
 end
