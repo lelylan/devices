@@ -9,13 +9,14 @@ another_user:
   uri: <%= "#{host}/users/bob" %>
   email: 'bob@example.com'
 type:
-  uri: <%= "#{type_host}/types/dimmer" %>
+  uri: <%= type_uri = "#{type_host}/types/dimmer" %>
   name: 'Dimmer'
 device:
   uri: <%= "#{host}/devices/closet_dimmer" %>
   name: 'Closet dimmer'
-stub:
-  type_uri: <%= type_host.gsub("http://", "") + "/types/dimmer" %>
+type_stub:
+  host: <%= type_host.gsub("http://", "") %>
+  path: <%= type_uri.gsub(type_host, "") %>
 validation: 
   valid_uri: 'http://example.com'
   not_valid_uri: 'example'
