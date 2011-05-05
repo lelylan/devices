@@ -139,9 +139,6 @@ GEM
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
-    typhoeus (0.2.4)
-      mime-types
-      mime-types
     tzinfo (0.3.27)
     validate_url (0.1.6)
       activemodel (>= 3.0.0)
@@ -176,7 +173,6 @@ DEPENDENCIES
   selenium-webdriver
   shoulda
   steak
-  typhoeus
   validate_url (= 0.1.6)
   watchr
   webmock
