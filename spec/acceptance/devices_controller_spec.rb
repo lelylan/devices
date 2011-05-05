@@ -111,6 +111,7 @@ feature "DevicesController" do
         page.driver.post(@uri, params.to_json)
         page.status_code.should == 201
         should_have_device(Device.last)
+        save_and_open_page
       end
 
       scenario "not valid params" do
