@@ -13,7 +13,7 @@ class Device
 
   embeds_many :device_properties  # device properties (inherited from type)
   embeds_many :device_functions   # device functions (inherited from type)
-  embeds_many :device_physicals   # physical devices to control
+  embeds_one  :device_physical    # physical devices to control
   embeds_many :device_locations   # locations the device is contained in
 
   validates :uri, url: true
