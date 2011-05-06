@@ -65,7 +65,6 @@ feature "DevicesController" do
         @resource = Device.last
         page.status_code.should == 201
         should_have_device(@resource)
-        save_and_open_page
         should_have_device_properties(@resource.device_properties)
         should_have_device_functions(@resource.device_functions)
       end

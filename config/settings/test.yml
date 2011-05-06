@@ -36,7 +36,7 @@ functions:
     function_uri: <%= turn_on_function_uri = "#{type_host}/functions/#{turn_on_id}" %>
     name: "Turn on"
   turn_off:
-    id: <%= turn_off_id = "set_turn_off" %>
+    id: <%= turn_off_id = "turn_off" %>
     uri: <%= turn_off_uri = "#{device_uri}/functions/#{turn_off_id}" %>
     function_uri: <%= turn_off_function_uri = "#{type_host}/functions/#{turn_off_id}" %>
     name: "Turn off"

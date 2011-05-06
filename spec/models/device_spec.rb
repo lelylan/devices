@@ -45,26 +45,4 @@ describe Device do
       end
     end
   end
-
-  # Function to properties
-  context "#function_representation" do
-    before { @function = @device.function_representation(Settings.functions.intensity.uri) }
-    it "gets json representation" do
-      @function[:name].should == Settings.functions.intensity.name
-    end
-
-    context "#populate_properties" do
-      before { @params = { properties: [{ uri: Settings.property.uri , value: "4.0" }]} }
-      before { @properties = @device.populate_properties(@function[:properties], @params[:properties]) }
-      subject { @properties }
-      it { should have(2).properties }
-
-      context "#function_to_parameters" do
-        before { @properties = @device.function_to_parameters(Settings.functions.intensity.uri, @params[:properties]) }
-        subject { @properties }
-        it { should have(2).properties }
-      end
-    end
-  end
-
 end

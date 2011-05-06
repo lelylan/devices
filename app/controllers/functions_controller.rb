@@ -5,9 +5,8 @@ class FunctionsController < ApplicationController
   before_filter :find_function
 
   def update
-    # TODO: move this method into device_function and call it to_properties
     # Transform the function to the properties to send to the physical device
-    properties = @device.to_parameters(@device_function.function_uri, json_body[:properties])
+    properties = @device_function.to_parameters(json_body[:properties])
     # Send the properties to the physical device
     properties = @device.sync_physical(properties) if @device.device_physical
     # Update the device properties with the ones received from the physical device
