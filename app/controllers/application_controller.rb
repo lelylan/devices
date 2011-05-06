@@ -1,9 +1,11 @@
 class ApplicationController < ActionController::Base
   include Lelylan::Rescue::Helpers
   include Lelylan::View::Helpers
+  include Lelylan::Pagination::Helpers
 
   protect_from_forgery
   before_filter :authenticate
+  before_filter :set_pagination, only: 'index'
 
   helper_method :json_body
   helper_method :current_user
@@ -59,4 +61,7 @@ class ApplicationController < ActionController::Base
     def current_user
       @current_user
     end
+
+
+
 end

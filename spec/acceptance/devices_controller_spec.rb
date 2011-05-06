@@ -7,7 +7,7 @@ feature "DevicesController" do
 
   # GET /devices/
   context ".index" do
-    before { @uri = "/devices" }
+    before { @uri = "/devices?page=1&per=100" }
     before { @resource = Factory(:device) }
     before { @not_owned_resource = Factory(:not_owned_device) }
 
