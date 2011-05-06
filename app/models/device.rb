@@ -21,6 +21,7 @@ class Device
   validates :name, presence: true
   validates :type_uri, presence: true, url: true
 
+  # TYPE SYNC
   # Inherit properties and functions from the selected type
   def sync_type(type_uri)
     type = type_representation(type_uri)
@@ -57,6 +58,39 @@ class Device
     self.save
   end
 
+
+
+  # GET THE PROPERTIES CHANGED FROM THE PHISICAL DEVICE
+  # AND UPDATE THE DEVICE PROPERTIES
+  def sync_physical(properties)
+    response = HTTParty.post(device_physical.unite_node_uri, 
+                 query: { id: device_physical.physical_id },
+                 body:  { properties: properties })
+    body = JSON.parse(response.body)
+    HashWithIndifferentAccess.new(body)[:properties]
+  end
+
+  def sync_properties_with_physical(properties)
+     properties.each do |property|
+      res = device_properties.where(property_uri: property[:uri]).first
+      res.value = property[:value]
+    end
+    self.save
+  end
+
+
+
+  #EXTRA
+  def device_physical
+    device_physicals.first
+  end
+
+  def destroy_previous_physical
+    unless device_physicals.length == 1
+      device_physicals.first.destroy
+    end
+  end
+
   private 
 
     # Create a device property relation
@@ -77,9 +111,9 @@ class Device
       )
     end
 
+    # TODO: not used anymore
     def function_uri_for_device(function_uri)
       function_uri = Addressable::URI.parse(function_uri)
       uri + function_uri.path
     end
-
 end

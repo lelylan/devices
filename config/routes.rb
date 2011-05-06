@@ -1,5 +1,5 @@
 Devices::Application.routes.draw do
-  root :to => "users#new"
+  root to: "users#new"
 
   # Authentication
   get "logout" => "sessions#destroy", as: "logout"
@@ -10,5 +10,12 @@ Devices::Application.routes.draw do
   resources :sessions
 
   # API Resources
-  resources :devices, defaults: {format: 'json'}
+  resources :devices, defaults: {format: 'json'} do
+    member do
+      put    "functions" => "functions#update"
+      post   "physical"  => "physicals#create"
+      delete "physical"  => "physicals#destroy"
+    end
+  end
+
 end

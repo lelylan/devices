@@ -6,8 +6,10 @@
   "type": { "uri": "<%=device.type_uri%>", "name": "<%=device.type_name%>" },
   "created_at": "<%=device.created_at%>",
   "updated_at": "<%=device.updated_at%>",
-  "properties": [ <%=render :partial => "device_properties",
+  "properties": [ <%=render :partial => "/devices/device_properties",
                             :locals => { connections: device.device_properties } %>  ],
-  "functions": [ <%=render :partial => "device_functions",
-                           :locals => { connections: device.device_functions } %>  ]
+  "functions": [ <%=render :partial => "/devices/device_functions",
+                           :locals => { connections: device.device_functions } %>  ],
+  "physical_device": {<%= render :partial => "devices/device_physical",
+                                 :locals => { connection: device.device_physical } %>  }
 }

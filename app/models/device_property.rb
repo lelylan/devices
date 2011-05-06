@@ -2,7 +2,7 @@ class DeviceProperty
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :propery_uri
+  field :property_uri
   field :name
   field :value
 
