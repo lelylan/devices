@@ -11,6 +11,7 @@ gem 'email_validator'
 gem 'chronic'
 gem 'jquery-rails'
 gem 'httparty'
+gem 'kaminari'
 
 group :development, :test do
   gem 'rspec-rails', '2.4.1'

@@ -76,6 +76,8 @@ GEM
       rails (~> 3.0)
       thor (~> 0.14)
     json_pure (1.5.1)
+    kaminari (0.12.4)
+      rails (>= 3.0.0)
     launchy (0.4.0)
       configuration (>= 0.0.5)
       rake (>= 0.8.1)
@@ -168,6 +170,7 @@ DEPENDENCIES
   fuubar
   httparty
   jquery-rails
+  kaminari
   launchy
   mongoid (~> 2.0)
   rails (= 3.0.7)
