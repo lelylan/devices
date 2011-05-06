@@ -4,6 +4,7 @@ class DevicesController < ApplicationController
   before_filter :find_resource, only: %w(show update destroy)
 
   def index
+    @devices = @devices.page(params[:page]).per(params[:per])
   end
 
   def show

@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   before_filter :authenticate
+  before_filter :set_pagination, only: 'index'
 
   helper_method :json_body
   helper_method :current_user
@@ -58,5 +59,24 @@ class ApplicationController < ActionController::Base
     
     def current_user
       @current_user
+    end
+
+
+    def set_pagination
+      page, per = normalize_pagination_params
+      if (page != params[:page] or per != params[:per])
+        redirect_to action: :index, page: page, per: per
+      end
+    end
+
+    def normalize_pagination_params
+      page = params[:page] ? params[:page] : Settings.pagination.page
+      per = params[:per] ? params[:per] : Settings.pagination.per
+      if (per == "all")
+        page = Settings.pagination.page
+        per = Device.count
+        puts "::::::" + self.class.inspect
+      end
+      [page, per]
     end
 end
