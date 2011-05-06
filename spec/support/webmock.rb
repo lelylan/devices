@@ -8,4 +8,4 @@ stub_request(:get, Settings.functions.intensity.uri).to_return(body: Settings.fu
 stub_request(:post, Settings.unite_node.uri).
   with(:body => /.*/).
   with(:query => {id: Settings.unite_node.physical_id}).
-  to_return(body: Settings.function_json)
+  to_return(body: Settings.unite_node_json)

@@ -7,9 +7,9 @@ class FunctionsController < ApplicationController
   def update
     # TODO: move this method into device_function and call it to_properties
     properties = @device.function_to_parameters(@device_function.function_uri, json_body[:properties])
-    puts "::::" +  properties.inspect
-
+    json = {}
     if @device.device_physical
+      #response = @device.send_properties_to_physical(properties)
       physical = @device.device_physical
       json = JSON.parse(
         HTTParty.post(physical.unite_node_uri, 
@@ -17,10 +17,16 @@ class FunctionsController < ApplicationController
           body:  { properties: properties }
         ).body
       )
-      puts "::: JSON " + json.inspect 
-      #response = @device.send_properties_to_physical(properties)
-
+      json = HashWithIndifferentAccess.new(json)
+      properties = json[:properties]
     end
+    # change_device_properties
+    properties.each do |property|
+      @device.device_properties.
+        where(property_uri: property[:uri]).
+        update_attributes(value: property[:value])
+    end
+    
     head 200
   end
   
