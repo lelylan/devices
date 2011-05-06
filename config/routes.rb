@@ -11,10 +11,10 @@ Devices::Application.routes.draw do
 
   # API Resources
   resources :devices, defaults: {format: 'json'} do
-    resources :functions, only: :update
     member do
-      post "physical" => "physicals#create"
-      delete "physical" => "physicals#destroy"
+      put    "functions" => "functions#update"
+      post   "physical"  => "physicals#create"
+      delete "physical"  => "physicals#destroy"
     end
   end
 

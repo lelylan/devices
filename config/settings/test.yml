@@ -19,11 +19,11 @@ properties:
   status:
     uri: <%= status_uri = "#{type_host}/properties/status" %> 
     name: 'Status'
-    value: 'on'
+    default_value: 'on'
   intensity:
     uri: <%= intensity_uri = "#{type_host}/properties/intensity" %> 
     name: 'Intensity'
-    value: '4.0'
+    default_value: '0.0'
 functions:
   set_intensity:
     id: <%= set_intensity_id = "set_intensity" %>
@@ -41,7 +41,7 @@ functions:
     function_uri: <%= turn_off_function_uri = "#{type_host}/functions/#{turn_off_id}" %>
     name: "Turn off"
 unite_node:
-  uri: <%= "#{unite_node_host}/nodes/home_gateway" %>
+  uri: <%= unite_node_uri = "#{unite_node_host}/nodes/home_gateway" %>
   physical_id: '<%= physical_id = "0x3a91fb2e" %>'
 validation: 
   valid_uri: 'http://example.com'
@@ -50,7 +50,7 @@ messages:
   access_denied: 'Access denied'
 type_json: |
   {
-    "id": "4dc24833d033a9778500000a",
+    "id": "<%= type_json_id = "4dc24833d033a9778500000a" %>",
     "uri": "<%= type_uri %>",
     "name": "Dimmer",
     "created_at": "2011-05-05 08:48:19 +0200",
@@ -179,11 +179,11 @@ function_json: |
 unite_node_json: |
   {
       "physical_id": "<%= physical_id %>",
-      "unite_node_uri": "<%= set_intensity_function_uri %>",
+      "unite_node_uri": "<%= unite_node_uri %>",
       "properties": [
           {
-              "uri": "<%= set_intensity_uri %>",
-              "value": "4.0"
+              "uri": "<%= intensity_uri %>",
+              "value": "10.0"
           },
           {
               "uri": "<%= status_uri %>",

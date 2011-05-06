@@ -22,10 +22,11 @@ class FunctionsController < ApplicationController
     end
     # change_device_properties
     properties.each do |property|
-      puts "::::" + @device.device_properties.where(property_uri: property[:uri]).first.inspect
+      res = @device.device_properties.where(property_uri: property[:uri]).first
+      res.value = property[:value]
     end
-    
-    head 200
+    @device.save
+    render "/devices/show", status: 200, location: @device.uri
   end
   
   private 
@@ -35,11 +36,11 @@ class FunctionsController < ApplicationController
     end
 
     def find_resource
-      @device = @devices.find(params[:device_id])
+      @device = @devices.find(params[:id])
     end
 
     def find_function
-      @device_function = @device.device_functions.where(uri: request.url).first
+      @device_function = @device.device_functions.where(function_uri: params[:function_uri]).first
       unless @device_function
         render_404 "notifications.document.not_found", {uri: request.url}
       end
