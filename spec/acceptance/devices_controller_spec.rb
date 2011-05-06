@@ -11,7 +11,7 @@ feature "DevicesController" do
     before { @resource = Factory(:device) }
     before { @not_owned_resource = Factory(:not_owned_device) }
 
-    it_should_behave_like "protected resource"
+    it_should_behave_like "protected resource", "visit(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -31,7 +31,7 @@ feature "DevicesController" do
     before { @uri = "/devices/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_device) }
 
-    it_should_behave_like "protected resource"
+    it_should_behave_like "protected resource", "visit(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -41,7 +41,8 @@ feature "DevicesController" do
         should_have_device(@resource)
       end
 
-      it_should_behave_like "rescued when not found"
+      it_should_behave_like "rescued when not found", 
+        "visit @uri", "devices"
     end
   end
 
@@ -50,13 +51,7 @@ feature "DevicesController" do
   context ".create" do
     before { @uri =  "/devices/" }
 
-    context "when not logged in" do
-      before { basic_auth_cleanup }
-      scenario "is not authorized" do
-        visit @uri
-        should_not_be_authorized
-      end
-    end
+    it_should_behave_like "protected resource", "page.driver.post(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -70,6 +65,7 @@ feature "DevicesController" do
         @resource = Device.last
         page.status_code.should == 201
         should_have_device(@resource)
+        save_and_open_page
         should_have_device_properties(@resource.device_properties)
         should_have_device_functions(@resource.device_functions)
       end
@@ -91,7 +87,7 @@ feature "DevicesController" do
     before { @uri =  "/devices/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_device) }
 
-    it_should_behave_like "protected resource"
+    it_should_behave_like "protected resource", "page.driver.put(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -115,7 +111,8 @@ feature "DevicesController" do
         should_have_a_not_valid_resource
       end
 
-      it_should_behave_like "rescued when not found"
+      it_should_behave_like "rescued when not found",
+        "page.driver.put(@uri)", "devices"
     end
   end
 
@@ -126,7 +123,7 @@ feature "DevicesController" do
     before { @uri =  "/devices/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_device) }
 
-    it_should_behave_like "protected resource"
+    it_should_behave_like "protected resource", "page.driver.delete(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -137,7 +134,8 @@ feature "DevicesController" do
         }.should change{ Device.count }.by(-1)
       end
 
-      it_should_behave_like "rescued when not found"
+      it_should_behave_like "rescued when not found",
+        "page.driver.delete(@uri)", "devices"
     end
   end
 
