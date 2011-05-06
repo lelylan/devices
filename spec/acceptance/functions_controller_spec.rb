@@ -19,7 +19,8 @@ feature "FunctionsController" do
         scenario "create resource" do
           page.driver.put(@uri, params.to_json)
           page.status_code.should == 200
-          save_and_open_page
+          page.should have_content "10.0"
+          page.should have_content "on"
         end
       end
 

@@ -63,7 +63,7 @@ class Device
   # to send to the physical device (if existing)
   #
   #   function_to_properties("http://...", [array]) 
-  def function_to_parameters(function_uri, params_properties)
+  def to_parameters(function_uri, params_properties)
     function = function_representation(function_uri)
     properties = populate_properties(function[:properties], params_properties)
   end
@@ -79,6 +79,26 @@ class Device
     keys = find_missing_keys(function_properties, params_properties)
     params_properties += add_missing_properties(keys, function_properties)
   end
+
+
+  # GET THE PROPERTIES CHANGED FROM THE PHISICAL DEVICE
+  # AND UPDATE THE DEVICE PROPERTIES
+  def sync_physical(properties)
+    response = HTTParty.post(device_physical.unite_node_uri, 
+                 query: { id: device_physical.physical_id },
+                 body:  { properties: properties })
+    body = JSON.parse(response.body)
+    HashWithIndifferentAccess.new(body)[:properties]
+  end
+
+  def sync_properties_with_physical(properties)
+     properties.each do |property|
+      res = device_properties.where(property_uri: property[:uri]).first
+      res.value = property[:value]
+    end
+    self.save
+  end
+
 
 
   #EXTRA
