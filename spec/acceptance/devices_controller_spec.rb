@@ -20,6 +20,7 @@ feature "DevicesController" do
         page.status_code.should == 200
         should_have_device(@resource)
         should_not_have_device(@not_owned_resource)
+        should_have_valid_json(page.body)
       end
     end
   end
@@ -39,6 +40,7 @@ feature "DevicesController" do
         visit @uri
         page.status_code.should == 200
         should_have_device(@resource)
+        should_have_valid_json(page.body)
       end
 
       it_should_behave_like "rescued when not found", 
@@ -67,6 +69,7 @@ feature "DevicesController" do
         should_have_device(@resource)
         should_have_device_properties(@resource.device_properties)
         should_have_device_functions(@resource.device_functions)
+        should_have_valid_json(page.body)
       end
 
       scenario "not valid params" do
@@ -102,6 +105,7 @@ feature "DevicesController" do
         page.should have_content "updated"
         should_have_device_properties(@resource.device_properties)
         should_have_device_functions(@resource.device_functions)
+        should_have_valid_json(page.body)
       end
 
       scenario "not valid params" do

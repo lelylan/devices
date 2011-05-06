@@ -24,6 +24,7 @@ feature "PhysicalController" do
         @connection = @resource.reload.device_physical
         page.should have_content @connection.physical_id
         page.should have_content @connection.unite_node_uri
+        should_have_valid_json(page.body)
       end
 
       context "when not valid" do

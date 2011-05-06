@@ -18,25 +18,29 @@ feature "FunctionsController" do
         ]
       }}
 
-      scenario "call physical and update device properties" do
-        page.driver.put(@uri, params.to_json)
-        page.status_code.should == 200
-        page.should have_content '10.0'
-        page.should have_content '"off"'
+      context "with physical device" do
+        scenario "update device properties to physical response" do
+          page.driver.put(@uri, params.to_json)
+          page.status_code.should == 200
+          page.should have_content '10.0'
+          page.should have_content '"off"'
+          should_have_valid_json(page.body)
+        end
       end
 
-      context "when physical device is no present" do
+      context "with no physical device" do
         before { @resource = Factory(:device_no_physical) }
         before { @uri = "#{host}/devices/#{@resource.id}/functions?function_uri=#{Settings.functions.set_intensity.function_uri}" }
         let(:params) {{ 
           properties: [{ uri: Settings.properties.intensity.uri, value: "10.0" }]
         }}
 
-        scenario "do not call physical and update device properties" do
+        scenario "update device properties" do
           page.driver.put(@uri, params.to_json)
           page.status_code.should == 200
           page.should have_content '10.0'
           page.should have_content '"on"'
+          should_have_valid_json(page.body)
         end
       end
 

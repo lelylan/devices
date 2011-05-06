@@ -14,6 +14,11 @@ module HelperMethods
     page.status_code.should == 401
     page.should have_content Settings.messages.access_denied
   end
+
+  # Valid JSON
+  def should_have_valid_json(body)
+    lambda {JSON.parse(body)}.should_not raise_error
+  end
 end
 
 RSpec.configuration.include HelperMethods, :type => :acceptance
