@@ -22,9 +22,7 @@ class FunctionsController < ApplicationController
     end
     # change_device_properties
     properties.each do |property|
-      @device.device_properties.
-        where(property_uri: property[:uri]).
-        update_attributes(value: property[:value])
+      puts "::::" + @device.device_properties.where(property_uri: property[:uri]).first.inspect
     end
     
     head 200

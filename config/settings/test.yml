@@ -15,15 +15,31 @@ type:
 device:
   uri: <%= device_uri = "#{host}/devices/closet_dimmer" %>
   name: 'Closet dimmer'
-property:
-  uri: <%= property_uri = "#{type_host}/properties/intensity"%>
-  name: 'Intensity'
-functions:
+properties:
+  status:
+    uri: <%= status_uri = "#{type_host}/properties/status" %> 
+    name: 'Status'
+    value: 'on'
   intensity:
-    id: <%= intensity_id = "set_intensity" %>
-    uri: <%= intensity_uri = "#{device_uri}/functions/#{intensity_id}" %>
-    function_uri: <%= intensity_function_uri = "#{type_host}/functions/#{intensity_id}" %>
+    uri: <%= intensity_uri = "#{type_host}/properties/intensity" %> 
+    name: 'Intensity'
+    value: '4.0'
+functions:
+  set_intensity:
+    id: <%= set_intensity_id = "set_intensity" %>
+    uri: <%= set_intensity_uri = "#{device_uri}/functions/#{set_intensity_id}" %>
+    function_uri: <%= set_intensity_function_uri = "#{type_host}/functions/#{set_intensity_id}" %>
     name: "Set intensity"
+  turn_on:
+    id: <%= turn_on_id = "turn_on" %>
+    uri: <%= turn_on_uri = "#{device_uri}/functions/#{turn_on_id}" %>
+    function_uri: <%= turn_on_function_uri = "#{type_host}/functions/#{turn_on_id}" %>
+    name: "Turn on"
+  turn_off:
+    id: <%= turn_off_id = "set_turn_off" %>
+    uri: <%= turn_off_uri = "#{device_uri}/functions/#{turn_off_id}" %>
+    function_uri: <%= turn_off_function_uri = "#{type_host}/functions/#{turn_off_id}" %>
+    name: "Turn off"
 unite_node:
   uri: <%= "#{unite_node_host}/nodes/home_gateway" %>
   physical_id: '<%= physical_id = "0x3a91fb2e" %>'
@@ -35,14 +51,14 @@ messages:
 type_json: |
   {
     "id": "4dc24833d033a9778500000a",
-    "uri": "http://localhost:3000/types/4dc24833d033a9778500000a",
+    "uri": "<%= type_uri %>",
     "name": "Dimmer",
     "created_at": "2011-05-05 08:48:19 +0200",
     "updated_at": "2011-05-05 08:48:19 +0200",
     "properties": [
         {
             "id": "4db94c2fd033a917e7000001",
-            "uri": "http://localhost:3000/properties/4db94c2fd033a917e7000001",
+            "uri": "<%= intensity_uri %>",
             "name": "Intensity",
             "default": "0.0",
             "values": [
@@ -58,7 +74,7 @@ type_json: |
         },
         {
             "id": "4dc2441ad033a97785000001",
-            "uri": "http://localhost:3000/properties/4dc2441ad033a97785000001",
+            "uri": "<%= status_uri %>",
             "name": "Status",
             "default": "off",
             "values": [
@@ -72,7 +88,7 @@ type_json: |
     "functions": [
         {
             "id": "4dc24514d033a97785000002",
-            "uri": "http://localhost:3000/functions/4dc24514d033a97785000002",
+            "uri": "<%= turn_on_function_uri %>",
             "name": "Turn on",
             "created_at": "2011-05-05 08:35:00 +0200",
             "updated_at": "2011-05-05 08:43:59 +0200",
@@ -91,7 +107,7 @@ type_json: |
         },
         {
             "id": "4dc24522d033a97785000003",
-            "uri": "http://localhost:3000/functions/4dc24522d033a97785000003",
+            "uri": "<%= turn_off_function_uri %>",
             "name": "Turn off",
             "created_at": "2011-05-05 08:35:14 +0200",
             "updated_at": "2011-05-05 08:45:04 +0200",
@@ -110,7 +126,7 @@ type_json: |
         },
         {
             "id": "4dc24532d033a97785000004",
-            "uri": "http://localhost:3000/functions/4dc24532d033a97785000004",
+            "uri": "<%= set_intensity_function_uri %>",
             "name": "Set intensity",
             "created_at": "2011-05-05 08:35:30 +0200",
             "updated_at": "2011-05-05 08:45:57 +0200",
@@ -137,13 +153,13 @@ type_json: |
 function_json: |
   {
       "id": "4dc24532d033a97785000004",
-      "uri": "<%=intensity_function_uri%>",
+      "uri": "<%=set_intensity_function_uri%>",
       "name": "Set intensity",
       "created_at": "2011-05-05 08:35:30 +0200",
       "updated_at": "2011-05-05 08:45:57 +0200",
       "properties": [
           {
-              "uri": "<%= property_uri%>",
+              "uri": "<%= intensity_uri %>",
               "value": "",
               "secret": "false",
               "before": "false",
@@ -151,7 +167,7 @@ function_json: |
               "updated_at": "" 
           },
           {
-              "uri": "http://localhost:3000/properties/4db94c2fd033a917e7000003",
+              "uri": "<%= status_uri %>",
               "value": "on",
               "secret": "false",
               "before": "false",
@@ -162,15 +178,15 @@ function_json: |
   } 
 unite_node_json: |
   {
-      "physical_id": "<%=physical_id%>",
-      "unite_node_uri": "<%=intensity_function_uri%>",
+      "physical_id": "<%= physical_id %>",
+      "unite_node_uri": "<%= set_intensity_function_uri %>",
       "properties": [
           {
-              "uri": "<%= property_uri %>",
+              "uri": "<%= set_intensity_uri %>",
               "value": "4.0"
           },
           {
-              "uri": "http://localhost:3000/properties/4db94c2fd033a917e7000003",
+              "uri": "<%= status_uri %>",
               "value": "on"
           } 
       ] 
