@@ -14,6 +14,7 @@ Devices::Application.routes.draw do
     resources :functions, only: :update
     member do
       post "physical" => "physicals#create"
+      delete "physical" => "physicals#destroy"
     end
   end
 
