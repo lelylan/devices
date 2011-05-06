@@ -4,7 +4,9 @@ class DevicePhysical
 
   field :physical_id
   field :unite_node_uri
-  field :unite_node_name
+
+  validates :physical_id, presence: true
+  validates :unite_node_uri, url: true
 
   embedded_in :device
 end

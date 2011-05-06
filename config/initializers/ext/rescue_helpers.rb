@@ -3,12 +3,21 @@ module Lelylan
     module Helpers
 
       def self.included(base)
+        base.rescue_from Mongoid::Errors::Validations, with: :validation_errors
         base.rescue_from Mongoid::Errors::DocumentNotFound, with: :document_not_found
         base.rescue_from BSON::InvalidObjectId, with: :bson_invalid_object_id
         base.rescue_from JSON::ParserError, with: :json_parse_error
         base.rescue_from Mongoid::Errors::InvalidType, with: :mongoid_errors_invalid_type
         base.rescue_from WillPaginate::InvalidPage, with: :will_paginate_invalid_page
         base.rescue_from ZeroDivisionError, with: :zero_division_error
+      end
+
+      # TODO: The only part it do not see is json_body
+      # Think if it can be used anyway to DRY controllers
+      #
+      # Document not valid
+      def validation_errors(e)
+        render_422 "notifications.document.not_valid", e.message
       end
 
       # Document not found

@@ -13,7 +13,7 @@ class Device
 
   embeds_many :device_properties  # device properties (inherited from type)
   embeds_many :device_functions   # device functions (inherited from type)
-  embeds_one  :device_physical    # physical devices to control
+  embeds_many :device_physicals   # physical devices to control
   embeds_many :device_locations   # locations the device is contained in
 
   validates :uri, url: true
@@ -22,7 +22,6 @@ class Device
   validates :type_uri, presence: true, url: true
 
   # TYPE SYNC
-
   # Inherit properties and functions from the selected type
   def sync_type(type_uri)
     type = type_representation(type_uri)
@@ -59,7 +58,7 @@ class Device
     self.save
   end
 
-  # FUNCTION TO PROPERTY FILLMENT
+  # FUNCTION TO PROPERTY TRANSFORMATION
   # Transform the function and the received body in the params
   # to send to the physical device (if existing)
   def function_to_parameters(function_uri, json_body)
@@ -77,6 +76,18 @@ class Device
   def populate_properties(function_properties, params_properties)
     keys = find_missing_keys(function_properties, params_properties)
     params_properties += add_missing_properties(keys, function_properties)
+  end
+
+
+  #EXTRA
+  def device_physical
+    device_physicals.first
+  end
+
+  def destroy_previous_physical
+    unless device_physicals.length == 1
+      device_physicals.first.destroy
+    end
   end
 
   private 

@@ -1,6 +1,7 @@
 host: <%= host = "http://www.iana.org/domains/example" %>
 another_host: <%= another_host = "http://www.anotherhost.com" %>
 type_host: <%= type_host = "http://types.lelylan.com" %>
+unite_node_nost: <%= unite_node_host = "http://nodes.lelylan.com" %>
 user: 
   uri: <%= "#{host}/users/alice" %>
   email: 'alice@example.com'
@@ -19,6 +20,9 @@ functions:
     id: <%= intensity_id = "set_intensity" %>
     uri: <%= intensity_uri = "#{device_uri}/functions/#{intensity_id}" %>
     name: "Set intensity"
+unite_node:
+  uri: <%= "#{unite_node_host}/nodes/home_gateway" %>
+  physical_id: "0x3a91fb2e"
 validation: 
   valid_uri: 'http://example.com'
   not_valid_uri: 'example'
