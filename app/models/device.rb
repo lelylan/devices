@@ -61,9 +61,11 @@ class Device
   # FUNCTION TO PROPERTY TRANSFORMATION
   # Transform the function and the received body in the params
   # to send to the physical device (if existing)
-  def function_to_parameters(function_uri, json_body)
+  #
+  #   function_to_properties("http://...", [array]) 
+  def function_to_parameters(function_uri, params_properties)
     function = function_representation(function_uri)
-    properties = populate_properties(function[:properties], json_body)
+    properties = populate_properties(function[:properties], params_properties)
   end
 
   # Get the JSON function representation

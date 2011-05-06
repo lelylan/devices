@@ -3,9 +3,24 @@ class FunctionsController < ApplicationController
   before_filter :find_owned_resources
   before_filter :find_resource 
   before_filter :find_function
-  before_filter :find_function_uri
 
   def update
+    # TODO: move this method into device_function and call it to_properties
+    properties = @device.function_to_parameters(@device_function.function_uri, json_body[:properties])
+    puts "::::" +  properties.inspect
+
+    if @device.device_physical
+      physical = @device.device_physical
+      json = JSON.parse(
+        HTTParty.post(physical.unite_node_uri, 
+          query: { id: physical.physical_id },
+          body:  { properties: properties }
+        ).body
+      )
+      puts "::: JSON " + json.inspect 
+      #response = @device.send_properties_to_physical(properties)
+
+    end
     head 200
   end
   
@@ -19,15 +34,10 @@ class FunctionsController < ApplicationController
       @device = @devices.find(params[:device_id])
     end
 
-    # TODO: think if the URI is correct or not in this way
     def find_function
       @device_function = @device.device_functions.where(uri: request.url).first
       unless @device_function
         render_404 "notifications.document.not_found", {uri: request.url}
       end
-    end
-
-    def find_function_uri
-      @function_uri = @device_function.function_uri
     end
 end

@@ -11,20 +11,25 @@ feature "FunctionsController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      let(:params) {[{ uri: Settings.functions.intensity.uri, value: "4.0" }]}
+      let(:params) {{ 
+        properties: [
+          { uri: Settings.property.uri, value: "4.0" }
+        ]
+      }}
 
       # Working function call
       context "when valid function uri" do
         before { create_device_function(@uri) }
+        before { create_device_physical }
         scenario "create resource" do
           page.driver.put(@uri, params.to_json)
           page.status_code.should == 200
         end
       end
 
-      # Missing function call
+      # Not valid function URI
       context "when not valid function uri" do
-        before { create_device_function("#{@uri}no") }
+        before { create_device_function("#{@uri}_wrong") }
         scenario "is not found" do
           page.driver.put(@uri, params.to_json)
           page.status_code.should == 404
@@ -35,7 +40,6 @@ feature "FunctionsController" do
   end
 end
 
-
 def create_device_function(uri)
   @device.device_functions.create!(
     uri: uri,
@@ -43,3 +47,8 @@ def create_device_function(uri)
     name: Settings.functions.intensity.name )
 end
 
+def create_device_physical()
+  @device.device_physicals.create!(
+    physical_id: Settings.unite_node.physical_id,
+    unite_node_uri: Settings.unite_node.uri )
+end

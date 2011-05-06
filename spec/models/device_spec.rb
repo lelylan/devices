@@ -54,13 +54,13 @@ describe Device do
     end
 
     context "#populate_properties" do
-      before { @params = [{ uri: @function[:properties][0][:uri], value: "4.0" }] }
-      before { @properties = @device.populate_properties(@function[:properties], @params) }
+      before { @params = { properties: [{ uri: Settings.property.uri , value: "4.0" }]} }
+      before { @properties = @device.populate_properties(@function[:properties], @params[:properties]) }
       subject { @properties }
       it { should have(2).properties }
 
       context "#function_to_parameters" do
-        before { @properties = @device.function_to_parameters(Settings.functions.intensity.uri, @params) }
+        before { @properties = @device.function_to_parameters(Settings.functions.intensity.uri, @params[:properties]) }
         subject { @properties }
         it { should have(2).properties }
       end
