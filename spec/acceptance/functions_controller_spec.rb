@@ -12,15 +12,31 @@ feature "FunctionsController" do
     context "when logged in" do
       before { basic_auth(@user) } 
       let(:params) {{ 
-        properties: [ { uri: Settings.properties.intensity.uri, value: "10.0" } ]
+        properties: [ 
+          { uri: Settings.properties.intensity.uri, value: "10.0" },
+          { uri: Settings.properties.status.uri, value: "off" }
+        ]
       }}
 
-      context "when valid function uri" do
-        scenario "create resource" do
+      scenario "call physical and update device properties" do
+        page.driver.put(@uri, params.to_json)
+        page.status_code.should == 200
+        page.should have_content '10.0'
+        page.should have_content '"off"'
+      end
+
+      context "when physical device is no present" do
+        before { @resource = Factory(:device_no_physical) }
+        before { @uri = "#{host}/devices/#{@resource.id}/functions?function_uri=#{Settings.functions.set_intensity.function_uri}" }
+        let(:params) {{ 
+          properties: [{ uri: Settings.properties.intensity.uri, value: "10.0" }]
+        }}
+
+        scenario "do not call physical and update device properties" do
           page.driver.put(@uri, params.to_json)
           page.status_code.should == 200
-          page.should have_content "10.0"
-          page.should have_content "on"
+          page.should have_content '10.0'
+          page.should have_content '"on"'
         end
       end
 

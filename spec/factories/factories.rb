@@ -36,6 +36,11 @@ FactoryGirl.define do
     d.device_physicals { [ Factory.build(:device_physical) ] }
   end
 
+  # DEVICE WITH NO PHYSICAL. PROPERTIES AND FUNCTIONS ARE PRESENT
+  factory :device_no_physical, parent: :device_complete do |d|
+    d.device_physicals { }
+  end
+
   factory :device_status, class: :device_property do
     name Settings.properties.status.name
     property_uri Settings.properties.status.uri
@@ -50,19 +55,16 @@ FactoryGirl.define do
 
   factory :device_set_intensity, class: :device_function do
     name Settings.functions.set_intensity.name
-    uri Settings.functions.set_intensity.uri
     function_uri Settings.functions.set_intensity.function_uri
   end
 
   factory :device_turn_on, class: :device_function do
     name Settings.functions.turn_on.name
-    uri Settings.functions.turn_on.uri
     function_uri Settings.functions.turn_on.function_uri
   end
 
   factory :device_turn_off, class: :device_function do
     name Settings.functions.turn_off.name
-    uri Settings.functions.turn_off.uri
     function_uri Settings.functions.turn_off.function_uri
   end
 

@@ -63,7 +63,7 @@ class Device
   # GET THE PROPERTIES CHANGED FROM THE PHISICAL DEVICE
   # AND UPDATE THE DEVICE PROPERTIES
   def sync_physical(properties)
-    response = HTTParty.post(device_physical.unite_node_uri, 
+    response = HTTParty.put(device_physical.unite_node_uri, 
                  query: { id: device_physical.physical_id },
                  body:  { properties: properties })
     body = JSON.parse(response.body)
@@ -106,14 +106,8 @@ class Device
     def create_device_function(function)
       device_functions.create!(
         function_uri: function[:uri],
-        uri: function_uri_for_device(function[:uri]),
         name: function[:name]
       )
     end
 
-    # TODO: not used anymore
-    def function_uri_for_device(function_uri)
-      function_uri = Addressable::URI.parse(function_uri)
-      uri + function_uri.path
-    end
 end

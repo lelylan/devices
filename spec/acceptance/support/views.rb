@@ -26,7 +26,6 @@ module ViewMethods
   # Device functions representation
   def should_have_device_functions(functions)
     functions.each do |function|
-      page.should have_content function.uri
       page.should have_content function.function_uri
       page.should have_content function.name
     end
