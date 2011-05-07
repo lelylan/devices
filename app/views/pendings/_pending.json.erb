@@ -1,0 +1,12 @@
+  {
+    "id": "<%=pending.id.as_json%>",
+    "uri": "<%=pending.uri%>",
+    "device": { "uri": "<%=pending.device_uri%>" },
+    "function": { "uri": "<%=pending.function_uri%>", "name": "<%=pending.function_name%>" },
+    "pending": "<%= pending.pending_status %>",
+    "expected_time": "<%= pending.expected_time %>"
+    "created_at": "<%=pending.created_at%>",
+    "updated_at": "<%=pending.updated_at%>",
+    "properties": [ <%=render :partial => "pending_properties",
+                              :locals => { connections: pending.pending_properties } %>    ],
+  }
