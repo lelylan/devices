@@ -3,7 +3,10 @@ class PendingsController < ApplicationController
   before_filter :find_resource 
   before_filter :find_pendings
 
-  de
+  def index
+
+  end
+  
   private 
   
     def find_owned_resources
@@ -11,10 +14,10 @@ class PendingsController < ApplicationController
     end
 
     def find_resource
-      @device = @devices.find(params[:id])
+      @device = @devices.find(params[:device_id])
     end
 
-    def find_function
-      @device_pendings = Pendings.where(device_uri: @device.uri)
+    def find_pendings
+      @pendings = Pending.where(device_uri: @device.uri)
     end
 end

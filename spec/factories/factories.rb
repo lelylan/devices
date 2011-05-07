@@ -18,11 +18,17 @@ FactoryGirl.define do
     function_name Settings.functions.set_intensity.name
   end
 
+  # Pending complete with properties
   factory :pending_complete, parent: :pending do |p|
     p.pending_properties {[
       Factory.build(:pending_property_intensity),
       Factory.build(:pending_property_status)
     ]}
+  end
+  
+  # Pending of a different device
+  factory :not_owned_pending, parent: :pending_complete do |p|
+    device_uri Settings.another_device.uri
   end
 
   factory :pending_property_intensity, class: :pending_property do

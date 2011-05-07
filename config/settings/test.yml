@@ -15,6 +15,9 @@ type:
 device:
   uri: <%= device_uri = "#{host}/devices/closet_dimmer" %>
   name: 'Closet dimmer'
+another_device:
+  uri: <%= "#{host}/devices/not_owned_closet_dimmer" %>
+  name: 'Not owned closet dimmer'
 properties:
   status:
     uri: <%= status_uri = "#{type_host}/properties/status" %> 

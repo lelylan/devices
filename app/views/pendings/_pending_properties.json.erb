@@ -5,7 +5,7 @@
       "values": {
         "old": "<%=connection.old_value%>",
         "expected": "<%=connection.expected_value%>",
-        "received": "<%=connection.received_value%>"
+        "received": <%=raw connection.received_values.to_json%>
       } 
     }<% if (connections.length - 1 > index) %>,<%end%>
 <% end %>
