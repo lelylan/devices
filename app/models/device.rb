@@ -65,8 +65,7 @@ class Device
   # FUNCTION TO PROPERTIES
   # -----------------------
 
-  # Get tge properties to change from the funciton and from 
-  # the body of the function request
+  # Get tge properties to change from the funciton and from the body of the function request
   def sync_physical(properties)
     response = HTTParty.put(device_physical.unite_node_uri, 
                  query: { id: device_physical.physical_id },
@@ -89,19 +88,14 @@ class Device
   # --------
 
   def create_pending(properties, function, request)
-    # pending = Pending.create_pending(self, function, request)
-    # pending.create_pending_properties(self, properties)
-  end
-
-  def update_pending 
-    # Maybe this goes into the device_property before_update
-    # Pending.update_pending(self)
+    pending = Pending.create_pending(self, function, request)
+    pending.create_pending_properties(self, properties)
   end
 
   def pendings
     # Maybe you should add function name to pending, as it could 
     # be useful to have message like "Turn on is pending"
-    # Pending.where(pending: true)
+    # Pending.where(pending: true, device_uri: uri)
   end
 
   # ------

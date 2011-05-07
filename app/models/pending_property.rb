@@ -3,7 +3,7 @@ class PendingProperty
   include Mongoid::Timestamps
 
   field :property_uri
-  field :pending, type: Boolean, default: true 
+  field :pending_status, type: Boolean, default: true 
   field :old_value                                    # previous property value
   field :expected_value                               # expected new property value
   field :received_values, type: Array, default: []    # values received in between from physical

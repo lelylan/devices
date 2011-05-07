@@ -41,15 +41,18 @@ describe Pending do
     context "with all properties" do
       it "closes the pending resource" do
         @pending.update_pending_properties(@applied_properties)
-        @pending.pending.should == false
-        @pending.pending_properties.should have(2).items
+        @pending.pending_status.should == false
+        closed = @pending.pending_properties.where(pending_status: false)
+        closed.should have(2).items
       end
     end
 
     context "with one property" do
       it "leaves open the pending resource" do
         @pending.update_pending_properties([@applied_properties.first])
-        @pending.pending.should == true
+        @pending.pending_status.should == true
+        closed = @pending.pending_properties.where(pending_status: false)
+        closed.should have(1).items
       end
     end
   end

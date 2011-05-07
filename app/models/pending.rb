@@ -7,7 +7,7 @@ class Pending
   field :device_uri
   field :function_uri
   field :function_name
-  field :pending, type: Boolean, default: true
+  field :pending_status, type: Boolean, default: true
   field :expected_time, default: '0' # expected time to complete the pending funciton (in seconds)
   
   embeds_many :pending_properties
@@ -22,7 +22,7 @@ class Pending
     pending = Pending.new(device_uri: device.uri,
                           function_uri: device_function.function_uri,
                           function_name: device_function.name)
-    pending.uri = Pending.base_uri(request)
+    pending.uri = Pending.base_uri(request, pending)
     pending.save!
     return pending
   end
@@ -40,10 +40,8 @@ class Pending
   
   # Update the pending status of updated properties
   def update_pending_properties(properties)
-    puts ":::" + pending_properties.inspect
     properties.each { |p| update_pending_property(p) }
-    puts ":::" + pending_properties.inspect
-    self.pending = false if no_pending_properties?
+    self.pending_status = false if with_no_pending_properties?
     self.save!
   end
 
@@ -51,16 +49,10 @@ class Pending
     
     def update_pending_property(property)
       pending_property = pending_properties.where(property_uri: property[:uri]).first
-      pending_property.pending = "false" if pending_property
-      self.save!
+      pending_property.pending_status = false if pending_property
     end
 
-    def no_pending_properties?
-      pending_properties.where(pending: true).length == 0
+    def with_no_pending_properties?
+      pending_properties.where(pending_status: true).length == 0
     end
-
-    def close_pending
-      self.pending
-    end
-
 end

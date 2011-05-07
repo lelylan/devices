@@ -18,13 +18,21 @@ feature "FunctionsController" do
         ]
       }}
 
-      context "with physical device" do
+      context "with a physical device" do
+        before { Pending.destroy_all }
+        before { page.driver.put(@uri, params.to_json) }
+
         scenario "update device properties to physical response" do
-          page.driver.put(@uri, params.to_json)
           page.status_code.should == 200
           page.should have_content '10.0'
           page.should have_content '"off"'
           should_have_valid_json(page.body)
+        end
+
+        scenario "creates a pending resource" do
+          Pending.count.should == 1
+          @pending = Pending.first
+          @pending.pending_status.should == false
         end
       end
 
@@ -44,7 +52,7 @@ feature "FunctionsController" do
         end
       end
 
-      context "when not valid function uri" do
+      context "with not valid function uri" do
         scenario "is not found" do
           page.driver.put("#{@uri}/not_exising", params.to_json)
           page.status_code.should == 404

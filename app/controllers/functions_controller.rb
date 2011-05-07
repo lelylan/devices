@@ -7,10 +7,22 @@ class FunctionsController < ApplicationController
   def update
     # Transform the function to the properties to send to the physical device
     properties = @device_function.to_parameters(json_body[:properties])
-    # Send the properties to the physical device
-    properties = @device.sync_physical(properties) if @device.device_physical
+    # If a physical device is connected handle it
+    if @device.device_physical
+      # Send the properties to the physical device
+      properties = @device.sync_physical(properties)
+      # Create the pending resource
+      pending = @device.create_pending(properties, @device_function, request)
+    end
+
+    #---- TO MOVE INTO /devices/{device-id}/properties -----
+
     # Update the device properties with the ones received from the physical device
     @device.sync_properties_with_physical(properties)
+    # Update the pending resources
+    @pendings = Pending.where(device_uri: @device.uri)
+    @pendings.each { |pending| pending.update_pending_properties(properties) }
+    # Render the updated device representation
     render "/devices/show", status: 200, location: @device.uri
   end
   
