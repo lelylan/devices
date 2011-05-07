@@ -77,7 +77,7 @@ class Device
   # Apply changes received from physical to the device
   def sync_properties_with_physical(properties)
      properties.each do |property|
-      res = device_properties.where(property_uri: property[:uri]).first
+      res = device_properties.where(uri: property[:uri]).first
       res.value = property[:value]
     end
     self.save
@@ -111,7 +111,7 @@ class Device
     # Create a device property relation
     def create_device_property(property)
       device_properties.create!(
-        property_uri: property[:uri],
+        uri: property[:uri],
         name: property[:name],
         value: property[:default]
       )
@@ -120,7 +120,7 @@ class Device
     # Create a device function relation
     def create_device_function(function)
       device_functions.create!(
-        function_uri: function[:uri],
+        uri: function[:uri],
         name: function[:name]
       )
     end

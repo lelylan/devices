@@ -27,7 +27,7 @@ class History
   def create_history_properties(properties)
     properties.each do |property|
       self.history_properties.create!(
-        property_uri: property[:property_uri],
+        uri: property[:uri],
         value: property[:value])
     end
   end

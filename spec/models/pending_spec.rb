@@ -13,7 +13,7 @@ describe Pending do
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:function_uri) }
   
   context "#create_pending" do
-    before { @device_function = @device.device_functions.where(function_uri: Settings.functions.set_intensity.function_uri).first }
+    before { @device_function = @device.device_functions.where(uri: Settings.functions.set_intensity.uri).first }
     before { Pending.stub(:base_uri).and_return(Settings.pending.uri) }
 
     it "creates a pending resource" do

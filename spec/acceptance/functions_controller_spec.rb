@@ -7,7 +7,7 @@ feature "FunctionsController" do
   # PUT /devices/{device-id}/functions/{function-id}
   context ".update" do
     before { @resource = Factory(:device_complete) }
-    before { @uri = "#{host}/devices/#{@resource.id}/functions?function_uri=#{Settings.functions.set_intensity.function_uri}" }
+    before { @uri = "#{host}/devices/#{@resource.id}/functions?uri=#{Settings.functions.set_intensity.uri}" }
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -18,11 +18,11 @@ feature "FunctionsController" do
         ]
       }}
 
-      context "with a physical device" do
+      context "with a connected physical" do
         before { Pending.destroy_all }
         before { page.driver.put(@uri, params.to_json) }
 
-        scenario "update device properties to physical response" do
+        scenario "shoul update device properties with physical response" do
           page.status_code.should == 200
           page.should have_content '10.0'
           page.should have_content '"off"'
@@ -39,7 +39,7 @@ feature "FunctionsController" do
 
       context "with no physical device" do
         before { @resource = Factory(:device_no_physical) }
-        before { @uri = "#{host}/devices/#{@resource.id}/functions?function_uri=#{Settings.functions.set_intensity.function_uri}" }
+        before { @uri = "#{host}/devices/#{@resource.id}/functions?uri=#{Settings.functions.set_intensity.uri}" }
         let(:params) {{ 
           properties: [{ uri: Settings.properties.intensity.uri, value: "10.0" }]
         }}
@@ -55,7 +55,7 @@ feature "FunctionsController" do
 
       context "with not valid function uri" do
         scenario "is not found" do
-          page.driver.put("#{@uri}/not_exising", params.to_json)
+          page.driver.put("#{@uri}/not_existing", params.to_json)
           page.status_code.should == 404
         end
       end

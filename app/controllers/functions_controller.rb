@@ -36,7 +36,7 @@ class FunctionsController < ApplicationController
     end
 
     def find_function
-      @device_function = @device.device_functions.where(function_uri: params[:function_uri]).first
+      @device_function = @device.device_functions.where(uri: params[:uri]).first
       unless @device_function
         render_404 "notifications.document.not_found", {uri: request.url}
       end

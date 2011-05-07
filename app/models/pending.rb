@@ -20,7 +20,7 @@ class Pending
   # Create a pending resource without properties
   def self.create_pending(device, device_function, request)
     pending = Pending.new(device_uri: device.uri,
-                          function_uri: device_function.function_uri,
+                          function_uri: device_function.uri,
                           function_name: device_function.name)
     pending.uri = Pending.base_uri(request, pending)
     pending.save!
@@ -31,9 +31,9 @@ class Pending
   def create_pending_properties(device, properties)
     properties.each do |property|
       self.pending_properties.create!(
-        property_uri: property[:uri],
+        uri: property[:uri],
         value: property[:value],
-        old_value: device.device_properties.where(property_uri: property[:uri]).first.value
+        old_value: device.device_properties.where(uri: property[:uri]).first.value
       )
     end
   end
@@ -55,7 +55,7 @@ class Pending
   private
     
     def update_pending_property(property)
-      pending_property = pending_properties.where(property_uri: property[:uri]).first
+      pending_property = pending_properties.where(uri: property[:uri]).first
       pending_property.pending_status = false if pending_property
     end
 

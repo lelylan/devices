@@ -30,18 +30,15 @@ properties:
 functions:
   set_intensity:
     id: <%= set_intensity_id = "set_intensity" %>
-    uri: <%= set_intensity_uri = "#{device_uri}/functions/#{set_intensity_id}" %>
-    function_uri: <%= set_intensity_function_uri = "#{type_host}/functions/#{set_intensity_id}" %>
+    uri: <%= set_intensity_function_uri = "#{type_host}/functions/#{set_intensity_id}" %>
     name: "Set intensity"
   turn_on:
     id: <%= turn_on_id = "turn_on" %>
-    uri: <%= turn_on_uri = "#{device_uri}/functions/#{turn_on_id}" %>
-    function_uri: <%= turn_on_function_uri = "#{type_host}/functions/#{turn_on_id}" %>
+    uri: <%= turn_on_function_uri = "#{type_host}/functions/#{turn_on_id}" %>
     name: "Turn on"
   turn_off:
     id: <%= turn_off_id = "turn_off" %>
-    uri: <%= turn_off_uri = "#{device_uri}/functions/#{turn_off_id}" %>
-    function_uri: <%= turn_off_function_uri = "#{type_host}/functions/#{turn_off_id}" %>
+    uri: <%= turn_off_function_uri = "#{type_host}/functions/#{turn_off_id}" %>
     name: "Turn off"
 pending:
   uri: <%= "#{host}/pendings/set_intensity" %>

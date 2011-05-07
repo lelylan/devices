@@ -1,11 +1,10 @@
 
 <% connections.each_with_index do |connection, index| %>
-    { "property_uri": "<%=connection.property_uri%>",
+    { "uri": "<%=connection.uri%>",
       "pending": "<%=connection.pending_status%>", 
       "values": {
         "expected": "<%=connection.value%>",
-        "old": "<%=connection.old_value%>",
-        "received": <%=raw connection.received_values.to_json%>
+        "old": "<%=connection.old_value%>"
       } 
     }<% if (connections.length - 1 > index) %>,<%end%>
 <% end %>
