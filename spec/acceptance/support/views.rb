@@ -1,4 +1,5 @@
 module ViewMethods
+
   # Device resource representation
   def should_have_device(device)
     page.should have_content device.id.as_json
@@ -43,6 +44,23 @@ module ViewMethods
   # Resource not valid
   def should_have_a_not_valid_resource
     page.status_code.should == 422
+  end
+
+  # Pending resource representation
+  def should_have_pending(pending)
+    page.status_code.should == 200
+    page.should have_content pending.uri
+    page.should have_content pending.device_uri
+    page.should have_content pending.function_uri
+    page.should have_content pending.function_name
+    page.should have_content "true"
+  end
+
+  # Pending property representation (connected to pending resource)
+  def should_have_pending_property(property)
+    page.should have_content property.property_uri
+    page.should have_content property.old_value
+    page.should have_content property.expected_value
   end
 end
 

@@ -12,6 +12,8 @@ gem 'chronic'
 gem 'jquery-rails'
 gem 'httparty'
 gem 'kaminari'
+gem "rails_config"
+gem 'delorean'
 
 group :development, :test do
   gem 'rspec-rails', '2.4.1'
@@ -25,7 +27,5 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'fuubar'
   gem 'watchr'
-  gem 'delorean'
-  gem "rails_config"
 end
 

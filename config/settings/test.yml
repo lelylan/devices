@@ -15,6 +15,9 @@ type:
 device:
   uri: <%= device_uri = "#{host}/devices/closet_dimmer" %>
   name: 'Closet dimmer'
+another_device:
+  uri: <%= "#{host}/devices/not_owned_closet_dimmer" %>
+  name: 'Not owned closet dimmer'
 properties:
   status:
     uri: <%= status_uri = "#{type_host}/properties/status" %> 
@@ -40,6 +43,10 @@ functions:
     uri: <%= turn_off_uri = "#{device_uri}/functions/#{turn_off_id}" %>
     function_uri: <%= turn_off_function_uri = "#{type_host}/functions/#{turn_off_id}" %>
     name: "Turn off"
+pending:
+  uri: <%= "#{host}/pendings/set_intensity" %>
+pending_closed:
+  uri: <%= "#{host}/pendings/closed_set_intensity" %>
 unite_node:
   uri: <%= unite_node_uri = "#{unite_node_host}/nodes/home_gateway" %>
   physical_id: '<%= physical_id = "0x3a91fb2e" %>'

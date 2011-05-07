@@ -10,19 +10,19 @@ module Lelylan
         def base(params, request, current_user)
           resource = self.new(params)
           resource.created_from = current_user.uri
-          resource.uri  = resource.base_uri(request)
+          resource.uri  = self.base_uri(request, resource)
           return resource
+        end
+        # Create the resource URI
+        def base_uri(request, resource)
+          protocol = request.protocol
+          host     = request.host_with_port
+          name     = resource.class.name.underscore.pluralize
+          id       = resource.id.as_json
+          uri      = protocol + host + "/" + name + "/" +  id
         end
       end
 
-      # Create the resource URI
-      def base_uri(request)
-        protocol = request.protocol
-        host     = request.host_with_port
-        name     = self.class.name.underscore.pluralize
-        id       = self.id.as_json
-        uri      = protocol + host + "/" + name + "/" +  id
-      end
     end
   end
 end
