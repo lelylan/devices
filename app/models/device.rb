@@ -92,12 +92,6 @@ class Device
     pending.create_pending_properties(self, properties)
   end
 
-  def pendings
-    # Maybe you should add function name to pending, as it could 
-    # be useful to have message like "Turn on is pending"
-    # Pending.where(pending: true, device_uri: uri)
-  end
-
   # ------
   # EXTRA
   # ------

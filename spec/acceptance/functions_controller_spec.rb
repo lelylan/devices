@@ -32,6 +32,7 @@ feature "FunctionsController" do
         scenario "creates a pending resource" do
           Pending.count.should == 1
           @pending = Pending.first
+          @pending.should_not be_nil
           @pending.pending_status.should == false
         end
       end

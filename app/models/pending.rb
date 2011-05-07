@@ -38,7 +38,14 @@ class Pending
     end
   end
   
-  # Update the pending status of updated properties
+  # Update all the pending status of all pending resources related
+  # to a specific device
+  def self.update_pendings(device_uri, properties)
+    pendings = open_pendings_for(device_uri)
+    pendings.each { |p| p.update_pending_properties(properties) }
+  end
+
+  # Update the pending status of a pending resource
   def update_pending_properties(properties)
     properties.each { |p| update_pending_property(p) }
     self.pending_status = false if with_no_pending_properties?
@@ -54,5 +61,9 @@ class Pending
 
     def with_no_pending_properties?
       pending_properties.where(pending_status: true).length == 0
+    end
+
+    def self.open_pendings_for(device_uri)
+      self.where(device_uri: device_uri).and(pending_status: true)
     end
 end
