@@ -19,7 +19,7 @@ class FunctionsController < ApplicationController
 
     # Update the device properties with the ones received from the physical device
     @device.sync_properties_with_physical(properties)
-    # Update the pending resources
+    # Update (close) the pending resources
     Pending.update_pendings(@device.uri, properties)
     # Render the updated device representation
     render "/devices/show", status: 200, location: @device.uri
