@@ -8,6 +8,14 @@ FactoryGirl.define do
     password "example"
   end
 
+  # PENDING
+  factory :pending do
+    uri Settings.pending.uri
+    device_uri Settings.device.uri
+    function_uri Settings.functions.set_intensity.function_uri
+    function_name Settings.functions.set_intensity.name
+  end
+
   # BASIC DEVICE
   factory :device do
     uri Settings.device.uri

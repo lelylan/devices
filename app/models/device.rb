@@ -61,9 +61,9 @@ class Device
     self.save
   end
 
-  # ------------------------
-  # Function to properties
-  # -------------------------
+  # -----------------------
+  # FUNCTION TO PROPERTIES
+  # -----------------------
 
   # Get tge properties to change from the funciton and from 
   # the body of the function request
@@ -82,6 +82,26 @@ class Device
       res.value = property[:value]
     end
     self.save
+  end
+
+  # --------
+  # PENDING
+  # --------
+
+  def create_pending(properties, function, request)
+    # pending = Pending.create_pending(self, function, request)
+    # pending.create_pending_properties(self, properties)
+  end
+
+  def update_pending 
+    # Maybe this goes into the device_property before_update
+    # Pending.update_pending(self)
+  end
+
+  def pendings
+    # Maybe you should add function name to pending, as it could 
+    # be useful to have message like "Turn on is pending"
+    # Pending.where(pending: true)
   end
 
   # ------
