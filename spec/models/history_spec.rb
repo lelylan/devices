@@ -11,41 +11,41 @@ describe History do
   
   context "#create_history" do
 
-    #context "when closes pending" do
-      #before { @device = Factory(:device_complete) }
-      #before { @pending = Factory(:pending_complete) }
-      #before { @properties = @pending.pending_properties }
-      #before { History.stub(:base_uri).and_return(Settings.history.uri) }
+    context "when closes pending" do
+      before { @device = Factory(:device_complete) }
+      before { @pending = Factory(:pending_complete) }
+      before { @properties = @pending.pending_properties }
+      before { History.stub(:base_uri).and_return(Settings.history.uri) }
 
-      #it "creates history" do
-        #lambda {
-          #@history = History.create_history(@device.uri, @properties, nil)
-        #}.should change{ History.count }.by(1)
-      #end
+      it "creates history" do
+        lambda {
+          @history = History.create_history(@device.uri, @properties, nil)
+        }.should change{ History.count }.by(1)
+      end
 
-      #it "creates history properties" do
-        #@history = History.create_history(@device.uri, @properties, nil)
-        #@history.history_properties.should have(2).items
-      #end
-    #end
+      it "creates history properties" do
+        @history = History.create_history(@device.uri, @properties, nil)
+        @history.history_properties.should have(2).items
+      end
+    end
 
-    #context "when physical changes" do
-      #before { @device = Factory(:device_complete) }
-      #before { @pending = Factory(:pending_complete) }
-      #before { @properties =  properties = changed_properties_from_json }
-      #before { History.stub(:base_uri).and_return(Settings.history.uri) }
+    context "when physical changes" do
+      before { @device = Factory(:device_complete) }
+      before { @pending = Factory(:pending_complete) }
+      before { @properties =  properties = changed_properties_from_json }
+      before { History.stub(:base_uri).and_return(Settings.history.uri) }
 
-      #it "creates history" do
-        #lambda {
-          #@history = History.create_history(@device.uri, @properties, nil)
-        #}.should change{ History.count }.by(1)
-      #end
+      it "creates history" do
+        lambda {
+          @history = History.create_history(@device.uri, @properties, nil)
+        }.should change{ History.count }.by(1)
+      end
 
-      #it "creates history properties" do
-        #@history = History.create_history(@device.uri, @properties, nil)
-        #@history.history_properties.should have(2).items
-      #end
-    #end
+      it "creates history properties" do
+        @history = History.create_history(@device.uri, @properties, nil)
+        @history.history_properties.should have(2).items
+      end
+    end
 
   end
 end

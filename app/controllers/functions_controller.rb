@@ -9,10 +9,14 @@ class FunctionsController < ApplicationController
     properties = @device_function.to_parameters(json_body[:properties])
     # If a physical device is connected handle it
     if @device.device_physical
-      # Send the properties to the physical device
-      properties = @device.sync_physical(properties)
       # Create the pending resource
       pending = @device.create_pending(properties, @device_function, request)
+      # Send the properties to the physical device
+      properties = @device.sync_physical(properties)
+    else
+      # If no phisical device is found add history
+      history = History.create_history(@device.uri, properties, request) 
+      puts ":::::" +  history.inspect
     end
 
     #---- TO MOVE INTO /devices/{device-id}/properties -----
@@ -21,6 +25,11 @@ class FunctionsController < ApplicationController
     @device.sync_properties_with_physical(properties)
     # Update (close) the pending resources
     Pending.update_pendings(@device.uri, properties)
+
+    if @device.device_physical
+      # Create an history resource when the physical changes
+      history = History.create_history(@device.uri, properties, request)
+    end
     # Render the updated device representation
     render "/devices/show", status: 200, location: @device.uri
   end

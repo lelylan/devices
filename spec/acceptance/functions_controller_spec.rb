@@ -8,6 +8,8 @@ feature "FunctionsController" do
   context ".update" do
     before { @resource = Factory(:device_complete) }
     before { @uri = "#{host}/devices/#{@resource.id}/functions?uri=#{Settings.functions.set_intensity.uri}" }
+    before { Pending.destroy_all }
+    before { History.destroy_all }
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -19,7 +21,6 @@ feature "FunctionsController" do
       }}
 
       context "with a connected physical" do
-        before { Pending.destroy_all }
         before { page.driver.put(@uri, params.to_json) }
 
         scenario "shoul update device properties with physical response" do
@@ -32,30 +33,39 @@ feature "FunctionsController" do
         scenario "creates a pending resource" do
           Pending.count.should == 1
           @pending = Pending.first
-          @pending.should_not be_nil
           @pending.pending_status.should == false
+        end
+
+        scenario "creates an history resource" do
+          History.count.should == 1
         end
       end
 
       context "with no physical device" do
         before { @resource = Factory(:device_no_physical) }
         before { @uri = "#{host}/devices/#{@resource.id}/functions?uri=#{Settings.functions.set_intensity.uri}" }
-        let(:params) {{ 
-          properties: [{ uri: Settings.properties.intensity.uri, value: "10.0" }]
-        }}
+        let(:params) {{ properties: [{ uri: Settings.properties.intensity.uri, value: "10.0" }] }}
+        before { page.driver.put(@uri, params.to_json) }
 
         scenario "update device properties" do
-          page.driver.put(@uri, params.to_json)
           page.status_code.should == 200
           page.should have_content '10.0'
           page.should have_content '"on"'
           should_have_valid_json(page.body)
         end
+        
+        scenario "do not create a pending resource" do
+          Pending.count.should == 0
+        end
+
+        scenario "creates an history resource" do
+          History.count.should == 1
+        end
       end
 
       context "with not valid function uri" do
         scenario "is not found" do
-          page.driver.put("#{@uri}/not_existing", params.to_json)
+          page.driver.put("#{@uri}?uri=not_existing", params.to_json)
           page.status_code.should == 404
         end
       end
