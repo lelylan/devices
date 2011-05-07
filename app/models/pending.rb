@@ -40,15 +40,27 @@ class Pending
   
   # Update the pending status of updated properties
   def update_pending_properties(properties)
-    properties.each do |property|
-      pending_property = pending_properties.where(property_uri: property[:uri]).first
-      pending_property.pending = false if pending_property
-    end
-    if pending_properties.where(pending: true).length == 0
-      self.pending = false
-    end
-    save
-    return pending
+    puts ":::" + pending_properties.inspect
+    properties.each { |p| update_pending_property(p) }
+    puts ":::" + pending_properties.inspect
+    self.pending = false if no_pending_properties?
+    self.save!
   end
+
+  private
+    
+    def update_pending_property(property)
+      pending_property = pending_properties.where(property_uri: property[:uri]).first
+      pending_property.pending = "false" if pending_property
+      self.save!
+    end
+
+    def no_pending_properties?
+      pending_properties.where(pending: true).length == 0
+    end
+
+    def close_pending
+      self.pending
+    end
 
 end

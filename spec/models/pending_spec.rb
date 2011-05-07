@@ -42,6 +42,7 @@ describe Pending do
       it "closes the pending resource" do
         @pending.update_pending_properties(@applied_properties)
         @pending.pending.should == false
+        @pending.pending_properties.should have(2).items
       end
     end
 
