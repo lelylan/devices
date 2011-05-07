@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Pending do
-  #before { @pending = Factory(:pending) }
+  before { @device = Factory(:device_complete) }
 
   it { should allow_value(Settings.validation.valid_uri).for(:uri) }
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:uri) }
@@ -13,7 +13,6 @@ describe Pending do
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:function_uri) }
   
   context "#create_pending" do
-    before { @device = Factory(:device_complete) }
     before { @device_function = @device.device_functions.where(function_uri: Settings.functions.set_intensity.function_uri).first }
     before { Pending.stub(:base_uri).with(nil).and_return(Settings.pending.uri) }
 
@@ -25,7 +24,6 @@ describe Pending do
   end
 
   context "#create_pending_properties" do
-    before { @device = Factory(:device_complete) }
     before { @pending = Factory(:pending) }
     before { @properties = HashWithIndifferentAccess.new(JSON.parse(Settings.unite_node_json))[:properties] }
 
@@ -33,6 +31,25 @@ describe Pending do
       lambda {
         @pending.create_pending_properties(@device, @properties)
       }.should change{ @pending.pending_properties.length }.by(2)
+    end
+  end
+
+  context "#update_pending_properties" do
+    before { @pending = Factory(:pending_complete) }
+    before { @applied_properties = HashWithIndifferentAccess.new(JSON.parse(Settings.unite_node_json))[:properties] }
+
+    context "with all properties" do
+      it "closes the pending resource" do
+        @pending.update_pending_properties(@applied_properties)
+        @pending.pending.should == false
+      end
+    end
+
+    context "with one property" do
+      it "leaves open the pending resource" do
+        @pending.update_pending_properties([@applied_properties.first])
+        @pending.pending.should == true
+      end
     end
   end
 end

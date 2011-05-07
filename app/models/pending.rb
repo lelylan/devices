@@ -7,7 +7,8 @@ class Pending
   field :device_uri
   field :function_uri
   field :function_name
-  field :expected_time, default: '0'   # supposed time to complete the pending funciton (in seconds)
+  field :pending, type: Boolean, default: true
+  field :expected_time, default: '0' # expected time to complete the pending funciton (in seconds)
   
   embeds_many :pending_properties
   
@@ -35,6 +36,19 @@ class Pending
         expected_value: property[:value]
       )
     end
+  end
+  
+  # Update the pending status of updated properties
+  def update_pending_properties(properties)
+    properties.each do |property|
+      pending_property = pending_properties.where(property_uri: property[:uri]).first
+      pending_property.pending = false if pending_property
+    end
+    if pending_properties.where(pending: true).length == 0
+      self.pending = false
+    end
+    save
+    return pending
   end
 
 end

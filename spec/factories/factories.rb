@@ -8,7 +8,9 @@ FactoryGirl.define do
     password "example"
   end
 
-  # PENDING
+
+
+  # PENDING BASE
   factory :pending do
     uri Settings.pending.uri
     device_uri Settings.device.uri
@@ -16,7 +18,28 @@ FactoryGirl.define do
     function_name Settings.functions.set_intensity.name
   end
 
-  # BASIC DEVICE
+  factory :pending_complete, parent: :pending do |p|
+    p.pending_properties {[
+      Factory.build(:pending_property_intensity),
+      Factory.build(:pending_property_status)
+    ]}
+  end
+
+  factory :pending_property_intensity, class: :pending_property do
+    property_uri Settings.properties.intensity.uri
+    old_value "0.0"
+    expected_value "10.0"
+  end
+
+  factory :pending_property_status, class: :pending_property do
+    property_uri Settings.properties.status.uri
+    old_value "on"
+    expected_value "off"
+  end
+
+
+
+  # DEVICE BASE
   factory :device do
     uri Settings.device.uri
     created_from Settings.user.uri
