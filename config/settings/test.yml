@@ -50,6 +50,8 @@ pending_closed:
 unite_node:
   uri: <%= unite_node_uri = "#{unite_node_host}/nodes/home_gateway" %>
   physical_id: '<%= physical_id = "0x3a91fb2e" %>'
+history:
+  uri: <%= "#{host}/histories/set_intensity" %>
 validation: 
   valid_uri: 'http://example.com'
   not_valid_uri: 'example'

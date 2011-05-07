@@ -13,20 +13,21 @@ class History
 
   # Create an history resource (with no properties)
   def self.create_history(device_uri, properties, request)
-    history = create_base_history(device_uri)
+    history = create_base_history(device_uri, request)
     history.create_history_properties(properties)
   end
 
-  def self.create_base_history(device_uri)
-    history = History.new(device_uri: device.uri)
+  def self.create_base_history(device_uri, request)
+    history = History.new(device_uri: device_uri)
     history.uri = History.base_uri(request, history)
     history.save! and return history
   end
 
   def create_history_properties(properties)
     properties.each do |property|
+      puts ":::::" + property.inspect
       self.history_properties.create!(
-        property_uri: property[:uri],
+        property_uri: property[:property_uri],
         value: property[:value]
       )
     end

@@ -32,8 +32,8 @@ class Pending
     properties.each do |property|
       self.pending_properties.create!(
         property_uri: property[:uri],
-        old_value: device.device_properties.where(property_uri: property[:uri]).first.value,
-        expected_value: property[:value]
+        value: property[:value],
+        old_value: device.device_properties.where(property_uri: property[:uri]).first.value
       )
     end
   end

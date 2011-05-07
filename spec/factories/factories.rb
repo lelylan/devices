@@ -39,14 +39,14 @@ FactoryGirl.define do
 
   factory :pending_property_intensity, class: :pending_property do
     property_uri Settings.properties.intensity.uri
+    value "10.0"
     old_value "0.0"
-    expected_value "10.0"
   end
 
   factory :pending_property_status, class: :pending_property do
     property_uri Settings.properties.status.uri
+    value "off"
     old_value "on"
-    expected_value "off"
   end
 
 

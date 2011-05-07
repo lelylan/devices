@@ -60,7 +60,7 @@ module ViewMethods
   def should_have_pending_property(property)
     page.should have_content property.property_uri
     page.should have_content property.old_value
-    page.should have_content property.expected_value
+    page.should have_content property.value
   end
 end
 
