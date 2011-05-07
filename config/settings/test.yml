@@ -45,6 +45,8 @@ functions:
     name: "Turn off"
 pending:
   uri: <%= "#{host}/pendings/set_intensity" %>
+pending_closed:
+  uri: <%= "#{host}/pendings/closed_set_intensity" %>
 unite_node:
   uri: <%= unite_node_uri = "#{unite_node_host}/nodes/home_gateway" %>
   physical_id: '<%= physical_id = "0x3a91fb2e" %>'

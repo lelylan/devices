@@ -26,6 +26,12 @@ FactoryGirl.define do
     ]}
   end
   
+  # Pending resource close
+  factory :closed_pending, parent: :pending_complete do |p|
+    uri Settings.pending_closed.uri
+    pending_status false
+  end
+
   # Pending of a different device
   factory :not_owned_pending, parent: :pending_complete do |p|
     device_uri Settings.another_device.uri

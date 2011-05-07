@@ -18,6 +18,6 @@ class PendingsController < ApplicationController
     end
 
     def find_pendings
-      @pendings = Pending.where(device_uri: @device.uri)
+      @pendings = Pending.where(device_uri: @device.uri, pending_status: true)
     end
 end
