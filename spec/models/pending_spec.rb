@@ -14,7 +14,7 @@ describe Pending do
   
   context "#create_pending" do
     before { @device_function = @device.device_functions.where(function_uri: Settings.functions.set_intensity.function_uri).first }
-    before { Pending.stub(:base_uri).with(nil).and_return(Settings.pending.uri) }
+    before { Pending.stub(:base_uri).and_return(Settings.pending.uri) }
 
     it "creates a pending resource" do
       lambda {
