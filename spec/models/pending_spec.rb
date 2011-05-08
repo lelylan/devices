@@ -64,7 +64,7 @@ describe Pending do
       end
     end
 
-    context "with one not matching property" do
+    context "with one 'not matching value' property" do
       before { @property = @applied_properties.first }
       before { @property[:value] = "5.0" }
       before { @pending.update_pending_properties([@property]) }

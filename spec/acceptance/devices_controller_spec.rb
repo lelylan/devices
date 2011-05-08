@@ -44,7 +44,7 @@ feature "DevicesController" do
       end
 
       it_should_behave_like "rescued when not found", 
-        "visit @uri", "devices"
+                            "visit @uri", "devices"
     end
   end
 

@@ -3,13 +3,16 @@ require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 feature "FunctionsController" do
   before { host! "http://" + host }
   before { @user = Factory(:user) }
+  before { Pending.destroy_all }
+  before { History.destroy_all }
 
   # PUT /devices/{device-id}/functions/{function-id}
   context ".update" do
     before { @resource = Factory(:device_complete) }
+    before { @not_owned_resource = Factory(:not_owned_device) }
     before { @uri = "#{host}/devices/#{@resource.id}/functions?uri=#{Settings.functions.set_intensity.uri}" }
-    before { Pending.destroy_all }
-    before { History.destroy_all }
+
+    it_should_behave_like "protected resource", "page.driver.put(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -47,6 +50,7 @@ feature "FunctionsController" do
         end
       end
 
+
       context "with no physical device" do
         before { @resource = Factory(:device_no_physical) }
         before { @uri = "#{host}/devices/#{@resource.id}/functions?uri=#{Settings.functions.set_intensity.uri}" }
@@ -73,8 +77,8 @@ feature "FunctionsController" do
             page.should have_content '"on"'
           end
         end
-
       end
+
 
       context "with not valid function uri" do
         scenario "is not found" do
@@ -83,6 +87,9 @@ feature "FunctionsController" do
         end
       end
 
+      it_should_behave_like "rescued when not found", 
+                            "page.driver.put(@uri)", 
+                            "devices", "/functions"
     end
   end
 end
