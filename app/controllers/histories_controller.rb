@@ -1,11 +1,10 @@
-class PendingsController < ApplicationController
-  skip_before_filter :set_pagination
-
+class HistoriesController < ApplicationController
   before_filter :find_owned_resources
   before_filter :find_resource 
   before_filter :find_pendings
 
   def index
+    @histories.page(params[:page]).per(params[:per])
   end
   
   private 
@@ -19,6 +18,6 @@ class PendingsController < ApplicationController
     end
 
     def find_pendings
-      @pendings = Pending.where(device_uri: @device.uri, pending_status: true)
+      @histories = History.where(device_uri: @device.uri)
     end
 end

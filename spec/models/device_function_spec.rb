@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe DeviceFunction do
   before { @device = Factory(:device_complete) }
-  before { @device_function = @device.device_functions.where(function_uri: Settings.functions.set_intensity.function_uri).first }
+  before { @device_function = @device.device_functions.where(uri: Settings.functions.set_intensity.uri).first }
 
   context "#function_representation" do
     before { @function = @device_function.function_representation }

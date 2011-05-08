@@ -16,17 +16,27 @@ feature "PendingsController" do
     it_should_behave_like "protected resource", "visit(@uri)"
 
     context "when logged in" do
-      before { basic_auth(@user) } 
+      before { basic_auth(@user) }
+      before {  visit @uri }
+
       scenario "view device pending resources" do
-        visit @uri
         page.status_code.should == 200
         should_have_pending(@pending)
+        should_have_valid_json(page.body)
+      end
+
+      scenario "view pending properties" do
         @pending.pending_properties.each do |property|
           should_have_pending_property(property)
         end
+      end
+      
+      scenario "do not view not related pendings" do
         page.should_not have_content @not_owned.device_uri
+      end
+
+      scenario "do not see closed pendings"
         page.should_not have_content @closed.uri
-        should_have_valid_json(page.body)
       end
     end
   end

@@ -12,6 +12,7 @@ Devices::Application.routes.draw do
   # API Resources
   resources :devices, defaults: {format: 'json'} do
     resources :pendings, only: 'index'
+    resources :histories, only: 'index'
     member do
       put    "functions" => "functions#update"
       post   "physical"  => "physicals#create"

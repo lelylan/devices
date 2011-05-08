@@ -1,0 +1,8 @@
+{
+  "pagination": {
+  <%=render :partial => "/shared/navigation"%>  },
+  "resources": [
+<%=render partial: 'history', 
+            collection: @histories, 
+            spacer_template: 'comma' %>  ]
+}

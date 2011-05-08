@@ -18,7 +18,7 @@ module ViewMethods
   # Device properties representation
   def should_have_device_properties(properties)
     properties.each do |property|
-      page.should have_content property.property_uri
+      page.should have_content property.uri
       page.should have_content property.name
       page.should have_content property.value
     end
@@ -27,7 +27,7 @@ module ViewMethods
   # Device functions representation
   def should_have_device_functions(functions)
     functions.each do |function|
-      page.should have_content function.function_uri
+      page.should have_content function.uri
       page.should have_content function.name
     end
   end
@@ -58,9 +58,20 @@ module ViewMethods
 
   # Pending property representation (connected to pending resource)
   def should_have_pending_property(property)
-    page.should have_content property.property_uri
+    page.should have_content property.uri
     page.should have_content property.old_value
-    page.should have_content property.expected_value
+    page.should have_content property.value
+  end
+
+  # History resource representation
+  def should_have_history(history)
+    page.should have_content history.uri
+    page.should have_content history.device_uri
+  end
+
+  def should_have_history_property(property)
+    page.should have_content property.uri
+    page.should have_content property.value
   end
 end
 

@@ -8,13 +8,41 @@ FactoryGirl.define do
     password "example"
   end
 
+  
+  # History
+  factory :history do
+    uri Settings.history.uri
+    device_uri Settings.device.uri
+  end
+
+  factory :history_complete, parent: :history do |p|
+    p.history_properties {[
+      Factory.build(:history_property_intensity),
+      Factory.build(:history_property_status)
+    ]}
+  end
+  
+  factory :not_owned_history, parent: :history_complete do |p|
+    device_uri Settings.another_device.uri
+  end
+
+  factory :history_property_intensity, class: :history_property do
+    uri Settings.properties.intensity.uri
+    value "10.0"
+  end
+
+  factory :history_property_status, class: :history_property do
+    uri Settings.properties.status.uri
+    value "off"
+  end
+
 
 
   # PENDING BASE
   factory :pending do
     uri Settings.pending.uri
     device_uri Settings.device.uri
-    function_uri Settings.functions.set_intensity.function_uri
+    function_uri Settings.functions.set_intensity.uri
     function_name Settings.functions.set_intensity.name
   end
 
@@ -38,16 +66,17 @@ FactoryGirl.define do
   end
 
   factory :pending_property_intensity, class: :pending_property do
-    property_uri Settings.properties.intensity.uri
+    uri Settings.properties.intensity.uri
+    value "10.0"
     old_value "0.0"
-    expected_value "10.0"
   end
 
   factory :pending_property_status, class: :pending_property do
-    property_uri Settings.properties.status.uri
+    uri Settings.properties.status.uri
+    value "off"
     old_value "on"
-    expected_value "off"
   end
+
 
 
 
@@ -86,29 +115,29 @@ FactoryGirl.define do
 
   factory :device_status, class: :device_property do
     name Settings.properties.status.name
-    property_uri Settings.properties.status.uri
+    uri Settings.properties.status.uri
     value Settings.properties.status.default_value
   end
 
   factory :device_intensity, class: :device_property do
     name Settings.properties.intensity.name
-    property_uri Settings.properties.intensity.uri
+    uri Settings.properties.intensity.uri
     value Settings.properties.intensity.default_value
   end
 
   factory :device_set_intensity, class: :device_function do
     name Settings.functions.set_intensity.name
-    function_uri Settings.functions.set_intensity.function_uri
+    uri Settings.functions.set_intensity.uri
   end
 
   factory :device_turn_on, class: :device_function do
     name Settings.functions.turn_on.name
-    function_uri Settings.functions.turn_on.function_uri
+    uri Settings.functions.turn_on.uri
   end
 
   factory :device_turn_off, class: :device_function do
     name Settings.functions.turn_off.name
-    function_uri Settings.functions.turn_off.function_uri
+    uri Settings.functions.turn_off.uri
   end
 
   factory :device_physical do
