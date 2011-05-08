@@ -19,20 +19,20 @@ feature "HisotriesController" do
       before { basic_auth(@user) } 
       before { visit @uri }
      
-      scenario "view device pending resources" do
+      scenario "view device history resources" do
         page.status_code.should == 200
         should_have_history @history
         should_have_history @base_history
         should_have_valid_json(page.body)
       end
 
-      scenario "view pending properties" do
+      scenario "view history properties" do
         @history.history_properties.each do |property|
           should_have_history_property property
         end
       end
       
-      scenario "do not view not related pendings" do
+      scenario "do not view not related hisotries" do
         page.should_not have_content @not_owned.device_uri
       end 
     end

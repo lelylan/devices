@@ -36,8 +36,14 @@ feature "FunctionsController" do
           @pending.pending_status.should == false
         end
 
-        scenario "creates an history resource" do
-          History.count.should == 1
+        context "with created history resource" do
+          before { @history = History.first }
+          before { visit "#{host}/devices/#{@resource.id}/histories" }
+          scenario "represent new properties values" do
+            should_have_history @history
+            page.should have_content '10.0'
+            page.should have_content '"off"'
+          end
         end
       end
 
@@ -58,9 +64,16 @@ feature "FunctionsController" do
           Pending.count.should == 0
         end
 
-        scenario "creates an history resource" do
-          History.count.should == 1
+        context "with created history resource" do
+          before { @history = History.first }
+          before { visit "#{host}/devices/#{@resource.id}/histories" }
+          scenario "represent new properties values" do
+            should_have_history @history
+            page.should have_content '10.0'
+            page.should have_content '"on"'
+          end
         end
+
       end
 
       context "with not valid function uri" do
@@ -69,6 +82,7 @@ feature "FunctionsController" do
           page.status_code.should == 404
         end
       end
+
     end
   end
 end
