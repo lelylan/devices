@@ -35,7 +35,7 @@ feature "PendingsController" do
         page.should_not have_content @not_owned.device_uri
       end
 
-      scenario "do not see closed pendings"
+      scenario "do not see closed pendings" do
         page.should_not have_content @closed.uri
       end
     end
