@@ -60,6 +60,18 @@ describe Pending do
         closed.should have(1).items
       end
     end
+
+    context "with one not matching property" do
+      it "populates transitional values" do
+        property = @applied_properties.first
+        property[:value] = "5.0"
+        @pending.update_pending_properties([property])
+        @pending.pending_status.should == true
+        pending_property = @pending.pending_properties.where(uri: property[:uri]).first
+        puts ":::::" + pending_property.inspect
+        pending_property.transitional_values.should include "5.0"
+      end
+    end
   end
 end
 

@@ -56,7 +56,13 @@ class Pending
     
     def update_pending_property(property)
       pending_property = pending_properties.where(uri: property[:uri]).first
-      pending_property.pending_status = false if pending_property
+      if (pending_property)
+        if (pending_property.value == property[:value])
+          pending_property.pending_status = false
+        else
+          pending_property.transitional_values << property[:value]
+        end
+      end
     end
 
     def with_no_pending_properties?
