@@ -3,15 +3,20 @@ require 'spec_helper'
 describe Pending do
   before { @device = Factory(:device_complete) }
 
+  it { should validate_presence_of :uri }
   it { should allow_value(Settings.validation.valid_uri).for(:uri) }
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:uri) }
 
+  it { should validate_presence_of :device_uri }
   it { should allow_value(Settings.validation.valid_uri).for(:device_uri) }
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:device_uri) }
   
+  it { should validate_presence_of :function_uri } 
   it { should allow_value(Settings.validation.valid_uri).for(:function_uri) }
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:function_uri) }
   
+  it { should validate_presence_of :function_name }
+
   context "#create_pending" do
     before { @device_function = @device.device_functions.where(uri: Settings.functions.set_intensity.uri).first }
     before { Pending.stub(:base_uri).and_return(Settings.pending.uri) }

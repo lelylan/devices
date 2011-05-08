@@ -12,10 +12,10 @@ class Pending
   
   embeds_many :pending_properties
   
-  validates :uri, url: true
-  validates :device_uri, url: true
-  validates :function_uri, url: true
-  validates :function_name, presence: true
+  validates :uri, presence: true, url: true
+  validates :device_uri, presence: true, url: true
+  validates :function_uri, presence: true, url: true
+  validates :function_name, presence: true, presence: true
 
   # Create a pending resource without properties
   def self.create_pending(device, device_function, request)
