@@ -62,6 +62,17 @@ module ViewMethods
     page.should have_content property.old_value
     page.should have_content property.value
   end
+
+  # History resource representation
+  def should_have_history(history)
+    page.should have_content history.uri
+    page.should have_content history.device_uri
+  end
+
+  def should_have_history_property(property)
+    page.should have_content property.uri
+    page.should have_content property.value
+  end
 end
 
 RSpec.configuration.include ViewMethods, :type => :acceptance

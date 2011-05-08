@@ -16,7 +16,6 @@ class FunctionsController < ApplicationController
     else
       # If no phisical device is found add history
       history = History.create_history(@device.uri, properties, request) 
-      puts ":::::" +  history.inspect
     end
 
     #---- TO MOVE INTO /devices/{device-id}/properties -----

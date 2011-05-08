@@ -8,6 +8,34 @@ FactoryGirl.define do
     password "example"
   end
 
+  
+  # History
+  factory :history do
+    uri Settings.history.uri
+    device_uri Settings.device.uri
+  end
+
+  factory :history_complete, parent: :history do |p|
+    p.history_properties {[
+      Factory.build(:history_property_intensity),
+      Factory.build(:history_property_status)
+    ]}
+  end
+  
+  factory :not_owned_history, parent: :history_complete do |p|
+    device_uri Settings.another_device.uri
+  end
+
+  factory :history_property_intensity, class: :history_property do
+    uri Settings.properties.intensity.uri
+    value "10.0"
+  end
+
+  factory :history_property_status, class: :history_property do
+    uri Settings.properties.status.uri
+    value "off"
+  end
+
 
 
   # PENDING BASE
@@ -48,6 +76,7 @@ FactoryGirl.define do
     value "off"
     old_value "on"
   end
+
 
 
 
