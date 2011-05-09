@@ -10,6 +10,7 @@ FactoryGirl.define do
 
   factory :consumption do
     uri Settings.consumptions.instantaneous.uri
+    device_uri Settings.device.uri
     created_from Settings.user.uri
     consumption 1.25
     occur_at Time.now
@@ -21,6 +22,10 @@ FactoryGirl.define do
     duration 60
     occur_at Time.now
     end_at Time.now + 60
+  end
+
+  factory :not_owned_consumption, parent: :consumption do
+    created_from Settings.another_user.uri
   end
 end
 

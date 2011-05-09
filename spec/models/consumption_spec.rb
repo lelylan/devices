@@ -9,6 +9,10 @@ describe Consumption do
   it { should allow_value(Settings.validation.valid_uri).for(:created_from) }
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:created_from) }
 
+  it { should validate_presence_of(:device_uri) }
+  it { should allow_value(Settings.validation.valid_uri).for(:device_uri) }
+  it { should_not allow_value(Settings.validation.not_valid_uri).for(:device_uri) }
+
   it { should allow_value('instantaneous').for(:type) }
   it { should allow_value('durational').for(:type) }
 

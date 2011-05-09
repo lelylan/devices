@@ -69,9 +69,29 @@ module ViewMethods
     page.should have_content history.device_uri
   end
 
+  # History property resource representation
   def should_have_history_property(property)
     page.should have_content property.uri
     page.should have_content property.value
+  end
+
+  def should_have_consumption(consumption)
+    page.should have_content consumption.uri
+    page.should have_content consumption.created_from
+    page.should have_content consumption.device_uri
+    page.should have_content consumption.type
+    page.should have_content consumption.consumption.to_s
+    page.should have_content consumption.unit
+    page.should have_content consumption.occur_at.to_s
+    if consumption.type
+      page.should have_content consumption.end_at.to_s
+      page.should have_content consumption.duration.to_s
+    end
+  end
+
+  # Consumption resource not represented
+  def should_not_have_consumption(consumption)
+    page.should_not have_content consumption.created_from
   end
 end
 
