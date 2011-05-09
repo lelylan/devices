@@ -43,7 +43,6 @@ class Pending
   def self.update_pendings(device_uri, properties)
     pendings = open_pendings_for(device_uri)
     pendings.each { |p| p.update_pending_properties(properties) }
-    pendings.each {|p| puts "::::::" + p.pending_properties.inspect }
   end
 
   # Update the pending status of a pending resource
