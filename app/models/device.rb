@@ -65,11 +65,12 @@ class Device
   # FUNCTION TO PROPERTIES
   # -----------------------
 
-  # Get tge properties to change from the funciton and from the body of the function request
+  # Get tge properties to change from the funciton and from the 
+  # body of the function request
   def sync_physical(properties)
     response = HTTParty.put(device_physical.unite_node_uri, 
-                 query: { id: device_physical.physical_id },
-                 body:  { properties: properties })
+      query: { id: device_physical.physical_id },
+      body:  { properties: properties })
     body = JSON.parse(response.body)
     HashWithIndifferentAccess.new(body)[:properties]
   end
