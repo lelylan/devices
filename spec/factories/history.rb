@@ -20,11 +20,11 @@ FactoryGirl.define do
 
   factory :history_property_intensity, class: :history_property do
     uri Settings.properties.intensity.uri
-    value "10.0"
+    value Settings.properties.intensity.new_value
   end
 
   factory :history_property_status, class: :history_property do
     uri Settings.properties.status.uri
-    value "off"
+    value Settings.properties.status.new_value
   end
 end

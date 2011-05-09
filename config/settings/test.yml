@@ -22,11 +22,13 @@ properties:
   status:
     uri: <%= status_uri = "#{type_host}/properties/status" %> 
     name: 'Status'
-    default_value: 'on'
+    default_value: '<%= default_status_value = 'off' %>'
+    new_value: '<%= new_status_value = 'on' %>'
   intensity:
     uri: <%= intensity_uri = "#{type_host}/properties/intensity" %> 
     name: 'Intensity'
-    default_value: '0.0'
+    default_value: '<%= default_intensity_value = 0.0 %>'
+    new_value: '<%= new_intensity_value = 10.0 %>'
 functions:
   set_intensity:
     id: <%= set_intensity_id = "set_intensity" %>
@@ -73,7 +75,7 @@ type_json: |
             "id": "4db94c2fd033a917e7000001",
             "uri": "<%= intensity_uri %>",
             "name": "Intensity",
-            "default": "0.0",
+            "default": "<%= default_intensity_value %>",
             "values": [
                 "0.0",
                 "2.0",
@@ -89,7 +91,7 @@ type_json: |
             "id": "4dc2441ad033a97785000001",
             "uri": "<%= status_uri %>",
             "name": "Status",
-            "default": "off",
+            "default": "<%= default_status_value %>",
             "values": [
                 "on",
                 "off" 
@@ -196,11 +198,11 @@ unite_node_json: |
       "properties": [
           {
               "uri": "<%= intensity_uri %>",
-              "value": "10.0"
+              "value": "<%= new_intensity_value %>"
           },
           {
               "uri": "<%= status_uri %>",
-              "value": "off"
+              "value": "<%= new_status_value %>"
           } 
       ] 
   } 

@@ -6,7 +6,7 @@ feature "FunctionsController" do
   before { Pending.destroy_all }
   before { History.destroy_all }
 
-  # PUT /devices/{device-id}/functions/{function-id}
+  # PUT /devices/{device-id}/functions?uri={function-uri}
   context ".update" do
     before { @resource = Factory(:device_complete) }
     before { @not_owned_resource = Factory(:not_owned_device) }
@@ -16,20 +16,16 @@ feature "FunctionsController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      let(:params) {{ 
-        properties: [ 
-          { uri: Settings.properties.intensity.uri, value: "10.0" },
-          { uri: Settings.properties.status.uri, value: "off" }
-        ]
-      }}
+      let(:params) {{ properties: new_device_properties }}
 
       context "with a connected physical" do
         before { page.driver.put(@uri, params.to_json) }
 
         scenario "shoul update device properties with physical response" do
           page.status_code.should == 200
-          page.should have_content '10.0'
-          page.should have_content '"off"'
+          page.should have_content('"' + Settings.properties.status.new_value + '"')
+          Settings.properties.intensity.new_value
+          page.should have_content('"' + Settings.properties.status.new_value + '"')
           should_have_valid_json(page.body)
         end
 
@@ -44,23 +40,24 @@ feature "FunctionsController" do
           before { visit "#{host}/devices/#{@resource.id}/histories" }
           scenario "represent new properties values" do
             should_have_history @history
-            page.should have_content '10.0'
-            page.should have_content '"off"'
+            page.should have_content('"' + Settings.properties.intensity.new_value + '"')
+            page.should have_content('"' + Settings.properties.status.new_value + '"')
           end
         end
       end
 
 
+      # TODO: propbably these makes more senso on /properties
       context "with no physical device" do
         before { @resource = Factory(:device_no_physical) }
         before { @uri = "#{host}/devices/#{@resource.id}/functions?uri=#{Settings.functions.set_intensity.uri}" }
-        let(:params) {{ properties: [{ uri: Settings.properties.intensity.uri, value: "10.0" }] }}
+        let(:params) {{ properties: [new_device_properties.first] }}
         before { page.driver.put(@uri, params.to_json) }
 
         scenario "update device properties" do
           page.status_code.should == 200
-          page.should have_content '10.0'
-          page.should have_content '"on"'
+          page.should have_content('"' + Settings.properties.intensity.new_value + '"')
+          page.should have_content('"' + Settings.properties.status.new_value + '"')
           should_have_valid_json(page.body)
         end
         
@@ -73,8 +70,8 @@ feature "FunctionsController" do
           before { visit "#{host}/devices/#{@resource.id}/histories" }
           scenario "represent new properties values" do
             should_have_history @history
-            page.should have_content '10.0'
-            page.should have_content '"on"'
+            page.should have_content('"' + Settings.properties.intensity.new_value + '"')
+            page.should have_content('"' + Settings.properties.status.new_value + '"')
           end
         end
       end

@@ -18,7 +18,9 @@ class FunctionsController < ApplicationController
       history = History.create_history(@device.uri, properties, request) 
     end
 
-    #---- TO MOVE INTO /devices/{device-id}/properties -----
+    #---- TO REMOVE WHEN WE HAVE A REALTIME SYSTEM ENABLED  -----
+    #---- This method needs to return only a 202 responce   -----
+    #---- (it stay only in /devices/{device-id}/properties) -----
 
     # Update the device properties with the ones received from the physical device
     @device.sync_properties_with_physical(properties)

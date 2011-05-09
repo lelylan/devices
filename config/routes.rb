@@ -19,9 +19,10 @@ Devices::Application.routes.draw do
     get 'consumptions/durational' => 'consumptions#index', type: 'durational'
     get 'consumptions' => 'consumptions#index'
     member do
-      put    "functions" => "functions#update"
-      post   "physical"  => "physicals#create"
-      delete "physical"  => "physicals#destroy"
+      put    "functions"  => "functions#update"
+      put    "properties" => "properties#update"
+      post   "physical"   => "physicals#create"
+      delete "physical"   => "physicals#destroy"
     end
   end
 

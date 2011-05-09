@@ -32,7 +32,7 @@ describe History do
     context "when physical changes" do
       before { @device = Factory(:device_complete) }
       before { @pending = Factory(:pending_complete) }
-      before { @properties =  properties = changed_properties_from_json }
+      before { @properties =  new_device_properties }
       before { History.stub(:base_uri).and_return(Settings.history.uri) }
 
       it "creates history" do
