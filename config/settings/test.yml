@@ -51,6 +51,11 @@ unite_node:
   physical_id: '<%= physical_id = "0x3a91fb2e" %>'
 history:
   uri: <%= "#{host}/histories/set_intensity" %>
+consumptions:
+  instantaneous:
+    uri: <%= "#{host}/consumptions/instantaneous" %>
+  durational:
+    uri: <%= "#{host}/consumptions/durational" %>
 validation: 
   valid_uri: 'http://example.com'
   not_valid_uri: 'example'

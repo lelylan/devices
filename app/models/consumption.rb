@@ -20,18 +20,39 @@ class Consumption
   validates :consumption, presence: true
   validates :unit, inclusion: { in: %w(kwh) }
   validates :occur_at, presence: true
+  validates :end_at, presence: true, if: :durational?
+  validates :duration, presence: true, if: :durational?
   
 
   # Normalize timings when the measurament type is durational
   # so that we can have occur_at, end_at and duration also if
   # one of them is missing.
   def normalize_timings
-    new_end_at   = calculate_end_at   if (occur_at and duration)
-    new_occur_at = calculate_occur_at if (end_at and duration)
-    new_duration = calculate_duration if (occur_time and end_time)
+    puts "::::::::::::::::::::::::::::::::::::"
+    puts ":::: occur_at " + occur_at.inspect
+    puts ":::: end_at " + end_at.inspect
+    puts ":::: duration " + duration.inspect
+
+    self.end_at   = calculate_end_at   if (occur_at and duration and end_at.nil?)
+    self.occur_at = calculate_occur_at if (end_at and duration and occur_at.nil?)
+    self.duration = calculate_duration if (occur_at and end_at and duration.nil?)
+
+    puts ":::: occur_at " + occur_at.inspect
+    puts ":::: end_at " + end_at.inspect
+    puts ":::: duration " + duration.inspect
+    puts "::::::::::::::::::::::::::::::::::::"
   end
 
   private 
+
+    def durational?
+      type == 'durational'
+    end
+
+    def instantaneous?
+      type == 'istantaneous'
+    end
+
     def calculate_end_at
       occur_at + duration
     end
@@ -41,6 +62,6 @@ class Consumption
     end
 
     def calculate_duration
-      end_time - occur_time
+      end_at - occur_at
     end
 end
