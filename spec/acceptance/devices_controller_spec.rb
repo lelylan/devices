@@ -21,6 +21,7 @@ feature "DevicesController" do
         should_have_device(@resource)
         should_not_have_device(@not_owned_resource)
         should_have_valid_json(page.body)
+        should_have_root_as('devices')
       end
     end
   end

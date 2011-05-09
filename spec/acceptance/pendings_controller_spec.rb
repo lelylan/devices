@@ -23,6 +23,7 @@ feature "PendingsController" do
         page.status_code.should == 200
         should_have_pending(@pending)
         should_have_valid_json(page.body)
+        should_have_root_as('pendings')
       end
 
       scenario "view pending properties" do

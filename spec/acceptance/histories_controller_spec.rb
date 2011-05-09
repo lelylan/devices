@@ -24,6 +24,7 @@ feature "HisotriesController" do
         should_have_history @history
         should_have_history @base_history
         should_have_valid_json(page.body)
+        should_have_root_as('histories')
       end
 
       scenario "view history properties" do
