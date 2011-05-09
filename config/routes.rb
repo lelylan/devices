@@ -26,6 +26,7 @@ Devices::Application.routes.draw do
     end
   end
 
+  get 'consumptions/instantaneous' => 'consumptions#index', defaults: {format: 'json'}, type: 'instantaneous' 
+  get 'consumptions/durational' => 'consumptions#index', defaults: {format: 'json'}, type: 'durational'
   resources :consumptions, except: 'update', defaults: {format: 'json'}
-
 end

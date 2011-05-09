@@ -10,7 +10,7 @@ feature "ConsumptionController" do
   context ".index" do
     before { @uri = "/consumptions?page=1&per=100" }
     before { @resource = Factory(:consumption) }
-    before { @other_resource = Factory(:durational_consumption) }
+    before { @durational_resource = Factory(:durational_consumption) }
     before { @not_owned_resource = Factory(:not_owned_consumption) }
 
     it_should_behave_like "protected resource", "visit(@uri)"
@@ -22,9 +22,23 @@ feature "ConsumptionController" do
         visit @uri
         page.status_code.should == 200
         should_have_consumption(@resource)
-        should_have_consumption(@other_resource)
+        should_have_consumption(@durational_resource)
         should_not_have_consumption(@not_owned_resource)
         should_have_valid_json(page.body)
+      end
+
+      scenario "view instantaneous resources" do
+        visit "consumptions/instantaneous?page=1&per=100"
+        page.status_code.should == 200
+        should_have_consumption(@resource)
+        page.should_not have_content @durational_resource.uri
+      end
+      
+      scenario "view durational resources" do
+        visit "consumptions/durational?page=1&per=100"
+        page.status_code.should == 200
+        should_have_consumption(@durational_resource)
+        page.should_not have_content @resource.uri
       end
     end
   end

@@ -33,6 +33,7 @@ class ConsumptionsController < ApplicationController
 
     def find_owned_resources
       @consumptions = Consumption.where(created_from: current_user.uri)
+      @consumptions = @consumptions.where(type: params[:type]) if params[:type]
     end
 
     def find_resource
