@@ -6,7 +6,7 @@ feature "FunctionsController" do
   before { Pending.destroy_all }
   before { History.destroy_all }
 
-  # PUT /devices/{device-id}/functions/{function-id}
+  # PUT /devices/{device-id}/functions?uri={function-uri}
   context ".update" do
     before { @resource = Factory(:device_complete) }
     before { @not_owned_resource = Factory(:not_owned_device) }
