@@ -13,6 +13,10 @@ Devices::Application.routes.draw do
   resources :devices, defaults: {format: 'json'} do
     resources :pendings, only: 'index'
     resources :histories, only: 'index'
+    resources :consumptions, only: %w(index create destroy) do
+      resource 'instantaneous', only: 'index', type: 'instantaneous'
+      resource 'durational', only: 'index', type: 'durational'
+    end
     member do
       put    "functions" => "functions#update"
       post   "physical"  => "physicals#create"
