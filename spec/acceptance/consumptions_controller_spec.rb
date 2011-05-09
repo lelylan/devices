@@ -45,48 +45,6 @@ feature "ConsumptionController" do
     end
   end
 
-  
-  # GET /devices/{device-id}/consumptions
-  # GET /devices/{device-id}/consumptions/instantaneous
-  # GET /devices/{device-id}/consumptions/durational
-  context ".index" do
-    context "restricted to a device" do
-      before { @device = Factory(:device) }
-      before { @uri = "#{host}/devices/#{@device.id}" }
-      before { @resource = Factory(:consumption) }
-      before { @another_resource = Factory(:another_consumption) }
-      before { @durational_resource = Factory(:durational_consumption) }
-      before { @another_durational_resource = Factory(:another_durational_consumption) }
-      
-      context "when logged in" do
-        before { basic_auth(@user) } 
-
-        scenario "view all resources" do
-          visit "#{@uri}/consumptions?page=1&per=100"
-          page.status_code.should == 200
-          should_have_consumption(@resource)
-          page.should_not have_content @another_resource.device_uri
-          should_have_valid_json(page.body)
-        end
-
-        scenario "view instantaneous resources" do
-          visit "#{@uri}/consumptions/instantaneous?page=1&per=100"
-          page.status_code.should == 200
-          save_and_open_page
-          should_have_consumption(@resource)
-          page.should_not have_content @another_resource.device_uri
-        end
-        
-        scenario "view durational resources" do
-          visit "#{@uri}/consumptions/durational?page=1&per=100"
-          page.status_code.should == 200
-          should_have_consumption(@durational_resource)
-          page.should_not have_content @another_durational_resource.device_uri
-        end
-      end
-    end
-  end
-
 
   # GET /consumptions/{consumption-id}
   context ".show" do
@@ -130,6 +88,54 @@ feature "ConsumptionController" do
 
         it_should_behave_like "rescued when not found", 
                               "visit @uri", "devices"
+      end
+    end
+  end
+
+  
+  
+  # GET /devices/{device-id}/consumptions
+  # GET /devices/{device-id}/consumptions/instantaneous
+  # GET /devices/{device-id}/consumptions/durational
+  context ".show" do
+    context "restricted to a device" do
+      before { @resource = Factory(:device) }
+      before { @not_owned_resource = Factory(:not_owned_device) }
+      before { @uri = "#{host}/devices/#{@resource.id}" }
+      before { @consumption = Factory(:consumption) }
+      before { @another_consumption = Factory(:another_consumption) }
+      before { @durational_consumption = Factory(:durational_consumption) }
+      before { @another_durational_consumption = Factory(:another_durational_consumption) }
+      
+      it_should_behave_like "protected resource", "visit(@uri)"
+
+      context "when logged in" do
+        before { basic_auth(@user) } 
+
+        scenario "view all resources" do
+          visit "#{@uri}/consumptions?page=1&per=100"
+          page.status_code.should == 200
+          should_have_consumption(@consumption)
+          page.should_not have_content @another_consumption.device_uri
+          should_have_valid_json(page.body)
+        end
+
+        scenario "view instantaneous resources" do
+          visit "#{@uri}/consumptions/instantaneous?page=1&per=100"
+          page.status_code.should == 200
+          should_have_consumption(@consumption)
+          page.should_not have_content @another_consumption.device_uri
+        end
+        
+        scenario "view durational resources" do
+          visit "#{@uri}/consumptions/durational?page=1&per=100"
+          page.status_code.should == 200
+          should_have_consumption(@durational_consumption)
+          page.should_not have_content @another_durational_consumption.device_uri
+        end
+
+        it_should_behave_like "rescued when not found", 
+                              "visit @uri", "devices", "consumptions"
       end
     end
   end
