@@ -5,20 +5,42 @@ class Consumption
 
   field :uri
   field :created_from
-  field :type, default: 'istantaneus'
-  field :energy, type: Float, default: '0.0'
+  field :type, default: 'instantaneous'
+  field :consumption, type: Float, default: 0.0
   field :unit, default: 'kwh'
   field :occur_at, type: Time
   field :end_at, type: Time
-  field :duration, type: Float, default: '0.0'
+  field :duration, type: Float, default: 0.0
 
-  attr_accessible :type, :energy, :unit
+  attr_accessible :type, :energy, :unit, :occur_at, :end_at, :duration
 
   validates :uri, presence: true, url: true
   validates :created_from, presence: true, url: true
-  validates :type, inclusion: { in: %w(istantaneus durational) }
-  validates :energy, presence: true
-  validates :unite, inclusion: { in %w(kwh) }
+  validates :type, inclusion: { in: %w(instantaneous durational) }
+  validates :consumption, presence: true
+  validates :unit, inclusion: { in: %w(kwh) }
   validates :occur_at, presence: true
   
+
+  # Normalize timings when the measurament type is durational
+  # so that we can have occur_at, end_at and duration also if
+  # one of them is missing.
+  def normalize_timings
+    new_end_at   = calculate_end_at   if (occur_at and duration)
+    new_occur_at = calculate_occur_at if (end_at and duration)
+    new_duration = calculate_duration if (occur_time and end_time)
+  end
+
+  private 
+    def calculate_end_at
+      occur_at + duration
+    end
+
+    def calculate_occur_at
+      end_at - duration
+    end
+
+    def calculate_duration
+      end_time - occur_time
+    end
 end
