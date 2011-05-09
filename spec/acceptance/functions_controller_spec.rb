@@ -47,6 +47,7 @@ feature "FunctionsController" do
       end
 
 
+      # TODO: propbably these makes more senso on /properties
       context "with no physical device" do
         before { @resource = Factory(:device_no_physical) }
         before { @uri = "#{host}/devices/#{@resource.id}/functions?uri=#{Settings.functions.set_intensity.uri}" }
@@ -56,7 +57,7 @@ feature "FunctionsController" do
         scenario "update device properties" do
           page.status_code.should == 200
           page.should have_content('"' + Settings.properties.intensity.new_value + '"')
-          page.should have_content('"' + Settings.properties.status.default_value + '"')
+          page.should have_content('"' + Settings.properties.status.new_value + '"')
           should_have_valid_json(page.body)
         end
         
@@ -70,7 +71,7 @@ feature "FunctionsController" do
           scenario "represent new properties values" do
             should_have_history @history
             page.should have_content('"' + Settings.properties.intensity.new_value + '"')
-            page.should have_content('"' + Settings.properties.status.default_value + '"')
+            page.should have_content('"' + Settings.properties.status.new_value + '"')
           end
         end
       end
