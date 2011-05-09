@@ -10,6 +10,7 @@ feature "ConsumptionController" do
   context ".index" do
     before { @uri = "/consumptions?page=1&per=100" }
     before { @resource = Factory(:consumption) }
+    before { @another_resource = Factory(:another_consumption) }
     before { @durational_resource = Factory(:durational_consumption) }
     before { @not_owned_resource = Factory(:not_owned_consumption) }
 
@@ -23,6 +24,7 @@ feature "ConsumptionController" do
         page.status_code.should == 200
         should_have_consumption(@resource)
         should_have_consumption(@durational_resource)
+        should_have_consumption(@another_resource)
         should_not_have_consumption(@not_owned_resource)
         should_have_valid_json(page.body)
       end
@@ -42,6 +44,49 @@ feature "ConsumptionController" do
       end
     end
   end
+
+  
+  # GET /devices/{device-id}/consumptions
+  # GET /devices/{device-id}/consumptions/instantaneous
+  # GET /devices/{device-id}/consumptions/durational
+  context ".index" do
+    context "restricted to a device" do
+      before { @device = Factory(:device) }
+      before { @uri = "#{host}/devices/#{@device.id}" }
+      before { @resource = Factory(:consumption) }
+      before { @another_resource = Factory(:another_consumption) }
+      before { @durational_resource = Factory(:durational_consumption) }
+      before { @another_durational_resource = Factory(:another_durational_consumption) }
+      
+      context "when logged in" do
+        before { basic_auth(@user) } 
+
+        scenario "view all resources" do
+          visit "#{@uri}/consumptions?page=1&per=100"
+          page.status_code.should == 200
+          should_have_consumption(@resource)
+          page.should_not have_content @another_resource.device_uri
+          should_have_valid_json(page.body)
+        end
+
+        scenario "view instantaneous resources" do
+          visit "#{@uri}/consumptions/instantaneous?page=1&per=100"
+          page.status_code.should == 200
+          save_and_open_page
+          should_have_consumption(@resource)
+          page.should_not have_content @another_resource.device_uri
+        end
+        
+        scenario "view durational resources" do
+          visit "#{@uri}/consumptions/durational?page=1&per=100"
+          page.status_code.should == 200
+          should_have_consumption(@durational_resource)
+          page.should_not have_content @another_durational_resource.device_uri
+        end
+      end
+    end
+  end
+
 
   # GET /consumptions/{consumption-id}
   context ".show" do
