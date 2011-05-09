@@ -53,11 +53,31 @@ describe Pending do
     end
 
     context "with one property" do
+      before { @pending.update_pending_properties([@applied_properties.first]) }
       it "leaves open the pending resource" do
-        @pending.update_pending_properties([@applied_properties.first])
         @pending.pending_status.should == true
-        closed = @pending.pending_properties.where(pending_status: false)
-        closed.should have(1).items
+      end
+
+      it "has one pending property" do
+        pending_properties = @pending.pending_properties.where(pending_status: false)
+        pending_properties.should have(1).items
+      end
+    end
+
+    context "with one 'not matching value' property" do
+      before { @property = @applied_properties.first }
+      before { @property[:value] = "5.0" }
+      before { @pending.update_pending_properties([@property]) }
+
+      it "populates transitional values" do
+        @pending.pending_status.should == true
+        pending_property = @pending.pending_properties.where(uri: @property[:uri]).first
+        pending_property.transitional_values.should include "5.0"
+      end
+
+      it "has two pending properties" do
+        pending_properties = @pending.pending_properties.where(pending_status: true)
+        pending_properties.should have(2).items
       end
     end
   end
