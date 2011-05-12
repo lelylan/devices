@@ -10,6 +10,6 @@
                               :locals => { connections: device.device_properties } %>    ],
     "functions": [ <%=render :partial => "/devices/device_functions",
                             :locals => { connections: device.device_functions } %>    ],
-    "physical_device": {<%= render :partial => "devices/device_physical",
-                                  :locals => { connection: device.device_physical } %>  }
+    "physical_device": { <%= render :partial => "devices/device_physical",
+                                  :locals => { connection: device.device_physical } %>    }
   }

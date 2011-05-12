@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 feature "PhysicalController" do
   before { host! "http://" + host }
   before { @user = Factory(:user) }
-  before { @resource = Factory(:device) }
+  before { @resource = Factory(:device_no_physical) }
   before { @not_owned_resource = Factory(:not_owned_device) }
 
   let(:params) {{ physical_id: Settings.unite_node.physical_id,

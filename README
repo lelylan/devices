@@ -1,256 +1,294 @@
-== Welcome to Rails
+= devices.riflect.me
 
-Rails is a web-application framework that includes everything needed to create
-database-backed web applications according to the Model-View-Control pattern.
-
-This pattern splits the view (also called the presentation) into "dumb"
-templates that are primarily responsible for inserting pre-built data in between
-HTML tags. The model contains the "smart" domain objects (such as Account,
-Product, Person, Post) that holds all the business logic and knows how to
-persist themselves to a database. The controller handles the incoming requests
-(such as Save New Account, Update Product, Show Post) by manipulating the model
-and directing data to the view.
-
-In Rails, the model is handled by what's called an object-relational mapping
-layer entitled Active Record. This layer allows you to present the data from
-database rows as objects and embellish these data objects with business logic
-methods. You can read more about Active Record in
-link:files/vendor/rails/activerecord/README.html.
-
-The controller and view are handled by the Action Pack, which handles both
-layers by its two parts: Action View and Action Controller. These two layers
-are bundled in a single package due to their heavy interdependence. This is
-unlike the relationship between the Active Record and Action Pack that is much
-more separate. Each of these packages can be used independently outside of
-Rails. You can read more about Action Pack in
-link:files/vendor/rails/actionpack/README.html.
+The Device Service defines a set of API to create, vision and control any device you want.
 
 
-== Getting Started
+= Installation
 
-1. At the command prompt, create a new Rails application:
-       <tt>rails new myapp</tt> (where <tt>myapp</tt> is the application name)
+For the Type Service to work you need to have
 
-2. Change directory to <tt>myapp</tt> and start the web server:
-       <tt>cd myapp; rails server</tt> (run with --help for options)
+* {Ruby 1.9.2}[www.ruby-lang.org/en/] (use rvm[http://screencasts.org/episodes/how-to-use-rvm?utm_source=rubyweekly&utm_medium=email] to manage versions).
+* {MongoDB}[http://www.mongodb.org/].
 
-3. Go to http://localhost:3000/ and you'll see:
-       "Welcome aboard: You're riding Ruby on Rails!"
+To install the project run the following commands (remember to run <tt>$ mongod</tt> before)
 
-4. Follow the guidelines to start developing your application. You can find
-the following resources handy:
-
-* The Getting Started Guide: http://guides.rubyonrails.org/getting_started.html
-* Ruby on Rails Tutorial Book: http://www.railstutorial.org/
+  $ git clone git@github.com:Lelylan/types.git
+  $ cd types
+  $ bundle install
+  $ rake spec
+  $ rails s
 
 
-== Debugging Rails
+= API Documentation
 
-Sometimes your application goes wrong. Fortunately there are a lot of tools that
-will help you debug it and get it back on the rails.
+All API supposes you have created a user with following credentials
 
-First area to check is the application log files. Have "tail -f" commands
-running on the server.log and development.log. Rails will automatically display
-debugging and runtime information to these files. Debugging info will also be
-shown in the browser on requests from 127.0.0.1.
+* <b>email</b>: alice@example.com
+* <b>password</b>: example
 
-You can also log your own messages directly into the log file from your code
-using the Ruby logger class from inside your controllers. Example:
+The requests accept only the JSON format, which can be set in two ways
 
-  class WeblogController < ActionController::Base
-    def destroy
-      @weblog = Weblog.find(params[:id])
-      @weblog.destroy
-      logger.info("#{Time.now} Destroyed Weblog ID ##{@weblog.id}!")
-    end
-  end
-
-The result will be a message in your log file along the lines of:
-
-  Mon Oct 08 14:22:29 +1000 2007 Destroyed Weblog ID #1!
-
-More information on how to use the logger is at http://www.ruby-doc.org/core/
-
-Also, Ruby documentation can be found at http://www.ruby-lang.org/. There are
-several books available online as well:
-
-* Programming Ruby: http://www.ruby-doc.org/docs/ProgrammingRuby/ (Pickaxe)
-* Learn to Program: http://pine.fm/LearnToProgram/ (a beginners guide)
-
-These two books will bring you up to speed on the Ruby language and also on
-programming in general.
+* <b>header</b>: adding the <tt>"Accept: application/json</tt> header
+* <b>suffix</b>: adding <tt>.json</tt> at the end of the URI
 
 
-== Debugger
+== Devices
 
-Debugger support is available through the debugger command when you start your
-Mongrel or WEBrick server with --debugger. This means that you can break out of
-execution at any point in the code, investigate and change the model, and then,
-resume execution! You need to install ruby-debug to run the server in debugging
-mode. With gems, use <tt>sudo gem install ruby-debug</tt>. Example:
+A device is everything you interact with everyday of your life. In the simplest form every device belongs to a 
+house and is characterized by a type (e.g dimmer, light, gate) through which the device inherit its properties 
+(e.g status and intensity for a dimmer) and functions (e.g. turn on, turn off and set intensity for a dimmer).
 
-  class WeblogController < ActionController::Base
-    def index
-      @posts = Post.find(:all)
-      debugger
-    end
-  end
+=== Get all devices
 
-So the controller will accept the action, run the first line, then present you
-with a IRB prompt in the server window. Here you can do things like:
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       http://localhost:3000/devices
 
-  >> @posts.inspect
-  => "[#<Post:0x14a6be8
-          @attributes={"title"=>nil, "body"=>nil, "id"=>"1"}>,
-       #<Post:0x14a6620
-          @attributes={"title"=>"Rails", "body"=>"Only ten..", "id"=>"2"}>]"
-  >> @posts.first.title = "hello from a debugger"
-  => "hello from a debugger"
+=== Get a device
 
-...and even better, you can examine how your runtime objects actually work:
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       http://localhost:3000/device/{device-id}
 
-  >> f = @posts.first
-  => #<Post:0x13630c4 @attributes={"title"=>nil, "body"=>nil, "id"=>"1"}>
-  >> f.
-  Display all 152 possibilities? (y or n)
+=== Create a property
 
-Finally, when you're ready to resume execution, you can enter "cont".
+  curl -u alice@example.com:example -i \
+       -H "Accept: application/json" \
+       -X POST -d '{"name":"Intensity", "default": "0.0", "values":["0.0", "2.0", "4.0", "6.0", "8.0", "10.0"]}' \
+       http://localhost:3000/properties
 
+The accepted params are:
 
-== Console
+* <b>name</b>: describe the property
+* <b>default</b>: default value that is inherited from the device property when created
+* <b>values</b>: accepted values from the property. This is not mandatory, and if the user send a value different from the list, the service will not raise any error. Anyway it is suggested to avoid unexpected behaviours and to give a list of accepted values to UIs.
 
-The console is a Ruby shell, which allows you to interact with your
-application's domain model. Here you'll have all parts of the application
-configured, just like it is when the application is running. You can inspect
-domain models, change values, and save to the database. Starting the script
-without arguments will launch it in the development environment.
+=== Update a property
 
-To start the console, run <tt>rails console</tt> from the application
-directory.
+  curl -u alice@example.com:example -i \
+       -H "Accept: application/json" \
+       -X PUT -d '{"name":"Updated Intensity", "default": "10.0"}' \
+       http://localhost:3000/properties/{property-id}
 
-Options:
+=== Destroy a property
 
-* Passing the <tt>-s, --sandbox</tt> argument will rollback any modifications
-  made to the database.
-* Passing an environment name as an argument will load the corresponding
-  environment. Example: <tt>rails console production</tt>.
-
-To reload your controllers and models after launching the console run
-<tt>reload!</tt>
-
-More information about irb can be found at:
-link:http://www.rubycentral.com/pickaxe/irb.html
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" -X DELETE \
+       http://localhost:3000/properties/{property-id}
 
 
-== dbconsole
+== Functions
 
-You can go to the command line of your database directly through <tt>rails
-dbconsole</tt>. You would be connected to the database with the credentials
-defined in database.yml. Starting the script without arguments will connect you
-to the development database. Passing an argument will connect you to a different
-database, like <tt>rails dbconsole production</tt>. Currently works for MySQL,
-PostgreSQL and SQLite 3.
+Functions change the status of a device, through the change of its properties. Think at the functions as your daily interactions 
+with all devices you have in your house, where you turn on a lights, close doors and raise temperature in your bedroom. Functions 
+make easy to interact with your devices, as you do everyday of your life.
 
-== Description of Contents
+=== Get all functions
 
-The default directory structure of a generated Ruby on Rails application:
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       http://localhost:3000/functions
 
-  |-- app
-  |   |-- controllers
-  |   |-- helpers
-  |   |-- mailers
-  |   |-- models
-  |   `-- views
-  |       `-- layouts
-  |-- config
-  |   |-- environments
-  |   |-- initializers
-  |   `-- locales
-  |-- db
-  |-- doc
-  |-- lib
-  |   `-- tasks
-  |-- log
-  |-- public
-  |   |-- images
-  |   |-- javascripts
-  |   `-- stylesheets
-  |-- script
-  |-- test
-  |   |-- fixtures
-  |   |-- functional
-  |   |-- integration
-  |   |-- performance
-  |   `-- unit
-  |-- tmp
-  |   |-- cache
-  |   |-- pids
-  |   |-- sessions
-  |   `-- sockets
-  `-- vendor
-      `-- plugins
+=== Get a function
 
-app
-  Holds all the code that's specific to this particular application.
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       http://localhost:3000/functions/{function-id}
 
-app/controllers
-  Holds controllers that should be named like weblogs_controller.rb for
-  automated URL mapping. All controllers should descend from
-  ApplicationController which itself descends from ActionController::Base.
+=== Create a function
 
-app/models
-  Holds models that should be named like post.rb. Models descend from
-  ActiveRecord::Base by default.
+  curl -u alice@example.com:example -i \
+       -H "Accept: application/json" \
+       -X POST -d '{"name":"Set intensity"}' \
+       http://localhost:3000/functions
 
-app/views
-  Holds the template files for the view that should be named like
-  weblogs/index.html.erb for the WeblogsController#index action. All views use
-  eRuby syntax by default.
+The accepted params are:
 
-app/views/layouts
-  Holds the template files for layouts to be used with views. This models the
-  common header/footer method of wrapping views. In your views, define a layout
-  using the <tt>layout :default</tt> and create a file named default.html.erb.
-  Inside default.html.erb, call <% yield %> to render the view using this
-  layout.
+* <b>name</b>: describe the function
 
-app/helpers
-  Holds view helpers that should be named like weblogs_helper.rb. These are
-  generated for you automatically when using generators for controllers.
-  Helpers can be used to wrap functionality for your views into methods.
+=== Update a property
 
-config
-  Configuration files for the Rails environment, the routing map, the database,
-  and other dependencies.
+  curl -u alice@example.com:example -i \
+       -H "Accept: application/json" \
+       -X PUT -d '{"name":"Update set intensity name"}' \
+       http://localhost:3000/functions/{function-id}
 
-db
-  Contains the database schema in schema.rb. db/migrate contains all the
-  sequence of Migrations for your schema.
+=== Destroy a property
 
-doc
-  This directory is where your application documentation will be stored when
-  generated using <tt>rake doc:app</tt>
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" -X DELETE \
+       http://localhost:3000/functions/{function-id}
 
-lib
-  Application specific libraries. Basically, any kind of custom code that
-  doesn't belong under controllers, models, or helpers. This directory is in
-  the load path.
 
-public
-  The directory available for the web server. Contains subdirectories for
-  images, stylesheets, and javascripts. Also contains the dispatchers and the
-  default HTML files. This should be set as the DOCUMENT_ROOT of your web
-  server.
+=== Property connection
 
-script
-  Helper scripts for automation and generation.
+When a function is applied, is important to "explain" how the function changes the device's properties. For this reason every 
+function needs the property connection which explains how the property change.
 
-test
-  Unit and functional tests along with fixtures. When using the rails generate
-  command, template test files will be generated for you and placed in this
-  directory.
 
-vendor
-  External libraries that the application depends on. Also includes the plugins
-  subdirectory. If the app has frozen rails, those gems also go here, under
-  vendor/rails/. This directory is in the load path.
+==== Get a connected property
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       http://localhost:3000/functions/{function-id}/properties?uri=http://localhost:3000/properties/{property-id}
+
+==== Connect a property
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       -X POST -d '{"uri":"http://localhost:3000/properties/{property-id}", "secret":"true", "before":"false"}' \
+       http://localhost:3000/functions/{function-id}/properties
+
+* <b>uri</b>: property uri to connect
+* <b>secret</b>: used to remember that any third party application can not store a function value (for example in a scenario), but need to always ask it to the final user. Lets think to an alarm system for example. If a service offers a "scenario" to open the house and to deactivate the alarm system, the secret code (labeled as secret) will need to be asked to the user.
+* <b>before</b>: user to tell to the unite node that this property needs to be examined before applying any change. For example if we want to deactivate the alarm we send the property code labeled as "before", and the unite node will understand that this property will not be changed, but will be used as precondition to allow the device changes, that in this case is to deactivate the alarm.
+* <b>values</b>: identify the value that the property have to set when the function is called. If empty, the user will send the value (see function call on device services). If set to a string value, it will be used as default value, also if it can still can be override.
+
+==== Update a connected property
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       -X PUT -d '{"secret":"false", "before":"true"}' \
+       http://localhost:3000/functions/{function-id}/properties?uri=http://localhost:3000/properties/{property-id}
+
+==== Disconnect a property
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" -X DELETE \
+       http://localhost:3000/functions/{function-id}/properties?uri=http://localhost:3000/properties/{property-id}
+
+
+== Statuses
+
+Properties are not enough to describe the status of a device. Think at a roller shutter for example. It has the property 
+“status” that can be open or close, but also opening or closing when it is "in action". To have complete and meaningful 
+messages describing the status of a device in a specific moment of its life, Lelylan defines the status resource which give 
+a definition of the device status through the combination of all properties values in a specific moment, through the combination
+of its properties and their <b>pending status</b>.
+
+Once you have the status of the device, you also have a message associated to it which can be used to give advanced info 
+to the final user and improve the representations of your device. Even more, using statuses you can easily define “png” 
+(associate an icon to every device status) or “mp3” representations of your devices which makes this resource pretty useful.
+
+
+=== Get all statuses
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       http://localhost:3000/statuses
+
+=== Get a status
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       http://localhost:3000/statuses/{status-id}
+
+=== Create a status
+
+  curl -u alice@example.com:example -i \
+       -H "Accept: application/json" \
+       -X POST -d '{"name":"Setting intensity", "template": "The <device:name/> is setting the intensity to <device:uri/>/properties?uri=devices.dev/devices/{device-id}/properties/value?uri=types.dev/properties/{property-id}} "}' \
+       http://localhost:3000/statuses
+
+TODO: Think if template could be much more clear as template_message.
+TODO: Rethink at the template system, if it can be simplified, because like this seems pretty complex
+TODO: Check if the authomatically generated message can always be used or if there is really the need of a template system. If yes
+find a way to simplify it.
+TODO: redefine a working order system.
+
+The accepted params are:
+
+* <b>name</b>: describe the status
+* <b>template</b>: by default the type system auto generate a message status where it list the property and its value. In the case you think this is not enough, and you want to have a much more personalized message, you can do it through the definition of a template, where you can access the device name <device:name> and properties value (as you can see in the sample).
+
+=== Update a status
+
+  curl -u alice@example.com:example -i \
+       -H "Accept: application/json" \
+       -X PUT -d '{"name":"Setting intensity value"}' \
+       http://localhost:3000/statuses/{status-id}
+
+
+=== Destroy a status
+
+  curl -u alice@example.com:example -i \
+       -H "Accept: application/json" \
+       -X DELETE -d '{"name":"Setting intensity value"}' \
+       http://localhost:3000/statuses/{status-id}
+
+
+=== Get a device status
+
+  curl -u alice@example.com:example -i \
+       -H "Accept: application/json" \
+       -X POST -d '{"device": "DEVICE_REPRESENTATION"}' \
+       http://localhost:3000/statuses/device
+
+TODO: Rethink this service and think if there is the possibility to get the message with one request and not with a 
+double (first find the status and then find the message)
+
+=== Get message status
+
+  curl -u alice@example.com:example -i \
+       -H "Accept: application/json" \
+       -X POST -d '{"device": "DEVICE_REPRESENTATION"}' \
+       http://localhost:3000/statuses/{status-id}/message
+
+
+=== Status icon (visual representation)
+
+==== Get a status icon
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       http://localhost:3000/statuses/{status-id}/icon
+
+==== Create the status icon
+
+  curl -u alice@example.com:example \
+       -s -F icon=@spec/fixtures/media/square.png \
+       -X PUT http://localhost:3000/statuses/{status-id}/icon
+
+
+=== Property connection
+
+Define which properties define the status of a device in a certain moment of its life.
+
+==== Get a connected property
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       http://localhost:3000/statuses/{status-id}/properties?uri=http://localhost:3000/properties/{property-id}
+
+==== Connect a property
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       -X POST -d '{"uri":"http://localhost:3000/properties/{property-id}", "pending":"true"}' \
+       http://localhost:3000/statuses/{status-id}/properties
+
+* <b>uri</b>: property uri to connect
+* <b>pending</b>: used to know if the property is changed on the device or not. 
+* <b>values</b>: identify the value that the property must have to match the status. There must be more statuses that can match a 
+specific device representation. In this cases an order must be defined and the first matching will be chosen.
+
+==== Update a connected property
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" \
+       -X PUT -d '{"pending": "true"}' \
+       http://localhost:3000/statuses/{status-id}/properties?uri=http://localhost:3000/properties/{property-id}
+
+==== Disconnect a property
+
+  curl -u alice@example.com:example -i -L \
+       -H "Accept: application/json" -X DELETE \
+       http://localhost:3000/statuses/{statuses-id}/properties?uri=http://localhost:3000/properties/{property-id}
+
+
+== Author
+
+== Changelog
+
+== License
+
