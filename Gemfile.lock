@@ -184,7 +184,7 @@ DEPENDENCIES
   rails (= 3.0.7)
   rails_config
   rb-fsevent
-  rspec-rails (= 2.4.1)
+  rspec-rails
   selenium-webdriver
   shoulda
   steak

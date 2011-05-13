@@ -26,7 +26,6 @@ feature "ConsumptionController" do
         should_have_consumption(@durational_resource)
         should_have_consumption(@another_resource)
         should_not_have_consumption(@not_owned_resource)
-        save_and_open_page
         should_have_valid_json(page.body)
         should_have_root_as('consumptions')
       end

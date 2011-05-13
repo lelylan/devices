@@ -3,9 +3,10 @@ require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 feature "DevicesController" do
   before { host! "http://" + host }
   before { @user = Factory(:user) }
+  before { Device.destroy_all }
 
 
-  # GET /devices/
+  # GET /devices
   context ".index" do
     before { @uri = "/devices?page=1&per=100" }
     before { @resource = Factory(:device) }
@@ -18,6 +19,7 @@ feature "DevicesController" do
       scenario "view all resources" do
         visit @uri
         page.status_code.should == 200
+        save_and_open_page
         should_have_device(@resource)
         should_not_have_device(@not_owned_resource)
         should_have_valid_json(page.body)
