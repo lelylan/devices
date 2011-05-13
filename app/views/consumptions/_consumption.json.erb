@@ -1,8 +1,8 @@
   {
     "id": "<%=consumption.id.as_json%>",
     "uri": "<%=consumption.uri%>",
-    "created_from": "<%=consumption.created_from%>",
-    "device_uri": "<%=consumption.device_uri%>",
+    "created_from": { "uri": "<%=consumption.created_from%>" },
+    "device": { "uri": "<%=consumption.device_uri%>" },
     "consumption": "<%=consumption.consumption%>",
     "unit": "<%=consumption.unit%>",
     "occur_at": "<%=consumption.occur_at%>",
