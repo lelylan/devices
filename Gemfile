@@ -16,7 +16,7 @@ gem "rails_config"
 gem 'delorean'
 
 group :development, :test do
-  gem 'rspec-rails', '2.4.1'
+  gem 'rspec-rails'
   gem 'steak'
   gem 'capybara'
   gem 'selenium-webdriver'
