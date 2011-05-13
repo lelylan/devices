@@ -77,6 +77,7 @@ feature "DevicesController" do
       scenario "not valid params" do
         page.driver.post(@uri, {}.to_json)
         should_have_a_not_valid_resource
+        should_have_valid_json(page.body)
       end
     end
   end
