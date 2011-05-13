@@ -6,12 +6,12 @@ class PhysicalsController < ApplicationController
   def create
     @device.device_physicals.create!(json_body)
     @device.destroy_previous_physical
-    render "/devices/show", status: 201, location: @device.uri
+    render '/devices/show', status: 201, location: @device.uri
   end
 
   def destroy
     @device.device_physicals.destroy_all
-    head 204
+    render '/devices/show'
   end
   
 

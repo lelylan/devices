@@ -27,7 +27,7 @@ feature "ConsumptionController" do
         should_have_consumption(@another_resource)
         should_not_have_consumption(@not_owned_resource)
         should_have_valid_json(page.body)
-        should_have_root_as('consumptions')
+        should_have_root_as('resources')
       end
 
       scenario "view instantaneous resources" do
@@ -209,8 +209,10 @@ feature "ConsumptionController" do
       scenario "delete resource" do
         lambda {
           page.driver.delete(@uri, {}.to_json)
-          page.status_code.should == 204
         }.should change{ Consumption.count }.by(-1)
+        page.status_code.should == 200
+        should_have_consumption(@resource)
+        should_have_valid_json(page.body)
       end
 
       it_should_behave_like "rescued when not found",

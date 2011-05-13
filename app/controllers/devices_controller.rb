@@ -31,7 +31,7 @@ class DevicesController < ApplicationController
 
   def destroy
     @device.destroy
-    head 204
+    render "show", status: 200
   end
 
 

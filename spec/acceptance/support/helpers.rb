@@ -22,7 +22,6 @@ module HelperMethods
 
   def should_have_root_as(resource_name)
     page.should have_content('"' + resource_name + '"')
-    page.should_not have_content('"resources"')
   end
 end
 

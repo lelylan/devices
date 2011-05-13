@@ -15,9 +15,9 @@ class ConsumptionsController < ApplicationController
   def create
     @consumption = Consumption.base(json_body, request, current_user)
     if @consumption.save
-      render "show", status: 201, location: @consumption.uri
+      render 'show', status: 201, location: @consumption.uri
     else
-      render_422 "notifications.document.not_valid", @consumption.errors
+      render_422 'notifications.document.not_valid', @consumption.errors
     end
   end
 
@@ -27,7 +27,7 @@ class ConsumptionsController < ApplicationController
 
   def destroy
     @consumption.destroy
-    head 204
+    render 'show', status: 200
   end
 
 

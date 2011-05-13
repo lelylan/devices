@@ -59,7 +59,7 @@ feature "PhysicalController" do
         @resource.device_physicals.create!(params)
         @resource.device_physicals.should have(1).item
         page.driver.delete(@uri)
-        page.status_code.should == 204
+        page.status_code.should == 200
         @resource.reload.device_physicals.should have(0).items
       end
 

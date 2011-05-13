@@ -19,11 +19,10 @@ feature "DevicesController" do
       scenario "view all resources" do
         visit @uri
         page.status_code.should == 200
-        save_and_open_page
         should_have_device(@resource)
         should_not_have_device(@not_owned_resource)
         should_have_valid_json(page.body)
-        should_have_root_as('devices')
+        should_have_root_as('resources')
       end
     end
   end
@@ -136,8 +135,10 @@ feature "DevicesController" do
       scenario "delete resource" do
         lambda {
           page.driver.delete(@uri, {}.to_json)
-          page.status_code.should == 204
         }.should change{ Device.count }.by(-1)
+        page.status_code.should == 200
+        should_have_device(@resource)
+        should_have_valid_json(page.body)
       end
 
       it_should_behave_like "rescued when not found",
