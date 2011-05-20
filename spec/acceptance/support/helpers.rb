@@ -20,11 +20,12 @@ module HelperMethods
     lambda {JSON.parse(body)}.should_not raise_error
   end
 
+  # Root key for a list of resources
   def should_have_root_as(resource_name)
     page.should have_content('"' + resource_name + '"')
   end
 
-  # Check correct generation single URI on pagination
+  # Check correct URI generation for pagination
   def should_have_pagination_uri(type, options)
     options = options.dup
     path = options.delete(:path) 
@@ -33,9 +34,9 @@ module HelperMethods
     page.should have_content uri
   end
 
-  # Check the existence of pagination on index views
-  def should_have_pagination(resource)
-    params = { page: Settings.pagination.page, per: Settings.pagination.per, resource: resource}
+  # Check pagination existance on intex views
+  def should_have_pagination(path)
+    params = { page: Settings.pagination.page, per: Settings.pagination.per, path: path}
     should_have_pagination_uri('first', params)
     should_have_pagination_uri('previous', params)
     should_have_pagination_uri('next', params)

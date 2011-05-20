@@ -22,7 +22,7 @@ feature "PendingsController" do
       scenario "view device pending resources" do
         page.status_code.should == 200
         should_have_pending(@pending)
-        should_have_pagination("devices/#{@resource.id}/pendings")
+        should_have_pagination(@uri)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
       end

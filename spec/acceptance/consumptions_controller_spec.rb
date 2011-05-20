@@ -10,7 +10,7 @@ feature "ConsumptionController" do
   # GET /consumptions?type=instantaneous
   # GET /consumptions?type=durational
   context ".index" do
-    before { @uri = "/consumptions?page=1&per=100" }
+    before { @uri = "/consumptions" }
     before { @resource = Factory(:consumption) }
     before { @another_resource = Factory(:another_consumption) }
     before { @durational_resource = Factory(:durational_consumption) }
@@ -29,7 +29,7 @@ feature "ConsumptionController" do
         should_have_consumption(@another_resource)
         should_not_have_consumption(@not_owned_resource)
         current_url.should_not match /type=/
-        should_have_pagination('consumptions')
+        should_have_pagination(@uri)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
       end
