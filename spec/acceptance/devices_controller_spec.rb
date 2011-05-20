@@ -30,7 +30,7 @@ feature "DevicesController" do
 
   # GET /devices/{device-id}
   context ".show" do
-    before { @resource = Factory(:device) }
+    before { @resource = Factory(:device_complete) }
     before { @uri = "/devices/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_device) }
 

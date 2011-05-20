@@ -52,9 +52,9 @@ module Lelylan
       end
 
       def page_url_for(page)
-        host = "#{request.protocol}#{request.host_with_port}/#{model_klass.to_s.downcase.pluralize}"
-        host += "?page=#{page}&per=#{params[:per]}"
-        host += "&type=#{params[:type]}" if params[:type]
+        query_string = request.query_string.gsub(/page=(\d*)/, "page=#{page}")
+        host = "#{request.protocol}#{request.host_with_port}/#{model_klass.to_s.downcase.pluralize}?#{query_string}"
+        return host
       end
 
 
