@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   before_filter :authenticate
-  before_filter :set_pagination, only: 'index'
+  before_filter :paginate, only: 'index'
 
   helper_method :json_body
   helper_method :current_user

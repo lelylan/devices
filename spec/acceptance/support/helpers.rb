@@ -23,6 +23,20 @@ module HelperMethods
   def should_have_root_as(resource_name)
     page.should have_content('"' + resource_name + '"')
   end
+
+  def should_have_pagination_uri(type, options)
+    resource = options.delete(:resource) 
+    uri = "\"#{type}\": \"http://www.example.com/#{resource}?page=#{options[:page]}&per=#{options[:per]}"
+    page.should have_content uri
+  end
+
+  # Simply check the ezistence
+  def should_have_test_pagination(resource)
+    should_have_pagination_uri('first', page: 1, per: 100, resource: resource)
+    should_have_pagination_uri('previous', page: 1, per: 100, resource: resource)
+    should_have_pagination_uri('next', page: 1, per: 100, resource: resource)
+    should_have_pagination_uri('last', page: 1, per: 100, resource: resource)
+  end
 end
 
 RSpec.configuration.include HelperMethods, :type => :acceptance
