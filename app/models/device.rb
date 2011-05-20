@@ -88,10 +88,23 @@ class Device
   # PENDING
   # --------
 
+  # Create a pending resource
   def create_pending(properties, function, request)
     pending = Pending.create_pending(self, function, request)
     pending.create_pending_properties(self, properties)
   end
+
+  # Update the pending values for every property
+  def update_pending_properties
+    pendings = open_pendings_for(self.uri)
+    pendings.each do |pending|
+      p.update_pending_properties(properties)
+    end
+    
+  end
+  
+
+  def 
 
   # ------
   # EXTRA
