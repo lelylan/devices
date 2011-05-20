@@ -24,18 +24,22 @@ module HelperMethods
     page.should have_content('"' + resource_name + '"')
   end
 
+  # Check correct generation single URI on pagination
   def should_have_pagination_uri(type, options)
-    resource = options.delete(:resource) 
-    uri = "\"#{type}\": \"http://www.example.com/#{resource}?page=#{options[:page]}&per=#{options[:per]}"
+    options = options.dup
+    path = options.delete(:path) 
+    uri = "\"#{type}\": \"#{host}#{path}?page=#{options[:page]}&per=#{options[:per]}"
+    uri += "&type=#{options[:type]}" if options[:type]
     page.should have_content uri
   end
 
-  # Simply check the ezistence
-  def should_have_test_pagination(resource)
-    should_have_pagination_uri('first', page: 1, per: 100, resource: resource)
-    should_have_pagination_uri('previous', page: 1, per: 100, resource: resource)
-    should_have_pagination_uri('next', page: 1, per: 100, resource: resource)
-    should_have_pagination_uri('last', page: 1, per: 100, resource: resource)
+  # Check the existence of pagination on index views
+  def should_have_pagination(resource)
+    params = { page: Settings.pagination.page, per: Settings.pagination.per, resource: resource}
+    should_have_pagination_uri('first', params)
+    should_have_pagination_uri('previous', params)
+    should_have_pagination_uri('next', params)
+    should_have_pagination_uri('last', params)
   end
 end
 

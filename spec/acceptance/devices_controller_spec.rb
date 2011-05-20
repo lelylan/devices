@@ -21,6 +21,7 @@ feature "DevicesController" do
         page.status_code.should == 200
         should_have_device(@resource)
         should_not_have_device(@not_owned_resource)
+        should_have_pagination('devices')
         should_have_valid_json(page.body)
         should_have_root_as('resources')
       end

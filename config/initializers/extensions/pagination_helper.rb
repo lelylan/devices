@@ -96,7 +96,7 @@ module Lelylan
         # Create the paginated URI
         def page_uri_for(page)
           query_string = request.query_string.gsub(/page=(\d*)/, "page=#{page}")
-          host = "#{request.protocol}#{request.host_with_port}/#{model_klass.to_s.downcase.pluralize}?#{query_string}"
+          host = "#{request.protocol}#{request.host_with_port}#{request.path}?#{query_string}"
           return host
         end
 

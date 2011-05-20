@@ -4,39 +4,43 @@ feature "DevicesController" do
   before { host! "http://" + host }
   before { @user = Factory(:user) }
   before { basic_auth(@user) } 
+
   before { Device.destroy_all }
-  let(:resource) { 'devices' }
+  before { History.destroy_all }
+  before { 5.times { |n| Factory(:device, name: "Resource #{n}") } }
+  let(:path) { '/devices' }
+  let(:connection) { 'histories' }
+  let(:resource) { Device.last }
 
 
   describe "pagination" do
-    before { 5.times { |n| Factory(:device, name: "Device #{n}") } }
 
-    context "redirect" do
+    describe "redirection" do
       context "with no params" do
-        before { visit 'devices' }
+        before { visit path }
         it { current_url.should match /page=1&per=25/ }
       end
 
       context "with page parmas" do
-        before { visit 'devices?page=2' }
+        before { visit "#{path}?page=2" }
         it { current_url.should match /page=2&per=25/ }
       end
 
       context "with per params" do
-        before { visit 'devices?per=1' }
+        before { visit "#{path}?per=1" }
         it { current_url.should match /page=1&per=1/ }
       end
 
       context "with per set to 'all'" do
-        before { visit 'devices?per=all' }
+        before { visit "#{path}?per=all" }
         it { current_url.should match /page=1&per=5/ }
       end
     end
 
     context "navigation links" do
-      let(:params) { {resource: resource, per: 2} }
+      let(:params) { {path: path, page: 1, per: 2} }
       context "when in first page" do
-        before { visit resource + '?page=1&per=2' }
+        before { visit "#{path}?page=1&per=2" }
         it { should_have_pagination_uri('first', params.merge({page: 1})) }
         it { should_have_pagination_uri('previous', params.merge({page: 1})) }
         it { should_have_pagination_uri('next', params.merge({page: 2})) }
@@ -44,7 +48,7 @@ feature "DevicesController" do
       end
 
       context "when in page 2" do
-        before { visit 'devices?page=2&per=2' }
+        before { visit "#{path}?page=2&per=2" }
         it { should_have_pagination_uri('first', params.merge({page: 1})) }
         it { should_have_pagination_uri('previous', params.merge({page: 1})) }
         it { should_have_pagination_uri('next', params.merge({page: 3})) }
@@ -52,7 +56,7 @@ feature "DevicesController" do
       end
 
       context "when in last page" do
-        before { visit 'devices?page=3&per=2' }
+        before { visit "#{path}?page=3&per=2" }
         it { should_have_pagination_uri('first', params.merge({page: 1})) }
         it { should_have_pagination_uri('previous', params.merge({page: 2})) }
         it { should_have_pagination_uri('next', params.merge({page: 3})) }
@@ -60,11 +64,22 @@ feature "DevicesController" do
       end
 
       context "with extra params" do
-        before { visit 'devices?page=3&per=2&type=instantaneous' }
         before { params.merge!(type: 'instantaneous') }
+        before { visit "#{path}?page=1&per=2&type=instantaneous" }
+        #it { save_and_open_page}
         it { should_have_pagination_uri('first', params.merge({page: 1})) }
-        it { should_have_pagination_uri('previous', params.merge({page: 2})) }
-        it { should_have_pagination_uri('next', params.merge({page: 3})) }
+        it { should_have_pagination_uri('previous', params.merge({page: 1})) }
+        it { should_have_pagination_uri('next', params.merge({page: 2})) }
+        it { should_have_pagination_uri('last', params.merge({page: 3})) }
+      end
+
+      context "when accessing a connected resource" do
+        before { path = "#{path}/#{resource.id.as_json}/#{connection}" }
+        before { params.merge!(path: path) }
+        before { visit "#{path}?page=1&per=2" }
+        it { should_have_pagination_uri('first', params.merge({page: 1})) }
+        it { should_have_pagination_uri('previous', params.merge({page: 1})) }
+        it { should_have_pagination_uri('next', params.merge({page: 2})) }
         it { should_have_pagination_uri('last', params.merge({page: 3})) }
       end
     end

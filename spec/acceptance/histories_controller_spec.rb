@@ -11,7 +11,7 @@ feature "HisotriesController" do
     before { @history = Factory(:history_complete) }
     before { @not_owned = Factory(:not_owned_history) }
     before { @base_history = Factory(:history) }
-    before { @uri = "#{host}/devices/#{@resource.id}/histories" }
+    before { @uri = "#{host}/devices/#{@resource.id}/histories?page=1&per=100" }
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
@@ -24,6 +24,7 @@ feature "HisotriesController" do
         should_have_history @history
         should_have_history @base_history
         should_have_valid_json(page.body)
+        should_have_pagination("devices/#{@resource.id}/histories")
         should_have_root_as('resources')
       end
 
