@@ -160,7 +160,7 @@ feature "ConsumptionController" do
         let(:params) {{ 
           device_uri: Settings.device.uri,
           type: 'instantaneous',
-          consumption: '1.25',
+          value: 1.25,
           unit: 'kwh',
           occur_at: Time.now
         }}
@@ -178,7 +178,7 @@ feature "ConsumptionController" do
         let(:params) {{ 
           device_uri: Settings.device.uri,
           type: 'durational',
-          consumption: '1.25',
+          value: 1.25,
           unit: 'kwh',
           occur_at: Time.now,
           duration: 60

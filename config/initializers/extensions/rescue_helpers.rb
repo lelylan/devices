@@ -12,9 +12,6 @@ module Lelylan
         base.rescue_from ZeroDivisionError, with: :zero_division_error
       end
 
-      # TODO: The only part it do not see is json_body
-      # Think if it can be used anyway to DRY controllers
-      #
       # Document not valid
       def validation_errors(e)
         render_422 "notifications.document.not_valid", e.message
@@ -38,16 +35,6 @@ module Lelylan
       # Assignation of wrong type to model field (e.g. hash instead of array)
       def mongoid_errors_invalid_type(e)
         render_422 "notifications.json.not_valid_type", parse_error(e)
-      end
-
-      # Invalid page (e.g. a string instead of a number)
-      def will_paginate_invalid_page(e)
-        render_422 "notifications.pagination.not_valid_page", {page: params[:page]}
-      end
-
-      # Invalid per page (e.g. a string instead of a number)
-      def zero_division_error(e)
-        render_422 "notifications.pagination.not_valid_per", {per: params[:per]}
       end
 
       private 

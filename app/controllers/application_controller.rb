@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include Lelylan::Rescue::Helpers
   include Lelylan::View::Helpers
+  include Lelylan::Resources::Public
   include Lelylan::Pagination::Helpers
 
   protect_from_forgery
@@ -41,7 +42,7 @@ class ApplicationController < ActionController::Base
         if user and user.verify(password)
           @current_user = user
         else
-          false
+          allow_public_resources('types')
         end
       end
     end

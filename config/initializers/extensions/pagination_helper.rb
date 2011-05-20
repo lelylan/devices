@@ -103,14 +103,13 @@ module Lelylan
         # Returns the number of owned resources 
         def total_number_of_resources
           klass = model_klass
-          klass.where(created_from: current_user.uri).count
+          accessing_public_resource? ? klass.where(public: true).count : klass.where(created_from: current_user.uri).count
         end
 
         # Return the 'supposed' model name
         def model_klass
           self.class.to_s.gsub("Controller", "").singularize.constantize
         end
-
     end
   end
 end

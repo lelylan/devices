@@ -22,7 +22,6 @@ module Lelylan
           uri      = protocol + host + "/" + name + "/" +  id
         end
       end
-
     end
   end
 end

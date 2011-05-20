@@ -42,7 +42,7 @@ feature "DevicesController" do
       context "when in first page" do
         before { visit "#{path}?page=1&per=2" }
         it { should_have_pagination_uri('first', params.merge({page: 1})) }
-        it { should_have_pagination_uri('previous', params.merge({page: 1})) }
+        it { should_have_pagination_uri('prev', params.merge({page: 1})) }
         it { should_have_pagination_uri('next', params.merge({page: 2})) }
         it { should_have_pagination_uri('last', params.merge({page: 3})) }
       end
@@ -50,7 +50,7 @@ feature "DevicesController" do
       context "when in page 2" do
         before { visit "#{path}?page=2&per=2" }
         it { should_have_pagination_uri('first', params.merge({page: 1})) }
-        it { should_have_pagination_uri('previous', params.merge({page: 1})) }
+        it { should_have_pagination_uri('prev', params.merge({page: 1})) }
         it { should_have_pagination_uri('next', params.merge({page: 3})) }
         it { should_have_pagination_uri('last', params.merge({page: 3})) }
       end
@@ -58,7 +58,7 @@ feature "DevicesController" do
       context "when in last page" do
         before { visit "#{path}?page=3&per=2" }
         it { should_have_pagination_uri('first', params.merge({page: 1})) }
-        it { should_have_pagination_uri('previous', params.merge({page: 2})) }
+        it { should_have_pagination_uri('prev', params.merge({page: 2})) }
         it { should_have_pagination_uri('next', params.merge({page: 3})) }
         it { should_have_pagination_uri('last', params.merge({page: 3})) }
       end
@@ -66,9 +66,8 @@ feature "DevicesController" do
       context "with extra params" do
         before { params.merge!(type: 'instantaneous') }
         before { visit "#{path}?page=1&per=2&type=instantaneous" }
-        #it { save_and_open_page}
         it { should_have_pagination_uri('first', params.merge({page: 1})) }
-        it { should_have_pagination_uri('previous', params.merge({page: 1})) }
+        it { should_have_pagination_uri('prev', params.merge({page: 1})) }
         it { should_have_pagination_uri('next', params.merge({page: 2})) }
         it { should_have_pagination_uri('last', params.merge({page: 3})) }
       end
@@ -78,7 +77,7 @@ feature "DevicesController" do
         before { params.merge!(path: path) }
         before { visit "#{path}?page=1&per=2" }
         it { should_have_pagination_uri('first', params.merge({page: 1})) }
-        it { should_have_pagination_uri('previous', params.merge({page: 1})) }
+        it { should_have_pagination_uri('prev', params.merge({page: 1})) }
         it { should_have_pagination_uri('next', params.merge({page: 2})) }
         it { should_have_pagination_uri('last', params.merge({page: 3})) }
       end
