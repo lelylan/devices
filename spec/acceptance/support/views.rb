@@ -1,5 +1,4 @@
 module ViewMethods
-
   # Device resource representation
   def should_have_device(device)
     page.should have_content device.id.as_json
@@ -13,6 +12,13 @@ module ViewMethods
   # Device resource not represented
   def should_not_have_device(device)
     page.should_not have_content device.created_from
+  end
+
+  # Device resource connections
+  def should_have_device_connections(device)
+    should_have_device_categories(device.device_categories)
+    should_have_device_properties(device.device_properties)
+    should_have_device_functions(device.device_functions)
   end
 
   # Device properties representation
@@ -30,6 +36,14 @@ module ViewMethods
     functions.each do |function|
       page.should have_content function.uri
       page.should have_content function.name
+    end
+  end
+
+  # Device categories representation
+  def should_have_device_categories(categories)
+    categories.each do |category|
+      page.should have_content category.uri
+      page.should have_content category.name
     end
   end
 

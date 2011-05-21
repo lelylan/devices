@@ -3,6 +3,7 @@ Settings.reload!
 
 FactoryGirl.define do
 
+  # Basic device with no connections
   factory :device do
     uri Settings.device.uri
     created_from Settings.user.uri
@@ -11,27 +12,37 @@ FactoryGirl.define do
     type_name Settings.type.name
   end
 
-  factory :device_complete, parent: :device do |d|
-    d.device_properties {[
-      Factory.build(:device_status),
-      Factory.build(:device_intensity)
-    ]}
-    d.device_functions {[
-      Factory.build(:device_set_intensity),
-      Factory.build(:device_turn_on),
-      Factory.build(:device_turn_off),
-    ]}
-    d.device_physicals { [ Factory.build(:device_physical) ] }
-  end
-
-  factory :device_no_physical, parent: :device_complete do |d|
-    d.device_physicals { }
-  end
-
+  # Not owned device with no connections
   factory :not_owned_device, parent: :device do
     created_from Settings.another_user.uri
   end
 
+  # Device with all connections
+  factory :device_complete, parent: :device do
+    device_categories {[ Factory.build(:device_category) ]}
+    device_properties {[
+      Factory.build(:device_status),
+      Factory.build(:device_intensity) ]}
+    device_functions {[
+      Factory.build(:device_set_intensity),
+      Factory.build(:device_turn_on),
+      Factory.build(:device_turn_off) ]}
+    device_physicals { [ Factory.build(:device_physical) ] }
+  end
+
+  # Device with no physical connection (it has all other connections)
+  factory :device_no_physical, parent: :device_complete do |d|
+    d.device_physicals {}
+  end
+
+  # -----------------
+  # Connections
+  # -----------------
+
+  factory :device_category, class: :device_category do
+    name Settings.category.name
+    uri Settings.category.uri
+  end
 
   factory :device_status, class: :device_property do
     name Settings.properties.status.name

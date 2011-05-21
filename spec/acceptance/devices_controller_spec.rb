@@ -42,7 +42,9 @@ feature "DevicesController" do
       scenario "view owned resource" do
         visit @uri
         page.status_code.should == 200
+        save_and_open_page
         should_have_device(@resource)
+        should_have_device_connections(@resource)
         should_have_valid_json(page.body)
       end
 
@@ -70,8 +72,7 @@ feature "DevicesController" do
         @resource = Device.last
         page.status_code.should == 201
         should_have_device(@resource)
-        should_have_device_properties(@resource.device_properties)
-        should_have_device_functions(@resource.device_functions)
+        should_have_device_connections(@resource)
         should_have_valid_json(page.body)
       end
 
