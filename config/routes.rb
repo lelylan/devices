@@ -15,6 +15,7 @@ Devices::Application.routes.draw do
   resources :devices, defaults: {format: 'json'} do
     resources :pendings, only: 'index'
     resources :histories, only: 'index'
+    get 'status' => 'status#show'
     get 'consumptions' => 'consumptions#index'
     member do
       put    "functions"  => "functions#update"
