@@ -3,7 +3,7 @@ another_host: <%= another_host = "http://www.anotherhost.com" %>
 type_host: <%= type_host = "http://types.lelylan.com" %>
 unite_node_nost: <%= unite_node_host = "http://nodes.lelylan.com" %>
 user: 
-  uri: <%= "#{host}/users/alice" %>
+  uri: <%= user_uri = "#{host}/users/alice" %>
   email: 'alice@example.com'
   password: 'example'
 another_user: 
@@ -18,6 +18,9 @@ device:
 another_device:
   uri: <%= "#{host}/devices/not_owned_closet_dimmer" %>
   name: 'Not owned closet dimmer'
+categori:
+  uri: <%= category_uri = "#{type_host}/categories/lighting" %>
+  name: 'Lighting' 
 properties:
   status:
     uri: <%= status_uri = "#{type_host}/properties/status" %> 
@@ -65,11 +68,19 @@ messages:
   access_denied: 'Access denied'
 type_json: |
   {
+    "name": "Dimmer",
     "id": "<%= type_json_id = "4dc24833d033a9778500000a" %>",
     "uri": "<%= type_uri %>",
-    "name": "Dimmer",
+    "public": "true",
     "created_at": "2011-05-05 08:48:19 +0200",
     "updated_at": "2011-05-05 08:48:19 +0200",
+    "categories": [ 
+        {
+            "name": "Lighting",
+            "uri": "<%= category_uri %>", 
+            "id": "4dd4d3ecd033a92a0a000095"
+        }
+    ],
     "properties": [
         {
             "id": "4db94c2fd033a917e7000001",
@@ -157,12 +168,66 @@ type_json: |
             ] 
         } 
     ],
-    "statuses": [
+    "statuses": [ 
         {
-            "uri": "http://localhost:3000/statuses/4dc24833d033a9778500000b",
-            "created_at": "",
-            "updated_at": "" 
-        } 
+            "id": "4dd4d3ecd033a92a0a00008f",
+            "uri": "https://type.lelylan.com/statuses/4dd4d3ecd033a92a0a00008f",
+            "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
+            "name": "Maximum setting",
+            "image": "https://type.lelylan.com/statuses/is_setting_max/image",
+            "properties": [ 
+                { 
+                    "uri": "https://type.lelylan.com/properties/4dd4d3ecd033a92a0a000085", 
+                    "pending": true,
+                    "values": ["10.0"]
+                }
+            ]
+        }
+        ,
+        {
+            "id": "4dd4d3ecd033a92a0a000093",
+            "uri": "https://type.lelylan.com/statuses/4dd4d3ecd033a92a0a000093",
+            "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
+            "name": "Maximum set",
+            "image": "https://type.lelylan.com/statuses/has_set_max/image",
+            "properties": [ 
+                { 
+                    "uri": "https://type.lelylan.com/properties/4dd4d3ecd033a92a0a000085", 
+                    "pending": false,
+                    "values": ["10.0"]
+                }
+            ]
+        }
+        ,
+        {
+            "id": "4dd4d3ecd033a92a0a00008d",
+            "uri": "https://type.lelylan.com/statuses/4dd4d3ecd033a92a0a00008d",
+            "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
+            "name": "Setting intensity",
+            "image": "https://type.lelylan.com/statuses/is_setting_intensity/image",
+            "properties": [ 
+                { 
+                    "uri": "https://type.lelylan.com/properties/4dd4d3ecd033a92a0a000085", 
+                    "pending": true,
+                    "values": ["0.0","1.0","2.0","3.0","4.0","5.0","6.0","7.0","8.0","9.0","10.0"]
+                }
+            ]
+        }
+        ,
+        {
+            "id": "4dd4d3ecd033a92a0a000091",
+            "uri": "https://type.lelylan.com/statuses/4dd4d3ecd033a92a0a000091",
+            "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
+            "name": "Intensity set",
+            "image": "https://type.lelylan.com/statuses/has_set_intensity/image",
+            "properties": [ 
+                { 
+                    "uri": "https://type.lelylan.com/properties/4dd4d3ecd033a92a0a000085", 
+                    "pending": null,
+                    "values": ["0.0","1.0","2.0","3.0","4.0","5.0","6.0","7.0","8.0","9.0","10.0"]
+                }
+            ]
+        }  
     ]
   }
 function_json: |
