@@ -21,6 +21,7 @@ module ViewMethods
       page.should have_content property.uri
       page.should have_content property.name
       page.should have_content property.value
+      page.should have_content property.pending.to_s
     end
   end
 

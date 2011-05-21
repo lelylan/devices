@@ -98,13 +98,11 @@ class Device
   # This method should be used any time a change happens to the device.
   def update_pending_properties
     pendings = Pending.open_pendings_for(uri)
-
     # if no pending resources are present set all pending values to false
     if pendings.empty? 
       device_properties.each do |device_property| 
         device_property.pending = false 
       end
-
     # if pendings resources are present check the open properties in them
     else
       pendings_hash = create_pendings_hash(pendings)
@@ -112,7 +110,7 @@ class Device
         dp.pending = pendings_hash[dp.uri].inject(:&) 
       end
     end
-
+    # Save the changes
     save
   end
   
@@ -154,8 +152,8 @@ class Device
     # which are true (open) or false (closed)
     def create_pendings_hash(pendings)
       pendings_hash = create_empty_pendings_hash
-      pendings.each do |p|
-        p.pending_properties.each do |pending_property| 
+      pendings.each do |pending|
+        pending.pending_properties.each do |pending_property| 
           pendings_hash[pending_property.uri] << pending_property.pending_status
         end
       end
