@@ -19,10 +19,9 @@ class StatusesController < ApplicationController
       @device = @devices.find(params[:device_id])
     end
     
+    # TODO: remove the param type_uri which is already known
     def find_statuses
-      # TODO: remove the param type_uri which is already known
       @statuses = @device.type_representation(@device.type_uri)[:statuses]
-      pp @statuses.map { |s| s[:uri]}
     end
 
     def find_status
