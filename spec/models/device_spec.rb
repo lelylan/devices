@@ -18,7 +18,7 @@ describe Device do
   it { should_not allow_mass_assignment_of(:created_from) }
   it { should_not allow_mass_assignment_of(:type_name) }
 
-  # Type population of properties and functions
+  #Type population of properties and functions
   context "#sync_type" do
     before  { @device.sync_type(Settings.type.uri) }
     subject { @device.reload }
@@ -47,8 +47,9 @@ describe Device do
     end
   end
 
+
   # Pending values property update on device
-  describe "#update pending properties" do
+  describe "#update_pending_properties" do
     before { @device = Factory(:device_complete) }
 
     context "with open pendings" do
@@ -62,9 +63,9 @@ describe Device do
       end
     end
 
-    context "with half pendings" do
+
+    context "with half pending" do
       before { @closed_pending = Factory(:closed_pending) }
-      before { @open_pending = Factory(:pending_complete) }
       before { @half_pending = Factory(:half_pending) } 
       before { @device.update_pending_properties }
       describe "open property connection" do
@@ -79,7 +80,20 @@ describe Device do
       end
     end
 
-    context "with closed pendings" do
+
+    context "with open and half pendings" do
+      before { @closed_pending = Factory(:closed_pending) }
+      before { @open_pending = Factory(:pending_complete) }
+      before { @half_pending = Factory(:half_pending) } 
+      before { @device.update_pending_properties }
+      it "should have all properties open" do
+        @device.reload.device_properties.each do |device_property|
+          device_property.pending.should == true
+        end
+      end
+   end
+
+    context "with closed pending" do
       before { @closed_pending = Factory(:closed_pending) }
       before { @device.update_pending_properties }
       it "should have all properties closed" do

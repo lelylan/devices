@@ -97,6 +97,14 @@ class Device
   # Update the pending values for every device property connection.
   # This method should be used any time a change happens to the device.
   def update_pending_properties
+    #device_properties.each do |property|
+      #open_pendings = Pending.where(
+        #device_uri: uri, pending_status: true,
+        #'pending_properties.uri' => property.uri, 
+        #'pending_properties.pending_status' => true
+      #)
+      #property.pending = !open_pendings.empty?
+    #end
     pendings = Pending.open_pendings_for(uri)
     # if no pending resources are present set all pending values to false
     if pendings.empty? 
@@ -107,7 +115,7 @@ class Device
     else
       pendings_hash = create_pendings_hash(pendings)
       device_properties.each do |dp| 
-        dp.pending = pendings_hash[dp.uri].inject(:&) 
+        dp.pending = pendings_hash[dp.uri].inject(:|) 
       end
     end
     # Save the changes
