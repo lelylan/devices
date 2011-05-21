@@ -18,7 +18,7 @@ device:
 another_device:
   uri: <%= "#{host}/devices/not_owned_closet_dimmer" %>
   name: 'Not owned closet dimmer'
-categori:
+category:
   uri: <%= category_uri = "#{type_host}/categories/lighting" %>
   name: 'Lighting' 
 properties:

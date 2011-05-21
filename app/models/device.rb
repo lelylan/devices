@@ -14,7 +14,6 @@ class Device
   embeds_many :device_categories  # device category (inherited from type)
   embeds_many :device_properties  # device properties (inherited from type)
   embeds_many :device_functions   # device functions (inherited from type)
-  embeds_many :device_statuses    # device statuses (inherited from type)
   embeds_many :device_physicals   # physical devices to control
   embeds_many :device_locations   # locations the device is contained in
 
@@ -33,7 +32,6 @@ class Device
     sync_categories(type[:categories])
     sync_properties(type[:properties])
     sync_functions(type[:functions])
-    sync_statuses(type[:statuses])
     sync_type_name(type[:name])
   end
 
@@ -64,14 +62,6 @@ class Device
     device_functions.destroy_all
     functions.each do |function|
       create_device_function(function)
-    end
-  end
-
-  # Sync statuses
-  def sync_statuses(statuses)
-    device_statuses.destroy_all
-    statuses.each do |status|
-      create_device_status(status)
     end
   end
 
@@ -180,14 +170,6 @@ class Device
       device_functions.create!(
         uri: function[:uri],
         name: function[:name]
-      )
-    end
-
-    # Create a device status relation
-    def create_device_status(status)
-      device_statuses.create!(
-        uri: status[:uri],
-        name: status[:name]
       )
     end
     
