@@ -7,6 +7,7 @@ feature "PropertiesController" do
   before { History.destroy_all }
   before { Device.destroy_all }
 
+
   # PUT /devices/{device-id}/properties
   context ".update" do
     before { @resource = Factory(:device_complete) }
@@ -15,6 +16,7 @@ feature "PropertiesController" do
     before { @uri = "#{host}/devices/#{@resource.id}/properties" }
 
     it_should_behave_like "protected resource", "page.driver.put(@uri)"
+
 
     context "when logged in" do
       before { basic_auth(@user) } 

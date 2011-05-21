@@ -11,7 +11,7 @@ feature "FunctionsController" do
     before { @resource = Factory(:device_complete) }
     before { @not_owned_resource = Factory(:not_owned_device) }
     before { @uri = "#{host}/devices/#{@resource.id}/functions?uri=#{Settings.functions.set_intensity.uri}" }
-    let(:params) {{ properties: new_device_properties }} #  TODO: make properties clear here
+    let(:params) {{ properties: new_device_properties }}
 
     it_should_behave_like "protected resource", "page.driver.put(@uri)"
 

@@ -10,7 +10,6 @@ class FunctionsController < ApplicationController
     # If a physical device is connected handle it
     if @device.device_physical
       # Create the pending resource
-      # TODO: move the pending creation to the device model logic
       pending = @device.create_pending(properties, @device_function, request)
       @device.update_pending_properties
       # Send the properties to the physical device

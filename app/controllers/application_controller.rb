@@ -16,7 +16,6 @@ class ApplicationController < ActionController::Base
     # JSON body parsing
     def parse_json_body
       @json_body = HashWithIndifferentAccess.new(JSON.parse(request.body.read.to_s))
-      # TODO: if nil raise an error
     end
 
     def json_body

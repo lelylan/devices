@@ -16,8 +16,6 @@ class User
   before_save :encrypt_password
 
   validates :password, presence: true, on: :create
-  # TODO: add password length
-  #validates :password, length: {min: 6}, empty: true
   validates :email, presence: true
   validates :email, uniqueness: true
   validates :email, email: true
