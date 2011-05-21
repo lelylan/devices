@@ -16,6 +16,7 @@ class Pending
   validates :device_uri, presence: true, url: true
   validates :function_uri, presence: true, url: true
   validates :function_name, presence: true, presence: true
+  validates :pending_status, inclusion: {in: [true, false]}
 
 
   # -----------------
