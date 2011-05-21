@@ -16,6 +16,7 @@ shared_examples_for "rescued when not found" do |action, controller, extra = ""|
       @resource.destroy
       eval(action)
       should_have_a_not_found_resource(@uri)
+      should_have_valid_json(page.body)
     end
   end
 
@@ -24,6 +25,7 @@ shared_examples_for "rescued when not found" do |action, controller, extra = ""|
       @uri = "/#{controller}/#{@not_owned_resource.id.as_json}#{extra}"
       eval(action)
       should_have_a_not_found_resource(@uri)
+      should_have_valid_json(page.body)
     end
   end
 
@@ -32,6 +34,7 @@ shared_examples_for "rescued when not found" do |action, controller, extra = ""|
       @uri = "/#{controller}/0#{extra}"
       eval(action)
       should_have_a_not_found_resource(@uri)
+      should_have_valid_json(page.body)
     end
   end
 end

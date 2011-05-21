@@ -20,9 +20,9 @@ module HelperMethods
     lambda {JSON.parse(body)}.should_not raise_error
   end
 
+  # Root key for a list of resources
   def should_have_root_as(resource_name)
     page.should have_content('"' + resource_name + '"')
-    page.should_not have_content('"resources"')
   end
 end
 

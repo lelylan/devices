@@ -6,7 +6,7 @@ FactoryGirl.define do
     uri Settings.consumptions.instantaneous.uri
     device_uri Settings.device.uri
     created_from Settings.user.uri
-    consumption 1.25
+    value 1.25
     occur_at Time.now
   end
 

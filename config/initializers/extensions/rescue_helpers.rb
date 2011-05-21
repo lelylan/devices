@@ -37,16 +37,6 @@ module Lelylan
         render_422 "notifications.json.not_valid_type", parse_error(e)
       end
 
-      # Invalid page (e.g. a string instead of a number)
-      def will_paginate_invalid_page(e)
-        render_422 "notifications.pagination.not_valid_page", {page: params[:page]}
-      end
-
-      # Invalid per page (e.g. a string instead of a number)
-      def zero_division_error(e)
-        render_422 "notifications.pagination.not_valid_per", {per: params[:per]}
-      end
-
       private 
 
         def parse_error(e)

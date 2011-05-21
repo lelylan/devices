@@ -14,7 +14,7 @@ class DevicesController < ApplicationController
     @device = Device.base(json_body, request, current_user)
     if @device.save
       @device.sync_type(@device.type_uri)
-      render "show", status: 201, location: @device.uri
+      render 'show', status: 201, location: @device.uri
     else
       render_422 "notifications.document.not_valid", @device.errors
     end
@@ -23,15 +23,15 @@ class DevicesController < ApplicationController
   def update
     if @device.update_attributes(json_body)
       @device.sync_type(@device.type_uri) if @device.type_uri_changed?
-      render "show", status: 200, location: @device.uri
+      render 'show'
     else
-      render_422 "notifications.document.not_valid", @device.errors
+      render_422 'notifications.document.not_valid', @device.errors
     end
   end
 
   def destroy
     @device.destroy
-    head 204
+    render 'show'
   end
 
 

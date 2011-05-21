@@ -1,11 +1,10 @@
 class PendingsController < ApplicationController
-  skip_before_filter :set_pagination
-
   before_filter :find_owned_resources
   before_filter :find_resource 
   before_filter :find_pendings
 
   def index
+    @pendings.page(params[:page]).per(params[:per])
   end
   
   private 

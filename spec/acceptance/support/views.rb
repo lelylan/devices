@@ -33,20 +33,6 @@ module ViewMethods
     end
   end
 
-  # Resource not found
-  def should_have_a_not_found_resource(uri)
-    page.status_code.should == 404
-    page.should have_content "404"
-    page.should have_content uri
-    page.should have_content "notifications.document.not_found"
-    page.should have_content "not found"
-  end
-
-  # Resource not valid
-  def should_have_a_not_valid_resource
-    page.status_code.should == 422
-  end
-
   # Pending resource representation
   def should_have_pending(pending)
     page.status_code.should == 200
@@ -81,7 +67,7 @@ module ViewMethods
     page.should have_content consumption.created_from
     page.should have_content consumption.device_uri
     page.should have_content consumption.type
-    page.should have_content consumption.consumption.to_s
+    page.should have_content consumption.value.to_s
     page.should have_content consumption.unit
     page.should have_content consumption.occur_at.to_s
     if consumption.type

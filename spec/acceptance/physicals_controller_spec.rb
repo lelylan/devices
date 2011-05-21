@@ -31,6 +31,7 @@ feature "PhysicalController" do
         scenario "get not valid notification" do
           page.driver.post(@uri, {}.to_json)
           should_have_a_not_valid_resource
+          should_have_valid_json(page.body)
         end
 
         scenario "do not destroy previous physical" do
@@ -59,7 +60,7 @@ feature "PhysicalController" do
         @resource.device_physicals.create!(params)
         @resource.device_physicals.should have(1).item
         page.driver.delete(@uri)
-        page.status_code.should == 204
+        page.status_code.should == 200
         @resource.reload.device_physicals.should have(0).items
       end
 

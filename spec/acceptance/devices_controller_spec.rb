@@ -8,7 +8,7 @@ feature "DevicesController" do
 
   # GET /devices
   context ".index" do
-    before { @uri = "/devices?page=1&per=100" }
+    before { @uri = "/devices" }
     before { @resource = Factory(:device) }
     before { @not_owned_resource = Factory(:not_owned_device) }
 
@@ -21,8 +21,9 @@ feature "DevicesController" do
         page.status_code.should == 200
         should_have_device(@resource)
         should_not_have_device(@not_owned_resource)
+        should_have_pagination(@uri)
         should_have_valid_json(page.body)
-        should_have_root_as('devices')
+        should_have_root_as('resources')
       end
     end
   end
@@ -30,7 +31,7 @@ feature "DevicesController" do
 
   # GET /devices/{device-id}
   context ".show" do
-    before { @resource = Factory(:device) }
+    before { @resource = Factory(:device_complete) }
     before { @uri = "/devices/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_device) }
 
@@ -77,6 +78,7 @@ feature "DevicesController" do
       scenario "not valid params" do
         page.driver.post(@uri, {}.to_json)
         should_have_a_not_valid_resource
+        should_have_valid_json(page.body)
       end
     end
   end
@@ -135,8 +137,10 @@ feature "DevicesController" do
       scenario "delete resource" do
         lambda {
           page.driver.delete(@uri, {}.to_json)
-          page.status_code.should == 204
         }.should change{ Device.count }.by(-1)
+        page.status_code.should == 200
+        should_have_device(@resource)
+        should_have_valid_json(page.body)
       end
 
       it_should_behave_like "rescued when not found",

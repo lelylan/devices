@@ -8,11 +8,11 @@ defaults: &defaults
 
 development:
   <<: *defaults
-  database: devices_development
+  database: device_development
 
 test:
   <<: *defaults
-  database: devices_test
+  database: device_test
 
 # set these environment variables on your prod server
 production:

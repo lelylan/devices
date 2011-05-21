@@ -11,7 +11,7 @@ feature "PendingsController" do
     before { @pending   = Factory(:pending_complete) }
     before { @not_owned = Factory(:not_owned_pending) }
     before { @closed    = Factory(:closed_pending) }
-    before { @uri = "#{host}/devices/#{@resource.id}/pendings" }
+    before { @uri = "/devices/#{@resource.id}/pendings" }
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
@@ -22,8 +22,9 @@ feature "PendingsController" do
       scenario "view device pending resources" do
         page.status_code.should == 200
         should_have_pending(@pending)
+        should_have_pagination(@uri)
         should_have_valid_json(page.body)
-        should_have_root_as('pendings')
+        should_have_root_as('resources')
       end
 
       scenario "view pending properties" do

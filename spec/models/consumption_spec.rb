@@ -16,7 +16,7 @@ describe Consumption do
   it { should allow_value('instantaneous').for(:type) }
   it { should allow_value('durational').for(:type) }
 
-  it { should validate_presence_of(:consumption) }
+  it { should validate_presence_of(:value) }
   it { should allow_value('kwh').for(:unit) }
   it { should validate_presence_of(:occur_at) }
 

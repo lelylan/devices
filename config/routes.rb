@@ -15,8 +15,6 @@ Devices::Application.routes.draw do
   resources :devices, defaults: {format: 'json'} do
     resources :pendings, only: 'index'
     resources :histories, only: 'index'
-    get 'consumptions/instantaneous' => 'consumptions#index', type: 'instantaneous' 
-    get 'consumptions/durational' => 'consumptions#index', type: 'durational'
     get 'consumptions' => 'consumptions#index'
     member do
       put    "functions"  => "functions#update"
@@ -26,7 +24,5 @@ Devices::Application.routes.draw do
     end
   end
 
-  get 'consumptions/instantaneous' => 'consumptions#index', defaults: {format: 'json'}, type: 'instantaneous' 
-  get 'consumptions/durational' => 'consumptions#index', defaults: {format: 'json'}, type: 'durational'
   resources :consumptions, except: 'update', defaults: {format: 'json'}
 end

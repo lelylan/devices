@@ -6,9 +6,11 @@ feature "ConsumptionController" do
   before { Consumption.destroy_all }
 
 
-  # GET /consumptions/
+  # GET /consumptions
+  # GET /consumptions?type=instantaneous
+  # GET /consumptions?type=durational
   context ".index" do
-    before { @uri = "/consumptions?page=1&per=100" }
+    before { @uri = "/consumptions" }
     before { @resource = Factory(:consumption) }
     before { @another_resource = Factory(:another_consumption) }
     before { @durational_resource = Factory(:durational_consumption) }
@@ -26,22 +28,26 @@ feature "ConsumptionController" do
         should_have_consumption(@durational_resource)
         should_have_consumption(@another_resource)
         should_not_have_consumption(@not_owned_resource)
+        current_url.should_not match /type=/
+        should_have_pagination(@uri)
         should_have_valid_json(page.body)
-        should_have_root_as('consumptions')
+        should_have_root_as('resources')
       end
 
       scenario "view instantaneous resources" do
-        visit "consumptions/instantaneous?page=1&per=100"
+        visit "consumptions?type=instantaneous&page=1&per=100"
         page.status_code.should == 200
         should_have_consumption(@resource)
         page.should_not have_content @durational_resource.uri
+        current_url.should match /type=instantaneous/
       end
       
       scenario "view durational resources" do
-        visit "consumptions/durational?page=1&per=100"
+        visit "consumptions?type=durational&page=1&per=100"
         page.status_code.should == 200
         should_have_consumption(@durational_resource)
         page.should_not have_content @resource.uri
+        current_url.should match /type=durational/
       end
     end
   end
@@ -96,8 +102,8 @@ feature "ConsumptionController" do
   
   
   # GET /devices/{device-id}/consumptions
-  # GET /devices/{device-id}/consumptions/instantaneous
-  # GET /devices/{device-id}/consumptions/durational
+  # GET /devices/{device-id}/consumptions?type=instantaneous
+  # GET /devices/{device-id}/consumptions?type=durational
   context ".show" do
     context "restricted to a device" do
       before { @resource = Factory(:device) }
@@ -122,14 +128,14 @@ feature "ConsumptionController" do
         end
 
         scenario "view instantaneous resources" do
-          visit "#{@uri}/consumptions/instantaneous?page=1&per=100"
+          visit "#{@uri}/consumptions?type=instantaneous&page=1&per=100"
           page.status_code.should == 200
           should_have_consumption(@consumption)
           page.should_not have_content @another_consumption.device_uri
         end
         
         scenario "view durational resources" do
-          visit "#{@uri}/consumptions/durational?page=1&per=100"
+          visit "#{@uri}/consumptions?type=durational&page=1&per=100"
           page.status_code.should == 200
           should_have_consumption(@durational_consumption)
           page.should_not have_content @another_durational_consumption.device_uri
@@ -154,7 +160,7 @@ feature "ConsumptionController" do
         let(:params) {{ 
           device_uri: Settings.device.uri,
           type: 'instantaneous',
-          consumption: '1.25',
+          value: 1.25,
           unit: 'kwh',
           occur_at: Time.now
         }}
@@ -172,7 +178,7 @@ feature "ConsumptionController" do
         let(:params) {{ 
           device_uri: Settings.device.uri,
           type: 'durational',
-          consumption: '1.25',
+          value: 1.25,
           unit: 'kwh',
           occur_at: Time.now,
           duration: 60
@@ -191,6 +197,7 @@ feature "ConsumptionController" do
       scenario "not valid params" do
         page.driver.post(@uri, {}.to_json)
         should_have_a_not_valid_resource
+        should_have_valid_json(page.body)
       end
     end
   end
@@ -209,8 +216,10 @@ feature "ConsumptionController" do
       scenario "delete resource" do
         lambda {
           page.driver.delete(@uri, {}.to_json)
-          page.status_code.should == 204
         }.should change{ Consumption.count }.by(-1)
+        page.status_code.should == 200
+        should_have_consumption(@resource)
+        should_have_valid_json(page.body)
       end
 
       it_should_behave_like "rescued when not found",

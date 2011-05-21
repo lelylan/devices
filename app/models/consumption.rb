@@ -7,19 +7,19 @@ class Consumption
   field :created_from
   field :device_uri
   field :type, default: 'instantaneous'
-  field :consumption, type: Float
+  field :value, type: Float
   field :unit, default: 'kwh'
   field :occur_at, type: Time
   field :end_at, type: Time
   field :duration, type: Float
 
-  attr_accessible :device_uri, :type, :consumption, :unit, :occur_at, :end_at, :duration
+  attr_accessible :device_uri, :type, :value, :unit, :occur_at, :end_at, :duration
 
   validates :uri, presence: true, url: true
   validates :created_from, presence: true, url: true
   validates :device_uri, presence: true, url: true
   validates :type, inclusion: { in: %w(instantaneous durational) }
-  validates :consumption, presence: true
+  validates :value, presence: true
   validates :unit, inclusion: { in: %w(kwh) }
   validates :occur_at, presence: true
   validates :end_at, presence: true, if: :durational?
