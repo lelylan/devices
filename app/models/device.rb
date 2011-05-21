@@ -11,8 +11,10 @@ class Device
   
   attr_accessible :name, :type_uri
 
+  embeds_many :device_categories  # device category (inherited from type)
   embeds_many :device_properties  # device properties (inherited from type)
   embeds_many :device_functions   # device functions (inherited from type)
+  embeds_many :device_statuses    # device statuses (inherited from type)
   embeds_many :device_physicals   # physical devices to control
   embeds_many :device_locations   # locations the device is contained in
 
@@ -28,8 +30,10 @@ class Device
   # Inherit properties and functions from the selected type
   def sync_type(type_uri)
     type = type_representation(type_uri)
+    sync_categories(type[:categories])
     sync_properties(type[:properties])
     sync_functions(type[:functions])
+    sync_statuses(type[:statuses])
     sync_type_name(type[:name])
   end
 
@@ -37,6 +41,14 @@ class Device
   def type_representation(type_uri)
     json = JSON.parse(HTTParty.get(type_uri).body)
     HashWithIndifferentAccess.new(json)
+  end
+
+  # Sync categories
+  def sync_categories(categories)
+    device_categories.destroy_all
+    categories.each do |category|
+      create_device_category(category)
+    end
   end
 
   # Sync properties
@@ -52,6 +64,14 @@ class Device
     device_functions.destroy_all
     functions.each do |function|
       create_device_function(function)
+    end
+  end
+
+  # Sync statuses
+  def sync_statuses(statuses)
+    device_statuses.destroy_all
+    statuses.each do |status|
+      create_device_status(status)
     end
   end
 
@@ -137,7 +157,14 @@ class Device
     end
   end
 
-  private 
+  private
+    # Create a device category relation
+    def create_device_category(category)
+      device_categories.create!(
+        uri: category[:uri],
+        name: category[:name]
+      )
+    end
 
     # Create a device property relation
     def create_device_property(property)
@@ -155,6 +182,15 @@ class Device
         name: function[:name]
       )
     end
+
+    # Create a device status relation
+    def create_device_status(status)
+      device_statuses.create!(
+        uri: status[:uri],
+        name: status[:name]
+      )
+    end
+    
 
     # Update the hash with the pending values (coming from pending resources)
     # which are true (open) or false (closed)
