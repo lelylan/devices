@@ -66,6 +66,27 @@ validation:
   not_valid_uri: 'example'
 messages:
   access_denied: 'Access denied'
+statuses:
+  has_set_intensity:
+    uri: <%= has_set_intensity_uri = "#{host}/statuses/has_set_intensity" %>
+    values: ['0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0']
+    name: 'Intensity set'
+  is_setting_intensity:
+    uri: <%= is_setting_intensity_uri = "#{host}/statuses/is_setting_intensity" %>
+    name: 'Setting intensity'
+    values: ['0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0']
+  has_set_max:
+    uri: <%= has_set_max_uri = "#{host}/statuses/has_set_max" %>
+    values: ['10.0']
+    name: 'Maximum set'
+  is_setting_max:
+    uri: <%= is_setting_max_uri = "#{host}/statuses/is_setting_max" %>
+    values: ['10.0']
+    name: 'Maximum setting'
+  default: 
+    uri: <%= default_uri = "#{host}/statuses/default" %>
+    values: []
+    name: 'Default status'
 type_json: |
   {
     "name": "Dimmer",
@@ -171,13 +192,13 @@ type_json: |
     "statuses": [ 
         {
             "id": "4dd4d3ecd033a92a0a00008f",
-            "uri": "https://type.lelylan.com/statuses/4dd4d3ecd033a92a0a00008f",
+            "uri": "<%= is_setting_max_uri %>",
             "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
             "name": "Maximum setting",
-            "image": "https://type.lelylan.com/statuses/is_setting_max/image",
+            "image": "<%= has_set_intensity_uri %>/image",
             "properties": [ 
                 { 
-                    "uri": "https://type.lelylan.com/properties/4dd4d3ecd033a92a0a000085", 
+                    "uri": "<%=intensity_uri%>", 
                     "pending": true,
                     "values": ["10.0"]
                 }
@@ -186,13 +207,13 @@ type_json: |
         ,
         {
             "id": "4dd4d3ecd033a92a0a000093",
-            "uri": "https://type.lelylan.com/statuses/4dd4d3ecd033a92a0a000093",
+            "uri": "<%= has_set_max_uri %>",
             "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
             "name": "Maximum set",
             "image": "https://type.lelylan.com/statuses/has_set_max/image",
             "properties": [ 
                 { 
-                    "uri": "https://type.lelylan.com/properties/4dd4d3ecd033a92a0a000085", 
+                    "uri": "<%=intensity_uri%>", 
                     "pending": false,
                     "values": ["10.0"]
                 }
@@ -201,13 +222,13 @@ type_json: |
         ,
         {
             "id": "4dd4d3ecd033a92a0a00008d",
-            "uri": "https://type.lelylan.com/statuses/4dd4d3ecd033a92a0a00008d",
+            "uri": "<%= is_setting_intensity_uri %>",
             "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
             "name": "Setting intensity",
             "image": "https://type.lelylan.com/statuses/is_setting_intensity/image",
             "properties": [ 
                 { 
-                    "uri": "https://type.lelylan.com/properties/4dd4d3ecd033a92a0a000085", 
+                    "uri": "<%=intensity_uri%>", 
                     "pending": true,
                     "values": ["0.0","1.0","2.0","3.0","4.0","5.0","6.0","7.0","8.0","9.0","10.0"]
                 }
@@ -216,17 +237,26 @@ type_json: |
         ,
         {
             "id": "4dd4d3ecd033a92a0a000091",
-            "uri": "https://type.lelylan.com/statuses/4dd4d3ecd033a92a0a000091",
+            "uri": "<%= has_set_intensity_uri %>",
             "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
             "name": "Intensity set",
             "image": "https://type.lelylan.com/statuses/has_set_intensity/image",
             "properties": [ 
                 { 
-                    "uri": "https://type.lelylan.com/properties/4dd4d3ecd033a92a0a000085", 
+                    "uri": "<%=intensity_uri%>", 
                     "pending": null,
                     "values": ["0.0","1.0","2.0","3.0","4.0","5.0","6.0","7.0","8.0","9.0","10.0"]
                 }
             ]
+        }  
+        ,
+        {
+            "id": "4dd4d3ecd033a92a0a000093",
+            "uri": "<%= default_uri %>",
+            "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
+            "name": "Default status",
+            "image": "<%= default_uri %>/image",
+            "properties": []
         }  
     ]
   }

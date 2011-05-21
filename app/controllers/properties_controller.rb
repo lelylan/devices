@@ -16,9 +16,9 @@ class PropertiesController < ApplicationController
     # Render the updated device representation
     render "/devices/show", status: 200, location: @device.uri
   end
-    
+
   private 
-  
+
     def find_owned_resources
       @devices = Device.where(created_from: current_user.uri)
     end
