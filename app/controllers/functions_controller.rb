@@ -11,6 +11,7 @@ class FunctionsController < ApplicationController
     if @device.device_physical
       # Create the pending resource
       pending = @device.create_pending(properties, @device_function, request)
+      @device.update_pending_properties
       # Send the properties to the physical device
       properties = @device.sync_physical(properties)
     else

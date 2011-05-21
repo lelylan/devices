@@ -13,4 +13,5 @@ class PendingProperty
   validates :uri, url: true
   validates :value, presence: true
   validates :old_value, presence: true
+  validates :pending_status, inclusion: {in: [true, false]}
 end

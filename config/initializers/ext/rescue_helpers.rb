@@ -12,9 +12,6 @@ module Lelylan
         base.rescue_from ZeroDivisionError, with: :zero_division_error
       end
 
-      # TODO: The only part it do not see is json_body
-      # Think if it can be used anyway to DRY controllers
-      #
       # Document not valid
       def validation_errors(e)
         render_422 "notifications.document.not_valid", e.message

@@ -10,6 +10,7 @@ class PropertiesController < ApplicationController
     @device.sync_properties_with_physical(properties)
     # Update (close) the pending resources
     Pending.update_pendings(@device.uri, properties)
+    @device.update_pending_properties
     # Create an history resource when the physical changes
     history = History.create_history(@device.uri, properties, request)
     # Render the updated device representation
