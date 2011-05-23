@@ -9,16 +9,15 @@ functions (e.g. turn on, turn off and set intensity for a dimmer).
 == Requirements
 
 Ruby ~> {1.9.2}[www.ruby-lang.org/en/]
+
 Mongodb ~> {1.6.4}[http://www.mongodb.org/].
 
 
 == Installation
 
-  gem install device
-
-Or if you are using bundler 
-
-  gem 'device'
+  git clone git://github.com/lelylan/type.git
+  bundle install
+  rails server
 
 
 == Usage
@@ -42,10 +41,12 @@ Getting set up should require minimal effort
 * Run bundle install for dependencies.
 * Run bundle exec spec rspec to execute all specs.
 
-The project provides a guard script as well for easy automated testing. Run the following command
-and presse CTRL + \ to run all tests.
+
+The project provides a guard script as well for easy automated testing.  
 
   bundle exec guard
+
+When running press CTRL + \ to run all tests.
 
 === Spec guidelines
 
