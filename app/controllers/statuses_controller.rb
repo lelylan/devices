@@ -6,7 +6,10 @@ class StatusesController < ApplicationController
   before_filter :find_status
 
   def show
-    render json: @status
+    respond_to do |format|
+      format.json { render json: @status }
+      format.png  { redirect_to @status[:image] }
+    end
   end
   
   private 

@@ -31,7 +31,15 @@ class ApplicationController < ActionController::Base
 
     # Check the API format
     def api_request
+      json_request? or exception_request?
+    end
+
+    def json_request?
       request.format == "application/json"
+    end
+
+    def exception_request?
+      (request.format == "image/png" and params[:controller] == 'statuses') 
     end
 
     # Apply the basic authentication for API requests
@@ -50,6 +58,7 @@ class ApplicationController < ActionController::Base
     def session_auth
       @current_user ||= User.find(session[:user_id]) if session[:user_id]
       unless current_user
+        pp params
         redirect_to(log_in_path) and return false
       end
     end

@@ -10,6 +10,7 @@ Devices::Application.routes.draw do
   resources :sessions
 
   # API Resources
+  get 'devices/:device_id.png' => 'statuses#show', format: 'png'
   resources :devices, defaults: {format: 'json'} do
     resources :pendings, only: 'index'
     resources :histories, only: 'index'

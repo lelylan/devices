@@ -68,23 +68,23 @@ messages:
   access_denied: 'Access denied'
 statuses:
   has_set_intensity:
-    uri: <%= has_set_intensity_uri = "#{host}/statuses/has_set_intensity" %>
+    uri: <%= has_set_intensity_uri = "#{type_host}/statuses/has_set_intensity" %>
     values: ['0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0']
     name: 'Intensity set'
   is_setting_intensity:
-    uri: <%= is_setting_intensity_uri = "#{host}/statuses/is_setting_intensity" %>
+    uri: <%= is_setting_intensity_uri = "#{type_host}/statuses/is_setting_intensity" %>
     name: 'Setting intensity'
     values: ['0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0']
   has_set_max:
-    uri: <%= has_set_max_uri = "#{host}/statuses/has_set_max" %>
+    uri: <%= has_set_max_uri = "#{type_host}/statuses/has_set_max" %>
     values: ['10.0']
     name: 'Maximum set'
   is_setting_max:
-    uri: <%= is_setting_max_uri = "#{host}/statuses/is_setting_max" %>
+    uri: <%= is_setting_max_uri = "#{type_host}/statuses/is_setting_max" %>
     values: ['10.0']
     name: 'Maximum setting'
   default: 
-    uri: <%= default_uri = "#{host}/statuses/default" %>
+    uri: <%= default_uri = "#{type_host}/statuses/default" %>
     values: []
     name: 'Default status'
 type_json: |
@@ -210,7 +210,7 @@ type_json: |
             "uri": "<%= has_set_max_uri %>",
             "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
             "name": "Maximum set",
-            "image": "https://type.lelylan.com/statuses/has_set_max/image",
+            "image": "<%= has_set_max_uri %>/image",
             "properties": [ 
                 { 
                     "uri": "<%=intensity_uri%>", 
@@ -225,7 +225,7 @@ type_json: |
             "uri": "<%= is_setting_intensity_uri %>",
             "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
             "name": "Setting intensity",
-            "image": "https://type.lelylan.com/statuses/is_setting_intensity/image",
+            "image": "<%= is_setting_intensity_uri %>/image",
             "properties": [ 
                 { 
                     "uri": "<%=intensity_uri%>", 
@@ -240,7 +240,7 @@ type_json: |
             "uri": "<%= has_set_intensity_uri %>",
             "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
             "name": "Intensity set",
-            "image": "https://type.lelylan.com/statuses/has_set_intensity/image",
+            "image": "<%= has_set_intensity_uri %>/image",
             "properties": [ 
                 { 
                     "uri": "<%=intensity_uri%>", 

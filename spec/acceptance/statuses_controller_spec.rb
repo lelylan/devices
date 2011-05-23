@@ -84,6 +84,16 @@ feature "StatusesController" do
           should_have_valid_json(page.body)
         end
       end
+
+      context ".png" do
+        before { basic_auth(@user) }
+        before { @uri = "#{host}#{@uri}.png" }
+        scenario "should redirect to image uri" do
+          lambda {
+            visit(@uri)
+          }.should raise_error(ActionController::RoutingError)
+        end
+      end
     end
   end
 end

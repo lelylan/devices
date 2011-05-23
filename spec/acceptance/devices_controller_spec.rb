@@ -46,6 +46,16 @@ feature "DevicesController" do
         should_have_device_connections(@resource)
         should_have_valid_json(page.body)
       end
+      
+      context "with format .png" do
+        before { basic_auth(@user) }
+        before { @uri = "#{@uri}.png" }
+        scenario "should redirect to status image uri" do
+          lambda {
+            visit(@uri)
+          }.should raise_error(ActionController::RoutingError)
+        end
+      end
 
       it_should_behave_like "rescued when not found", 
                             "visit @uri", "devices"
