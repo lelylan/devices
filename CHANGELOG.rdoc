@@ -1,6 +1,11 @@
 = Changelog
 
 
+== Release v0.1.1
+
+* Added status matching through range values. It actually search in both values and range to find a mathcing value
+
+
 == Release v0.1.0 (2011/05/22)
 
 * First version Device APIs

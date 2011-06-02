@@ -29,10 +29,6 @@ class Status
     end
 
     def self.match_range?(status_property, device_property)
-      pp "::::::::::::::"
-      pp status_property[:range]
-      pp status_property[:range][:start]
-
       if status_property[:range]
         value = device_property[:value].to_f
         range_start = status_property[:range][:start].to_f

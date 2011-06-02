@@ -362,7 +362,7 @@ type_range_json: |
                   "uri": "<%=intensity_uri%>",
                   "pending": true,
                   "values": ["10.0"],
-                  "range": {"start": "0.01", "end": "9.99"}
+                  "range": {"start": "9.0", "end": "9.99"}
               }
           ]
       }
@@ -378,7 +378,7 @@ type_range_json: |
                   "uri": "<%=intensity_uri%>", 
                   "pending": false,
                   "values": ["10.0"],
-                  "range": {"start": "0.01", "end": "9.99"}
+                  "range": {"start": "9.0", "end": "9.99"}
               }
           ]
       }

@@ -28,7 +28,6 @@ class StatusesController < ApplicationController
     end
 
     def find_status
-      pp @device.device_properties
       @status = Status.find_matching_status(@device.device_properties, @statuses).first
     end
 end
