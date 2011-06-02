@@ -10,20 +10,11 @@ class DeviceFunction
 
   embedded_in :device
 
-  # Transform the function and the received body in the params
-  # to send to the physical device  
-  #
-  #   function_to_properties("http://...", [body array of properties]) 
+  # Transform the function and the received body in the params to send to the physical device  
   def to_parameters(params_properties)
     function = Lelylan::Type.function(uri)
-    properties = populate_properties(function[:properties], params_properties)
+    properties = populate_properties(function.properties, params_properties)
   end
-
-  # Get the JSON function representation
-  #def function_representation
-    #json = JSON.parse(HTTParty.get(uri).body)
-    #HashWithIndifferentAccess.new(json)
-  #end
 
   # Populate the params to send to the physical device
   def populate_properties(function_properties, params_properties)
@@ -42,8 +33,8 @@ class DeviceFunction
 
     def add_missing_properties(missing_keys, function_properties)
       result = function_properties.collect do |property|
-        if missing_keys.include?(property[:uri])
-          {uri: property[:uri], value: property[:value]}
+        if missing_keys.include?(property.uri)
+          {uri: property.uri, value: property.value}
         end
       end
       return result.delete_if {|r| r.nil? }
