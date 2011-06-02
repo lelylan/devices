@@ -14,6 +14,7 @@ gem 'httparty'
 gem 'kaminari'
 gem "rails_config"
 gem 'delorean'
+gem 'type_ruby', git: 'https://andreareginato@github.com/Lelylan/type_ruby.git'
 
 group :development, :test do
   gem 'rspec-rails'

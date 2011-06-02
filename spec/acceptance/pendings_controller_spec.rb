@@ -20,7 +20,6 @@ feature "PendingsController" do
       before { visit @uri }
 
       scenario "view device pending resources" do
-        save_and_open_page
         page.status_code.should == 200
         should_have_pending(@pending)
         should_have_pagination(@uri)

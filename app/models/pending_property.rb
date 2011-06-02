@@ -14,4 +14,11 @@ class PendingProperty
   validates :value, presence: true
   validates :old_value, presence: true
   validates :pending_status, inclusion: {in: [true, false]}
+
+  before_save :parse_transitional_values
+
+
+  def parse_transitional_values
+    transitional_values.map!(&:to_s)
+  end
 end
