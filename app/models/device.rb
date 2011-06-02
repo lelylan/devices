@@ -27,17 +27,11 @@ class Device
 
   # Inherit properties and functions from the selected type
   def sync_type(type_uri)
-    type = type_representation(type_uri)
-    sync_categories(type[:categories])
-    sync_properties(type[:properties])
-    sync_functions(type[:functions])
-    sync_type_name(type[:name])
-  end
-
-  # Get the JSON type representation
-  def type_representation(type_uri)
-    json = JSON.parse(HTTParty.get(type_uri).body)
-    HashWithIndifferentAccess.new(json)
+    type = Lelylan::Type.type(type_uri)
+    sync_categories(type.categories)
+    sync_properties(type.properties)
+    sync_functions(type.functions)
+    sync_type_name(type.name)
   end
 
   # Sync categories
@@ -74,7 +68,7 @@ class Device
   # FUNCTION TO PROPERTIES
   # -----------------------
 
-  # Get tge properties to change from the funciton and from the 
+  # Get tge properties to change from the function and from the 
   # body of the function request
   def sync_physical(properties)
     response = HTTParty.put(device_physical.unite_node_uri, 
@@ -152,25 +146,25 @@ class Device
     # Create a device category relation
     def create_device_category(category)
       device_categories.create!(
-        uri: category[:uri],
-        name: category[:name]
+        uri: category.uri,
+        name: category.name
       )
     end
 
     # Create a device property relation
     def create_device_property(property)
       device_properties.create!(
-        uri: property[:uri],
-        name: property[:name],
-        value: property[:default]
+        uri: property.uri,
+        name: property.name,
+        value: property[:default] # Hashiw::Rash bug does not allow the usage of default as key
       )
     end
 
     # Create a device function relation
     def create_device_function(function)
       device_functions.create!(
-        uri: function[:uri],
-        name: function[:name]
+        uri: function.uri,
+        name: function.name
       )
     end
     
