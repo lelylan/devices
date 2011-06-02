@@ -52,7 +52,6 @@ feature "HisotriesController" do
           before { @visible = Factory(:history, created_at: @occur_at)}
           before { visit "#{@uri}?to=#{@to_search}" }
           it "should filter the searched value" do
-            save_and_open_page
             should_have_history(@visible)
             page.should_not have_content @history.to_s
           end

@@ -72,7 +72,6 @@ feature "ConsumptionController" do
           before { @visible = Factory(:consumption, occur_at: @occur_at)}
           before { visit "#{@uri}?to=#{@to_search}" }
           it "should filter the searched value" do
-            save_and_open_page
             should_have_consumption(@visible)
             page.should_not have_content @resource.to_s
           end
