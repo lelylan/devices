@@ -3,8 +3,7 @@ module PaginationMethods
   def should_have_pagination_uri(type, options)
     options = options.dup
     path = options.delete(:path) 
-    uri = "\"#{type}\": \"#{host}#{path}?page=#{options[:page]}&per=#{options[:per]}"
-    uri += "&type=#{options[:type]}" if options[:type]
+    uri = "\"#{type}\": \"#{host}#{path}?#{options.to_query}" 
     page.should have_content uri
   end
 

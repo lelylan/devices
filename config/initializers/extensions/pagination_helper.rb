@@ -39,15 +39,21 @@ module Lelylan
 
       private 
 
-        # Redirect to the correct page if params are missin, otherwise populate
+        # Redirect to the correct page if params are missing, otherwise populate
         # all variables used to define the navigation links.
         def set_pagination(page, per)
           new_page, new_per = normalize_pagination_params(page, per)
           if (new_page != page or new_per != per)
-            redirect_to(action: :index, page: new_page, per: new_per)
+            redirect_to(cleaned_uri(new_page,new_per))
           else
             create_navigation_links(page, per)
           end
+        end
+
+        # Get the cleaned request querystring
+        def cleaned_uri(page, per)
+          query_string = params.except('format', 'action', 'controller').merge(page: page, per: per)
+          host = "#{request.protocol}#{request.host_with_port}#{request.path}?#{query_string.to_query}"
         end
 
         # Get default page values.
@@ -97,7 +103,6 @@ module Lelylan
         def page_uri_for(page)
           query_string = request.query_string.gsub(/page=(\d*)/, "page=#{page}")
           host = "#{request.protocol}#{request.host_with_port}#{request.path}?#{query_string}"
-          return host
         end
 
         # Returns the number of owned resources 
