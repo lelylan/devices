@@ -27,8 +27,8 @@ describe Device do
     its(:device_functions) { should have(3).functions }
     its(:type_name) { should == Settings.type.name }
 
-    context "#type_representation" do
-      before { @type = @device.type_representation(Settings.type.uri) }
+    context "Lelylan::Type.type" do
+      before { @type = Lelylan::Type.type(Settings.type.uri) }
       it "gets json representation" do
         @type[:name].should == Settings.type.name
       end

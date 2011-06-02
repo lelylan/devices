@@ -22,9 +22,8 @@ class StatusesController < ApplicationController
       @device = @devices.find(params[:device_id])
     end
     
-    # TODO: remove the param type_uri which is already known
     def find_statuses
-      @statuses = @device.type_representation(@device.type_uri)[:statuses]
+      @statuses = Lelylan::Type.type(@device.type_uri).statuses
     end
 
     def find_status

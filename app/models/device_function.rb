@@ -15,15 +15,15 @@ class DeviceFunction
   #
   #   function_to_properties("http://...", [body array of properties]) 
   def to_parameters(params_properties)
-    function = function_representation
+    function = Lelylan::Type.function(uri)
     properties = populate_properties(function[:properties], params_properties)
   end
 
   # Get the JSON function representation
-  def function_representation
-    json = JSON.parse(HTTParty.get(uri).body)
-    HashWithIndifferentAccess.new(json)
-  end
+  #def function_representation
+    #json = JSON.parse(HTTParty.get(uri).body)
+    #HashWithIndifferentAccess.new(json)
+  #end
 
   # Populate the params to send to the physical device
   def populate_properties(function_properties, params_properties)

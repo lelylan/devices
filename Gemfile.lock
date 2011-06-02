@@ -1,5 +1,6 @@
-PATH
-  remote: /Users/andreareginato/dev/work/lelylan/clients/type_ruby
+GIT
+  remote: https://andreareginato@github.com/Lelylan/type_ruby.git
+  revision: a4fe2ae3ff29feccb8446d40a3f3d88ac73d84bd
   specs:
     type_ruby (0.1.3)
       faraday (~> 0.6.1)
