@@ -41,6 +41,8 @@ properties:
     name: 'Intensity'
     default_value: '<%= default_intensity_value = 0.0 %>'
     new_value: '<%= new_intensity_value = 10.0 %>'
+  another:
+    uri: <%= "#{type_host}/properties/another" %> 
 functions:
   set_intensity:
     id: <%= set_intensity_id = "set_intensity" %>
@@ -54,6 +56,8 @@ functions:
     id: <%= turn_off_id = "turn_off" %>
     uri: <%= turn_off_function_uri = "#{type_host}/functions/#{turn_off_id}" %>
     name: "Turn off"
+  another:
+    uri: <%= "#{type_host}/functions/another" %>
 pending:
   uri: <%= "#{host}/pendings/set_intensity" %>
 pending_closed:

@@ -67,7 +67,7 @@ feature "DevicesController" do
             page.should_not have_content @resource.device_categories.first.uri
           end
         end
-        
+
         context "params[:category_name]" do
           before { @to_search = "A new cool name" }
           before { @filtered_resource = Factory(:device_complete) }
@@ -76,6 +76,51 @@ feature "DevicesController" do
           it "should filter the searched value" do
             should_have_device(@filtered_resource)
             page.should_not have_content @resource.device_categories.first.name
+          end
+        end
+
+        context "params[:property]" do
+          before { @to_search = Settings.properties.another.uri }
+          before { @filtered_resource = Factory(:device_complete) }
+          before { @filtered_resource.device_properties.first.update_attributes(uri: @to_search) }
+          before { visit "#{@uri}?property=#{@to_search}" }
+          it "should filter the searched value" do
+            should_have_device(@filtered_resource)
+            page.should_not have_content @resource.device_properties.first.uri
+          end
+        end
+
+        context "params[:property_value]" do
+          before { @to_search = "value" }
+          before { @filtered_resource = Factory(:device_complete) }
+          before { @filtered_resource.device_properties.first.update_attributes(value: @to_search) }
+          before { visit "#{@uri}?property_value=#{@to_search}" }
+          it "should filter the searched value" do
+            should_have_device(@filtered_resource)
+            page.should_not have_content "\"#{@resource.device_properties.first.value}\""
+          end
+        end
+
+        context "params[:function]" do
+          before { @to_search = Settings.functions.another.uri }
+          before { @filtered_resource = Factory(:device_complete) }
+          before { @filtered_resource.device_functions.first.update_attributes(uri: @to_search) }
+          before { visit "#{@uri}?function=#{@to_search}" }
+          it "should filter the searched value" do
+            save_and_open_page
+            should_have_device(@filtered_resource)
+            page.should_not have_content @resource.device_functions.first.uri
+          end
+        end
+
+        context "params[:function_name]" do
+          before { @to_search = "A new cool name" }
+          before { @filtered_resource = Factory(:device_complete) }
+          before { @filtered_resource.device_functions.first.update_attributes(name: @to_search) }
+          before { visit "#{@uri}?function_name=A+new" }
+          it "should filter the searched value" do
+            should_have_device(@filtered_resource)
+            page.should_not have_content @resource.device_functions.first.name
           end
         end
       end

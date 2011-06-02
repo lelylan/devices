@@ -49,9 +49,18 @@ class DevicesController < ApplicationController
     def filter_params
       # Device specific
       @devices = @devices.where('name' => /^#{params[:name]}/) if params[:name]
+      # Type specific
       @devices = @devices.where('type_name' => /^#{params[:type_name]}/) if params[:type_name]
       @devices = @devices.where(type_uri: params[:type]) if params[:type]
+      # Category specific
       @devices = @devices.any_in('device_categories.uri' => [params[:category]]) if params[:category]
       @devices = @devices.where('device_categories.name' => /^#{params[:category_name]}/) if params[:category_name]
+      # Property specific
+      @devices = @devices.any_in('device_properties.uri' => [params[:property]]) if params[:property]
+      @devices = @devices.where('device_properties.name' => /^#{params[:property_name]}/) if params[:property_name]
+      @devices = @devices.where('device_properties.value' => params[:property_value]) if params[:property_value]
+      # Function specific
+      @devices = @devices.any_in('device_functions.uri' => [params[:function]]) if params[:function]
+      @devices = @devices.where('device_functions.name' => /^#{params[:function_name]}/) if params[:function_name]
     end 
 end
