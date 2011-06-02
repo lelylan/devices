@@ -54,6 +54,29 @@ feature "ConsumptionController" do
             current_url.should match /type=#{@to_search}/
           end
         end
+
+        context "params[:from]" do
+          before { @to_search = 'yesterday' }
+          before { @occur_at = Chronic.parse('1 week ago') }
+          before { @not_visible = Factory(:consumption, occur_at: @occur_at)}
+          before { visit "#{@uri}?from=#{@to_search}" }
+          it "should filter the searched value" do
+            should_have_consumption(@resource)
+            page.should_not have_content @occur_at.to_s
+          end
+        end
+
+        context "params[:to]" do
+          before { @to_search = 'yesterday' }
+          before { @occur_at = Chronic.parse('1 week ago') }
+          before { @visible = Factory(:consumption, occur_at: @occur_at)}
+          before { visit "#{@uri}?to=#{@to_search}" }
+          it "should filter the searched value" do
+            save_and_open_page
+            should_have_consumption(@visible)
+            page.should_not have_content @resource.to_s
+          end
+        end
       end
     end
   end
