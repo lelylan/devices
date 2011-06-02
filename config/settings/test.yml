@@ -12,6 +12,9 @@ another_user:
 type:
   uri: <%= type_uri = "#{type_host}/types/dimmer" %>
   name: 'Dimmer'
+another_type:
+  uri: <%= another_type_uri = "#{type_host}/types/another_dimmer" %>
+  name: 'Another dimmer'
 type_range:
   uri: <%= type_range_uri = "#{type_host}/types/dimmer_range" %>
   name: 'Dimmer range'
@@ -23,7 +26,10 @@ another_device:
   name: 'Not owned closet dimmer'
 category:
   uri: <%= category_uri = "#{type_host}/categories/lighting" %>
-  name: 'Lighting' 
+  name: 'Lighting'
+another_category:
+  uri: <%= another_category_uri = "#{type_host}/categories/another_lighting" %>
+  name: 'Lighting'
 properties:
   status:
     uri: <%= status_uri = "#{type_host}/properties/status" %> 

@@ -9,7 +9,7 @@ feature "DevicesController" do
   # GET /devices
   context ".index" do
     before { @uri = "/devices" }
-    before { @resource = Factory(:device) }
+    before { @resource = Factory(:device_complete) }
     before { @not_owned_resource = Factory(:not_owned_device) }
 
     it_should_behave_like "protected resource", "visit(@uri)"
@@ -24,6 +24,60 @@ feature "DevicesController" do
         should_have_pagination(@uri)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
+      end
+
+      context "with filter" do
+        context "params[:name]" do
+          before { @to_search = "A new cool name" }
+          before { @filtered_resource = Factory(:device_complete, name: @to_search) }
+          before { visit "#{@uri}?name=A+new" }
+          it "should filter the searched value" do
+            should_have_device(@filtered_resource)
+            page.should_not have_content @resource.name
+          end
+        end
+
+        context "params[:type]" do
+          before { @to_search = Settings.another_type.uri }
+          before { @filtered_resource = Factory(:device_complete, type_uri: @to_search)}
+          before { visit "#{@uri}?type=#{@to_search}" }
+          it "should filter the searched value" do
+            should_have_device(@filtered_resource)
+            page.should_not have_content @resource.type_uri
+          end
+        end
+
+        context "params[:type_name]" do
+          before { @to_search = "A new cool name" }
+          before { @filtered_resource = Factory(:device_complete, type_name: @to_search)}
+          before { visit "#{@uri}?type_name=A+new" }
+          it "should filter the searched value" do
+            should_have_device(@filtered_resource)
+            page.should_not have_content @resource.type_name
+          end
+        end
+
+        context "params[:category]" do
+          before { @to_search = Settings.another_category.uri }
+          before { @filtered_resource = Factory(:device_complete) }
+          before { @filtered_resource.device_categories.first.update_attributes(uri: @to_search) }
+          before { visit "#{@uri}?category=#{@to_search}" }
+          it "should filter the searched value" do
+            should_have_device(@filtered_resource)
+            page.should_not have_content @resource.device_categories.first.uri
+          end
+        end
+        
+        context "params[:category_name]" do
+          before { @to_search = "A new cool name" }
+          before { @filtered_resource = Factory(:device_complete) }
+          before { @filtered_resource.device_categories.first.update_attributes(name: @to_search) }
+          before { visit "#{@uri}?category_name=A+new" }
+          it "should filter the searched value" do
+            should_have_device(@filtered_resource)
+            page.should_not have_content @resource.device_categories.first.name
+          end
+        end
       end
     end
   end

@@ -2,6 +2,7 @@ class DevicesController < ApplicationController
   before_filter :parse_json_body, only: %w(create update)
   before_filter :find_owned_resources
   before_filter :find_resource, only: %w(show update destroy)
+  before_filter :filter_params, only: 'index'
 
   def index
     @devices = @devices.page(params[:page]).per(params[:per])
@@ -44,4 +45,13 @@ class DevicesController < ApplicationController
     def find_resource
       @device = @devices.find(params[:id])
     end
+
+    def filter_params
+      # Device specific
+      @devices = @devices.where('name' => /^#{params[:name]}/) if params[:name]
+      @devices = @devices.where('type_name' => /^#{params[:type_name]}/) if params[:type_name]
+      @devices = @devices.where(type_uri: params[:type]) if params[:type]
+      @devices = @devices.any_in('device_categories.uri' => [params[:category]]) if params[:category]
+      @devices = @devices.where('device_categories.name' => /^#{params[:category_name]}/) if params[:category_name]
+    end 
 end

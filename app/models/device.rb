@@ -15,7 +15,6 @@ class Device
   embeds_many :device_properties  # device properties (inherited from type)
   embeds_many :device_functions   # device functions (inherited from type)
   embeds_many :device_physicals   # physical devices to control
-  embeds_many :device_locations   # locations the device is contained in
 
   validates :uri, url: true
   validates :created_from, url: true
@@ -106,15 +105,17 @@ class Device
 
   # Update the pending values for every device property connection.
   # This method should be used any time a change happens to the device.
+  #
+  # # Implementation that would work if boolean embedded document was going to be validated
+  # device_properties.each do |property|
+  #   open_pendings = Pending.where(
+  #     device_uri: uri, pending_status: true,
+  #     'pending_properties.uri' => property.uri, 
+  #     'pending_properties.pending_status' => true
+  #   )
+  #   property.pending = !open_pendings.empty?
+  # end
   def update_pending_properties
-    #device_properties.each do |property|
-      #open_pendings = Pending.where(
-        #device_uri: uri, pending_status: true,
-        #'pending_properties.uri' => property.uri, 
-        #'pending_properties.pending_status' => true
-      #)
-      #property.pending = !open_pendings.empty?
-    #end
     pendings = Pending.open_pendings_for(uri)
     # if no pending resources are present set all pending values to false
     if pendings.empty? 

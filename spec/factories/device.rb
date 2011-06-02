@@ -3,7 +3,7 @@ Settings.reload!
 
 FactoryGirl.define do
 
-  # Basic device with no connections
+  # Device with no connections
   factory :device do
     uri Settings.device.uri
     created_from Settings.user.uri
@@ -31,8 +31,7 @@ FactoryGirl.define do
     device_physicals { [ Factory.build(:device_physical) ] }
   end
 
-  # Device with all connections. It differs because it has the type range connected, 
-  # which has the statuses with range values.
+  # Device connected to a type which has range definitions
   factory :device_range_complete, parent: :device_complete do
     type_uri Settings.type_range.uri
     type_name Settings.type_range.name
