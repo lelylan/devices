@@ -107,7 +107,6 @@ feature "DevicesController" do
           before { @filtered_resource.device_functions.first.update_attributes(uri: @to_search) }
           before { visit "#{@uri}?function=#{@to_search}" }
           it "should filter the searched value" do
-            save_and_open_page
             should_have_device(@filtered_resource)
             page.should_not have_content @resource.device_functions.first.uri
           end
@@ -156,7 +155,7 @@ feature "DevicesController" do
         end
       end
 
-      it_should_behave_like "rescued when not found", 
+      it_should_behave_like "a rescued 404 resource", 
                             "visit @uri", "devices"
     end
   end
@@ -227,7 +226,7 @@ feature "DevicesController" do
         should_have_a_not_valid_resource
       end
 
-      it_should_behave_like "rescued when not found",
+      it_should_behave_like "a rescued 404 resource",
         "page.driver.put(@uri)", "devices"
     end
   end
@@ -252,7 +251,7 @@ feature "DevicesController" do
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "rescued when not found",
+      it_should_behave_like "a rescued 404 resource",
         "page.driver.delete(@uri)", "devices"
     end
   end

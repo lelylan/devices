@@ -49,8 +49,15 @@ class ApplicationController < ActionController::Base
         if user and user.verify(password)
           @current_user = user
         else
-          allow_public_resources('types')
+          allow_public_resources([])
         end
+      end
+    end
+
+    # Override the 401 notification method
+    ActionController::HttpAuthentication::Basic.module_eval do
+      def authentication_request(controller, realm)
+        controller.render_401
       end
     end
 

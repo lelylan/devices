@@ -42,7 +42,7 @@ feature "PhysicalController" do
         end
       end
 
-      it_should_behave_like "rescued when not found", 
+      it_should_behave_like "a rescued 404 resource", 
         "page.driver.post(@uri)", "devices", "/physical"
     end
   end
@@ -64,7 +64,7 @@ feature "PhysicalController" do
         @resource.reload.device_physicals.should have(0).items
       end
 
-      it_should_behave_like "rescued when not found", 
+      it_should_behave_like "a rescued 404 resource", 
         "page.driver.delete(@uri)", "devices", "/physical"
     end
   end  

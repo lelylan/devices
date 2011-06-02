@@ -72,7 +72,7 @@ feature "ConsumptionController" do
           should_have_valid_json(page.body)
         end
 
-        it_should_behave_like "rescued when not found", 
+        it_should_behave_like "a rescued 404 resource", 
                               "visit @uri", "devices"
      end
     end
@@ -93,7 +93,7 @@ feature "ConsumptionController" do
           should_have_valid_json(page.body)
         end
 
-        it_should_behave_like "rescued when not found", 
+        it_should_behave_like "a rescued 404 resource", 
                               "visit @uri", "devices"
       end
     end
@@ -141,7 +141,7 @@ feature "ConsumptionController" do
           page.should_not have_content @another_durational_consumption.device_uri
         end
 
-        it_should_behave_like "rescued when not found", 
+        it_should_behave_like "a rescued 404 resource", 
                               "visit @uri", "devices", "consumptions"
       end
     end
@@ -222,7 +222,7 @@ feature "ConsumptionController" do
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "rescued when not found",
+      it_should_behave_like "a rescued 404 resource",
         "page.driver.delete(@uri)", "devices"
     end
   end

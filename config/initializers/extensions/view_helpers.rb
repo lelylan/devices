@@ -3,8 +3,7 @@ module Lelylan
     module Helpers
       # Not authorized
       def render_401
-        render text: 'HTTP Basic: Access denied.',
-          status: 401 and return
+        render "shared/401", status: 401 and return
       end
 
       # Not found view

@@ -17,7 +17,7 @@ feature "FunctionsController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      it_should_behave_like "rescued when not found", "page.driver.put(@uri)", "devices", "/functions"
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "devices", "/functions"
 
 
       context "with a connected physical" do

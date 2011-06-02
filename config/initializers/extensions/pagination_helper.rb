@@ -52,7 +52,7 @@ module Lelylan
 
         # Get the cleaned request querystring
         def cleaned_uri(page, per)
-          query_string = params.except('format', 'action', 'controller').merge(page: page, per: per)
+          query_string = params.except('format', 'action', 'controller', 'device_id').merge(page: page, per: per)
           host = "#{request.protocol}#{request.host_with_port}#{request.path}?#{query_string.to_query}"
         end
 

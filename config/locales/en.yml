@@ -17,3 +17,5 @@ en:
     pagination:
       not_valid_page: "Not a valid page"
       not_valid_per_page: "Not a valid per_page"
+    access:
+      denied: "Access denied. HTTP Basic authentication failed"
