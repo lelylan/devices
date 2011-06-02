@@ -1,9 +1,9 @@
 class ConsumptionsController < ApplicationController
   before_filter :parse_json_body, only: %w(create update)
   before_filter :find_owned_resources
-  before_filter :find_type_consumption, only: 'index'
   before_filter :find_device, only: 'index'
   before_filter :find_resource, only: %w(show destroy)  
+  before_filter :filter_params, only: 'index'
 
   def index
     @consumptions = @consumptions.page(params[:page]).per(params[:per])
@@ -37,10 +37,6 @@ class ConsumptionsController < ApplicationController
       @consumptions = Consumption.where(created_from: current_user.uri)
     end
 
-    def find_type_consumption
-      @consumptions = @consumptions.where(type: params[:type]) if params[:type]
-    end
-
     def find_device
       if params[:device_id]
         @device = Device.find(params[:device_id])
@@ -50,5 +46,11 @@ class ConsumptionsController < ApplicationController
 
     def find_resource
       @consumption = @consumptions.find(params[:id])
+    end
+
+    def filter_params
+      @consumptions = @consumptions.where(type: params[:type]) if params[:type]
+      @consumptions = @consumptions.where(:occur_at.gte => Chronic.parse(params[:from])) if params[:from]
+      @consumptions = @consumptions.where(:occur_at.lte => Chronic.parse(params[:to])) if params[:to]
     end
 end

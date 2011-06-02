@@ -1,7 +1,8 @@
 class HistoriesController < ApplicationController
   before_filter :find_owned_resources
   before_filter :find_resource 
-  before_filter :find_pendings
+  before_filter :find_histories
+  before_filter :filter_params
 
   def index
     @histories.page(params[:page]).per(params[:per])
@@ -17,7 +18,12 @@ class HistoriesController < ApplicationController
       @device = @devices.find(params[:device_id])
     end
 
-    def find_pendings
+    def find_histories
       @histories = History.where(device_uri: @device.uri)
+    end
+    
+    def filter_params
+      @histories = @histories.where(:created_at.gte => Chronic.parse(params[:from])) if params[:from]
+      @histories = @histories.where(:created_at.lte => Chronic.parse(params[:to]))   if params[:to]
     end
 end

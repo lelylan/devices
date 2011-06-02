@@ -26,6 +26,7 @@ feature "StatusesController" do
           context "with intensity pending to false" do
             scenario "should have 'has set intensity' status" do
               visit(@uri)
+              save_and_open_page
               page.status_code.should == 200
               page.should have_content Settings.statuses.has_set_intensity.uri
               should_have_valid_json(page.body)

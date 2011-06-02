@@ -7,7 +7,7 @@ class StatusesController < ApplicationController
 
   def show
     respond_to do |format|
-      format.json { render json: @status }
+      format.json { render json: JSON.pretty_generate(@status) }
       format.png  { redirect_to @status[:image] }
     end
   end

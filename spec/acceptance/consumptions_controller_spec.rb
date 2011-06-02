@@ -34,20 +34,48 @@ feature "ConsumptionController" do
         should_have_root_as('resources')
       end
 
-      scenario "view instantaneous resources" do
-        visit "consumptions?type=instantaneous&page=1&per=100"
-        page.status_code.should == 200
-        should_have_consumption(@resource)
-        page.should_not have_content @durational_resource.uri
-        current_url.should match /type=instantaneous/
-      end
-      
-      scenario "view durational resources" do
-        visit "consumptions?type=durational&page=1&per=100"
-        page.status_code.should == 200
-        should_have_consumption(@durational_resource)
-        page.should_not have_content @resource.uri
-        current_url.should match /type=durational/
+      context "with filter" do
+        context "params[:type]=instantaneous" do
+          before { @to_search = 'instantaneous' }
+          before { visit "#{@uri}?type=#{@to_search}" }
+          it "should filter the searched value" do
+            should_have_consumption(@resource)
+            page.should_not have_content @durational_resource.uri
+            current_url.should match /type=#{@to_search}/
+          end
+        end
+
+        context "params[:type]=durational" do
+          before { @to_search = 'durational' }
+          before { visit "#{@uri}?type=#{@to_search}" }
+          it "should filter the searched value" do
+            should_have_consumption(@durational_resource)
+            page.should_not have_content @resource.uri
+            current_url.should match /type=#{@to_search}/
+          end
+        end
+
+        context "params[:from]" do
+          before { @to_search = 'yesterday' }
+          before { @occur_at = Chronic.parse('1 week ago') }
+          before { @not_visible = Factory(:consumption, occur_at: @occur_at)}
+          before { visit "#{@uri}?from=#{@to_search}" }
+          it "should filter the searched value" do
+            should_have_consumption(@resource)
+            page.should_not have_content @occur_at.to_s
+          end
+        end
+
+        context "params[:to]" do
+          before { @to_search = 'yesterday' }
+          before { @occur_at = Chronic.parse('1 week ago') }
+          before { @visible = Factory(:consumption, occur_at: @occur_at)}
+          before { visit "#{@uri}?to=#{@to_search}" }
+          it "should filter the searched value" do
+            should_have_consumption(@visible)
+            page.should_not have_content @resource.to_s
+          end
+        end
       end
     end
   end
