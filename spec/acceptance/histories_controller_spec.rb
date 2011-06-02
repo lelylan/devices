@@ -33,7 +33,32 @@ feature "HisotriesController" do
           should_have_history_property property
         end
       end
-      
+
+      context "with filter" do
+        context "params[:from]" do
+          before { @to_search = 'yesterday' }
+          before { @occur_at = Chronic.parse('1 week ago') }
+          before { @not_visible = Factory(:history, created_at: @occur_at)}
+          before { visit "#{@uri}?from=#{@to_search}" }
+          it "should filter the searched value" do
+            should_have_history(@history)
+            page.should_not have_content @occur_at.to_s
+          end
+        end
+
+        context "params[:to]" do
+          before { @to_search = 'yesterday' }
+          before { @occur_at = Chronic.parse('1 week ago') }
+          before { @visible = Factory(:history, created_at: @occur_at)}
+          before { visit "#{@uri}?to=#{@to_search}" }
+          it "should filter the searched value" do
+            save_and_open_page
+            should_have_history(@visible)
+            page.should_not have_content @history.to_s
+          end
+        end
+      end
+
       scenario "do not view not related hisotries" do
         page.should_not have_content @not_owned.device_uri
       end 

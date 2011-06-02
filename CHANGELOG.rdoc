@@ -3,6 +3,7 @@
 
 == Release v0.1.1
 
+* Added query system to consumptions and histories (from and to, based on field occur_at)
 * Added query system to devices (on name, type, type_name, category, category_name, property, property_name, property_value, function, function_name)
 * Added status matching through range values. It actually search in both values and range to find a mathcing value
 
