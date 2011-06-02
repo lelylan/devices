@@ -12,6 +12,9 @@ another_user:
 type:
   uri: <%= type_uri = "#{type_host}/types/dimmer" %>
   name: 'Dimmer'
+type_range:
+  uri: <%= type_range_uri = "#{type_host}/types/dimmer_range" %>
+  name: 'Dimmer range'
 device:
   uri: <%= device_uri = "#{host}/devices/closet_dimmer" %>
   name: 'Closet dimmer'
@@ -301,4 +304,125 @@ unite_node_json: |
           } 
       ] 
   } 
+type_range_json: |
+  {
+    "name": "Dimmer range",
+    "id": "<%= type_range_json_id = "4dc24833d033a9778500000a" %>",
+    "uri": "<%= type_range_uri + "_range" %>",
+    "public": "true",
+    "created_at": "2011-05-05 08:48:19 +0200",
+    "updated_at": "2011-05-05 08:48:19 +0200",
+    "categories": [ 
+        {
+            "name": "Lighting",
+            "uri": "<%= category_uri %>", 
+            "id": "4dd4d3ecd033a92a0a000095"
+        }
+    ],
+    "properties": [
+        {
+            "id": "4db94c2fd033a917e7000001",
+            "uri": "<%= intensity_uri %>",
+            "name": "Intensity",
+            "default": "<%= default_intensity_value %>",
+            "values": [
+                "0.0",
+                "2.0",
+                "4.0",
+                "6.0",
+                "8.0",
+                "10.0" 
+            ],
+            "created_at": "2011-04-28 13:14:55 +0200",
+            "updated_at": "2011-05-05 08:32:20 +0200" 
+        },
+        {
+            "id": "4dc2441ad033a97785000001",
+            "uri": "<%= status_uri %>",
+            "name": "Status",
+            "default": "<%= default_status_value %>",
+            "values": [
+                "on",
+                "off" 
+            ],
+            "created_at": "2011-05-05 08:30:50 +0200",
+            "updated_at": "2011-05-05 08:30:50 +0200" 
+        } 
+    ],
+    "functions" : [],
+    "statuses" : [
+      {
+          "id": "4dd4d3ecd033a92a0a00008f",
+          "uri": "<%= is_setting_max_uri %>",
+          "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
+          "name": "Setting maximum",
+          "image": "<%= is_setting_max_uri %>/image",
+          "properties": [
+              {
+                  "uri": "<%=intensity_uri%>",
+                  "pending": true,
+                  "values": ["10.0"],
+                  "range": {"start": "0.01", "end": "9.99"}
+              }
+          ]
+      }
+      ,
+      {
+          "id": "4dd4d3ecd033a92a0a000093",
+          "uri": "<%= has_set_max_uri %>",
+          "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
+          "name": "Maximum set",
+          "image": "<%= has_set_max_uri %>/image",
+          "properties": [ 
+              { 
+                  "uri": "<%=intensity_uri%>", 
+                  "pending": false,
+                  "values": ["10.0"],
+                  "range": {"start": "0.01", "end": "9.99"}
+              }
+          ]
+      }
+      ,
+      {
+          "id": "4dd4d3ecd033a92a0a00008d",
+          "uri": "<%= is_setting_intensity_uri %>",
+          "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
+          "name": "Setting intensity",
+          "image": "<%= is_setting_intensity_uri %>/image",
+          "properties": [ 
+              { 
+                  "uri": "<%=intensity_uri%>", 
+                  "pending": true,
+                  "values": [],
+                  "range": {"start": "0.01", "end": "9.99"}
+              }
+          ]
+      }
+      ,
+      {
+          "id": "4dd4d3ecd033a92a0a000091",
+          "uri": "<%= has_set_intensity_uri %>",
+          "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
+          "name": "Intensity set",
+          "image": "<%= has_set_intensity_uri %>/image",
+          "properties": [ 
+              { 
+                  "uri": "<%=intensity_uri%>", 
+                  "pending": null,
+                  "values": [],
+                  "range": {"start": "0.01", "end": "9.99"}
+              }
+          ]
+      }  
+      ,
+      {
+          "id": "4dd4d3ecd033a92a0a000093",
+          "uri": "<%= default_uri %>",
+          "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" },
+          "name": "Default status",
+          "image": "<%= default_uri %>/image",
+          "properties": []
+      }  
+    ]
+  }
 

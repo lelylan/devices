@@ -18,6 +18,7 @@ FactoryGirl.define do
   end
 
   # Device with all connections
+  # (statuses are not present because retrived from the type every time)
   factory :device_complete, parent: :device do
     device_categories {[ Factory.build(:device_category) ]}
     device_properties {[
@@ -28,6 +29,13 @@ FactoryGirl.define do
       Factory.build(:device_turn_on),
       Factory.build(:device_turn_off) ]}
     device_physicals { [ Factory.build(:device_physical) ] }
+  end
+
+  # Device with all connections. It differs because it has the type range connected, 
+  # which has the statuses with range values.
+  factory :device_range_complete, parent: :device_complete do
+    type_uri Settings.type_range.uri
+    type_name Settings.type_range.name
   end
 
   # Device with no physical connection (it has all other connections)

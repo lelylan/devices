@@ -1,5 +1,6 @@
 # Type JSON stubbing
 stub_request(:get, Settings.type.uri).to_return(body: Settings.type_json)
+stub_request(:get, Settings.type_range.uri).to_return(body: Settings.type_range_json)
 
 # Function JSON stubbing
 stub_request(:get, Settings.functions.set_intensity.uri).to_return(body: Settings.function_json)
