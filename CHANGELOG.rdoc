@@ -1,11 +1,12 @@
 = Changelog
 
 
-== Release v0.1.1
+== Release v0.1.1 (2011/06/02)
 
 * Added query system to consumptions and histories (from and to, based on field occur_at)
 * Added query system to devices (on name, type, type_name, category, category_name, property, property_name, property_value, function, function_name)
 * Added status matching through range values. It actually search in both values and range to find a mathcing value
+* Added type wrapper instead of direct calls to URIs
 
 
 == Release v0.1.0 (2011/05/22)

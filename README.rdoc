@@ -41,7 +41,6 @@ Getting set up should require minimal effort
 * Run bundle install for dependencies.
 * Run bundle exec spec rspec to execute all specs.
 
-
 The project provides a guard script as well for easy automated testing.  
 
   bundle exec guard
