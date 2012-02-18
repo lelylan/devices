@@ -1,0 +1,42 @@
+device:
+  host: <%= device_host = "https://device.lelylan.com" %>
+  uri: <%= "#{device_host}/devices/closet-dimmer" %>
+
+type:
+  host: <%= type_host = "https://type.lelylan.com" %>
+  uri: <%= "#{type_host}/type/dimmer" %>
+
+physical:
+  host: <%= physical_host = "https://node.lelylan.com" %>
+  uri: <%= "#{physical_host}/devices/physical-dimmer" %>
+
+user: 
+  host: <%= people_host = "https://people.lelylan.com" %>
+  uri: <%= "#{people_host}/users/alice" %>
+  email: 'alice@example.com'
+  another: 
+    uri: <%= "#{people_host}/users/bob" %>
+    email: 'bob@example.com'
+
+properties:
+  status:
+    uri: <%= status_uri = "#{type_host}/properties/status" %> 
+    name: 'Status'
+    default_value: 'off'
+    new_value: 'on'
+  intensity:
+    uri: <%= intensity_uri = "#{type_host}/properties/intensity" %> 
+    name: 'Intensity'
+    default_value: '0.0'
+    new_value: '100.0'
+
+pending:
+  uri: <%= "#{device_host}/pendings/set_intensity" %>
+  closed:
+    uri: <%= "#{device_host}/pendings/closed_set_intensity" %>
+
+
+validation:
+  uri:
+    valid: 'http://example.com'
+    not_valid: 'example'

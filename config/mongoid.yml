@@ -1,10 +1,10 @@
 development:
   host: localhost
-  database: device_development
+  database: devices_development
 
 test:
   host: localhost
-  database: device_test
+  database: devices_test
 
 # set these environment variables on your prod server
 production:

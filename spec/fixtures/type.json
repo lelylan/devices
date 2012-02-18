@@ -1,0 +1,80 @@
+{
+  "uri": "https://type.lelylan.com/types/dimmer",
+  "id": "4dd4d3ecd033a92a0a0000a2",
+  "name": "Dimmer",
+  "public": true,
+  "created_from": { "uri": "https://user.lelylan.com/users/alice" },
+  "categories": [ 
+  {
+    "name": "Lighting",
+    "uri": "https://type.lelylan.com/categories/lighting",
+    "id": "4dd4d3ecd033a92a0a000095",
+    "created_from": { "uri": "https://user.lelylan.com/users/4dab9e92d033a90889000001" }
+  }
+  ],
+  "properties": [ 
+  {
+    "uri": "https://type.lelylan.com/properties/status",
+    "id": "4dd4d3ecd033a92a0a000084",
+    "name": "Status",
+    "values": ["on","off"]
+  }
+  ,
+  {
+    "uri": "https://type.lelylan.com/properties/intensity",
+    "id": "4dd4d3ecd033a92a0a000085",
+    "name": "Intensity",
+    "values": ["0.0","10.0","20.0","30.0","40.0","50.0","60.0","70.0","80.0","90.0","100.0"]
+  }
+  ],
+  "functions": [ 
+  {
+    "uri": "https://type.lelylan.com/functions/set-intensity",
+    "id": "4dd4d3ecd033a92a0a000086",
+    "name": "Set intensity",
+    "properties": [
+    {
+      "uri": "https://type.lelylan.com/properties/status", 
+      "value": "off",
+      "secret": false,
+      "before": false
+    },
+    { 
+      "uri": "https://type.lelylan.com/properties/intensity", 
+      "value": "",
+      "secret": true,
+      "before": true 
+    }
+    ]
+  }
+  ,
+  {
+    "uri": "https://type.lelylan.com/functions/turn-on",
+    "id": "4dd4d3ecd033a92a0a000089",
+    "name": "Turn on",
+    "properties": [ 
+    { 
+      "uri": "https://type.lelylan.com/properties/status", 
+      "value": "on",
+      "secret": false,
+      "before": false 
+    }
+    ]
+  }
+  ,
+  {
+    "uri": "https://type.lelylan.com/functions/turn-off",
+    "id": "4dd4d3ecd033a92a0a00008b",
+    "name": "Turn off",
+    "properties": [ 
+    { 
+      "uri": "https://type.lelylan.com/properties/status", 
+      "value": "off",
+      "secret": false,
+      "before": false 
+    }
+    ]
+  }
+  ],
+  "statuses": []
+}

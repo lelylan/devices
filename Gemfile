@@ -11,10 +11,12 @@ gem 'chronic'
 gem 'kaminari'
 gem 'rails_config'
 gem 'bcrypt-ruby', :require => "bcrypt"
+gem 'httparty'
 gem 'type_ruby', path: '/Users/andreareginato/dev/work/lelylan/clients/type_ruby'
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.6'
+  gem 'shoulda'
   gem 'capybara'
   gem 'factory_girl_rails'
   gem 'database_cleaner'
@@ -25,6 +27,8 @@ end
 
 group :test do
   gem 'webmock'
+  gem 'growl'
+  gem 'rb-fsevent'
 end
 
 group :assets do

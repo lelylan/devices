@@ -1,0 +1,13 @@
+{
+  "meta": 
+  { 
+    "status": "401",
+    "request": "https://device.lelylan.com/devices/4dd4d3ecd033a92a0a0000a2"
+  },
+  "error": 
+  {
+    "code": "notifications.access.denied",
+    "message": "Access denied. HTTP Basic authentication failed"
+  }
+}
+

@@ -1,0 +1,13 @@
+{
+  "meta": 
+  { 
+    "status": "503",
+    "request": "https://type.lelylan.com/types/4dd4d3ecd033a92a0a0000a2"
+  },
+  "error": 
+  {
+    "code": "notifications.server.unavailable",
+    "message": "Type service is over capacity",
+    "info": "Check http://status.lelylan.com/type for updates on the status of the Type service"
+  }
+}
