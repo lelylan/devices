@@ -1,0 +1,14 @@
+{
+  "uri": "https://device.lelylan.com/devices/closet-dimmer",
+  "id": "4dcb9e23d033a9088900000a",
+  "name": "Closet dimmer",
+  "created_from": "https://people.lelylan.com/users/alice",
+  "type": { "uri": "https://type.lelylan.com/types/dimmer" },
+  "created_at": "2011-05-12 10:45:23 +0200",
+  "updated_at": "2011-05-12 10:45:23 +0200",
+  "properties": [ 
+    { "uri": "https://type.lelylan.com/properties/status", "value": "off" },
+    { "uri": "https://type.lelylan.com/properties/intensity", "value": "0.0" }
+  ],
+  "physical_device": { "uri": "https://node.lelylan.com/devices/physical-dimmer" }
+}

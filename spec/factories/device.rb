@@ -9,11 +9,9 @@ FactoryGirl.define do
     name 'Closet dimmer'
     created_from Settings.user.uri
     type_uri Settings.type.uri
-
     device_properties {[
       Factory.build(:device_status),
       Factory.build(:device_intensity) ]}
-
     device_physicals {[ Factory.build(:device_physical) ]}
   end
 

@@ -30,12 +30,6 @@ properties:
     default_value: '0.0'
     new_value: '100.0'
 
-pending:
-  uri: <%= "#{device_host}/pendings/set_intensity" %>
-  closed:
-    uri: <%= "#{device_host}/pendings/closed_set_intensity" %>
-
-
 validation:
   uri:
     valid: 'http://example.com'

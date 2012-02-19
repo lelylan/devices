@@ -11,6 +11,7 @@ gem 'chronic'
 gem 'kaminari'
 gem 'rails_config'
 gem 'bcrypt-ruby', :require => "bcrypt"
+gem 'rest-client'
 gem 'httparty'
 gem 'type_ruby', path: '/Users/andreareginato/dev/work/lelylan/clients/type_ruby'
 
@@ -23,6 +24,7 @@ group :development, :test do
   gem 'fuubar'
   gem 'guard-rspec'
   gem 'delorean'
+  gem 'hashie'
 end
 
 group :test do

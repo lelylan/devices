@@ -1,3 +1,7 @@
+def mock_headers 
+  {'Accept'=>'application/json', 'Content-Type' => 'application/json'}
+end
+
 # Expectations
 def a_get(path)
   a_request(:get, authenticated(path))
@@ -11,8 +15,8 @@ def a_post(path)
   a_request(:post, authenticated(path))
 end
 
-def a_put(path, type='basic')
-  path = authenticated(path) if type=='basic'
+def a_put(path, auth=true)
+  path = authenticated(path) if auth
   a_request(:put, path)
 end
 
@@ -22,30 +26,26 @@ end
 
 
 # Stubs
-def stub_get(path)
-  stub_request(:get, authenticated(path)).
-    with(headers: {'Accept'=>'application/json', 'Content-Type' => 'application/json'})
+def stub_get(path, auth=true)
+  path = authenticated(path) if auth
+  stub_request(:get, path).with(headers: mock_headers)
 end
 
-def stub_public_get(path)
-  stub_request(:get, path).
-    with(headers: {'Accept'=>'application/json', 'Content-Type' => 'application/json'})
+def stub_post(path, auth=true)
+  path = authenticated(path) if auth
+  stub_request(:post, path).with(headers: mock_headers)
 end
 
-def stub_post(path)
-  stub_request(:post, authenticated(path)).
-    with(headers: {'Accept'=>'application/json', 'Content-Type' => 'application/json'})
+def stub_put(path, auth=true)
+  path = authenticated(path) if auth
+  stub_request(:put, path).with(headers: mock_headers)
 end
 
-def stub_put(path)
-  stub_request(:put, authenticated(path)).
-    with(headers: {'Accept'=>'application/json', 'Content-Type' => 'application/json'})
+def stub_delete(path, auth=true)
+  path = authenticated(path) if auth
+  stub_request(:delete, path).with(headers: mock_headers)
 end
 
-def stub_delete(path)
-  stub_request(:delete, authenticated(path)).
-    with(headers: {'Accept'=>'application/json', 'Content-Type' => 'application/json'})
-end
 
 
 # Fixtures
@@ -57,6 +57,9 @@ def fixture(file)
   File.new(fixture_path + '/' + file)
 end
 
+def json_fixture(file)
+  HashWithIndifferentAccess.new JSON.parse fixture(file).read
+end
 
 # Basic Authenticatin definition
 def authenticated(path)
@@ -67,8 +70,3 @@ def authenticated(path)
   return path
 end
 
-# Device properties
-# TODO: remove and find a much better way to do this
-def new_device_properties
-  HashWithIndifferentAccess.new(JSON.parse(Settings.unite_node_json))[:properties]
-end

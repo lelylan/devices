@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Device do
-  before { Pending.destroy_all }
-
   # presence
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:type_uri) }
@@ -33,7 +31,7 @@ describe Device do
         before { @physical = {} }
         it "should get a not valid notification" do
           lambda{ 
-            Factory(:device_no_physical, physical: @physical) 
+            Factory(:device_no_physical, physical: @physical)
           }.should raise_error(Mongoid::Errors::Validations)
         end
       end
@@ -76,70 +74,40 @@ describe Device do
 
 
 
-  context "synchronize_device"
+  context "synchronize_device" do
+    before { @properties = json_fixture('properties.json')[:properties] }
 
+    context "with physical connection" do
+      before  { stub_http_request(:put, Settings.physical.uri).with(body: {properties: @properties}) }
+      before  { @device = Factory(:device) }
+      before  { @device.synchronize_device(@properties) }
 
+      it "changes device property status" do
+        @device.reload.device_properties[0][:value].should == "on"
+      end
 
-  # Pending values property update on device
-  describe "#update_open_pendings" do
-    before { @device = Factory(:device) }
+      it "changes device property intensity" do
+        @device.reload.device_properties[1][:value].should == "100.0"
+      end
 
-
-    context "with open pendings" do
-      before { @pending_closed = Factory(:pending_closed) }
-      before { @pending_open   = Factory(:pending) }
-      before { @device.update_open_pendings }
-
-      it "should have all properties pending" do
-        @device.reload.device_properties.each do |device_property|
-          device_property.pending.should == true
-        end
+      it "update the physical device" do
+        a_put(Settings.physical.uri, false).with(body: {properties: @properties}).should have_been_made.once
       end
     end
 
 
-    context "with a pending property" do
-      before { @pending_closed    = Factory(:pending_closed) }
-      before { @pending_intenisty = Factory(:pending_intensity) } 
-      before { @device.update_open_pendings }
+    context "without physical connection" do
+      before  { @device = Factory(:device_no_physical) }
+      before  { @device.synchronize_device(@properties) }
 
-      describe "open property connection" do
-        subject { @device.reload.device_properties.where(pending:true).first }
-        it { should_not be_nil }
-        its(:uri) { should == Settings.properties.intensity.uri }
+      it "changes device property status" do
+        @device.reload.device_properties[0][:value].should == "on"
       end
 
-      describe "closed property connection" do
-        subject { @device.reload.device_properties.where(pending:false).first }
-        it { should_not be_nil }
-        its(:uri) { should == Settings.properties.status.uri }
-      end
-    end
-
-
-    context "with more than one open pending per property" do
-      before { @closed_pending = Factory(:pending_closed) }
-      before { @open_pending = Factory(:pending) }
-      before { @half_pending = Factory(:pending_intensity) } 
-      before { @device.update_open_pendings }
-
-      it "should have all properties open" do
-        @device.reload.device_properties.each do |device_property|
-          device_property.pending.should == true
-        end
-      end
-    end
-
-
-    context "with closed pending" do
-      before { @closed_pending = Factory(:pending_closed) }
-      before { @device.update_open_pendings }
-
-      it "should have all properties closed" do
-        @device.reload.device_properties.each do |device_property|
-          device_property.pending.should == false
-        end
+      it "changes device property intensity" do
+        @device.reload.device_properties[1][:value].should == "100.0"
       end
     end
   end
+
 end
