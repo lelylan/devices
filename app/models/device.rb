@@ -8,7 +8,7 @@ class Device
   field :name
   field :type_uri
   field :labels, type: Array, default: []
-  
+
   attr_accessor :physical  
   attr_accessible :name, :type_uri, :labels
 

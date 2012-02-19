@@ -30,6 +30,12 @@ properties:
     default_value: '0.0'
     new_value: '100.0'
 
+consumptions:
+  instantaneous:
+    uri: <%= "#{device_host}/consumptions/instantaneous" %>
+  durational:
+    uri: <%= "#{device_host}/consumptions/durational" %>
+
 validation:
   uri:
     valid: 'http://example.com'
