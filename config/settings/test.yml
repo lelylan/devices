@@ -36,6 +36,9 @@ consumptions:
   durational:
     uri: <%= "#{device_host}/consumptions/durational" %>
 
+history:
+  uri: <%= "#{device_host}/histories/set_intensity" %>
+
 validation:
   uri:
     valid: 'http://example.com'

@@ -15,8 +15,8 @@ class Device
   embeds_many :device_properties  # properties inherited from type
   embeds_many :device_physicals   # physical devices
 
-  validates :uri, url: true
-  validates :created_from, url: true
+  validates :uri, presence: true, url: true
+  validates :created_from, presence: true, url: true
   validates :name, presence: true
   validates :type_uri, presence: true, url: true
 

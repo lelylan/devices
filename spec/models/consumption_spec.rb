@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe Consumption do
   # presence
+  it { should validate_presence_of(:uri) }
+  it { should validate_presence_of(:created_from) }
   it { should validate_presence_of(:device_uri) }
   it { should validate_presence_of(:value) }
 

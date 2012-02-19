@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe Device do
   # presence
+  it { should validate_presence_of(:uri) }
+  it { should validate_presence_of(:created_from) }
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:type_uri) }
 
