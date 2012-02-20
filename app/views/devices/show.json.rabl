@@ -1,13 +1,17 @@
-object @device
+object @device => false
 
-attributes :uri, :id, :name, :type_uri
+attributes :uri, :id, :name
+attributes :created_at, :updated_at
+
+node :type do |device|
+  { :uri => device.type_uri }
+end
 
 child :device_properties do
-  attributes :uri, :value
+  attribute :uri
 end
 
-child :physical do
-  attributes :uri
+child :device_properties do
+  attribute :uri
 end
 
-attributes :created_at, :updated_at

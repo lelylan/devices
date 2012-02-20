@@ -10,6 +10,8 @@ guard 'rspec', cli: '--format Fuubar --color', all_on_start: true, all_after_pas
   watch(%r{^spec/support/(.+)\.rb$})                  { "spec" }
   watch('app/controllers/application_controller.rb')  { "spec/requests" }
 
+  watch(%r{^app/views/(.+)/(.+)\.rabl$})              { "spec/requests" }
+
   # Capybara request specs
   watch(%r{^app/views/(.+)/.*\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
 end
