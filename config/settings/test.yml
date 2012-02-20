@@ -12,8 +12,10 @@ physical:
 
 user: 
   host: <%= people_host = "https://people.lelylan.com" %>
+  auth: <%= "#{people_host}/authentication" %>
   uri: <%= "#{people_host}/users/alice" %>
   email: 'alice@example.com'
+  password: 'example' 
   another: 
     uri: <%= "#{people_host}/users/bob" %>
     email: 'bob@example.com'

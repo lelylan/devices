@@ -10,6 +10,7 @@ gem 'email_validator'
 gem 'chronic'
 gem 'kaminari'
 gem 'rails_config'
+gem 'rabl'
 gem 'bcrypt-ruby', :require => "bcrypt"
 gem 'httparty'
 gem 'type_ruby', path: '/Users/andreareginato/dev/work/lelylan/clients/type_ruby'
@@ -30,6 +31,7 @@ group :test do
   gem 'webmock'
   gem 'growl'
   gem 'rb-fsevent'
+  gem 'launchy'
 end
 
 group :assets do
