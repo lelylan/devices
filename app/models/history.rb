@@ -22,6 +22,7 @@ class History
     history.save! and return history
   end
 
+  # Add properties to the history resource
   def create_properties(properties)
     properties.each do |property|
       self.history_properties.create!(
