@@ -1,12 +1,13 @@
 module DeviceViewMethods
 
   def should_have_only_owned_device(device)
-    should_have_device(device)
+    json = JSON.parse(page.source)
+    should_have_device(device, json.first)
     should_not_have_not_owned_devices
   end
 
-  def should_have_device(device)
-    json = Hashie::Mash.new JSON.parse(page.source).first
+  def should_have_device(device, json)
+    json = Hashie::Mash.new json
     json.uri.should == device.uri
     json.id.should == device.id.as_json
     json.name.should == device.name
