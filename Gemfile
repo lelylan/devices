@@ -25,6 +25,8 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'delorean'
   gem 'hashie'
+  gem 'spork', '~> 1.0rc'
+  gem 'guard-spork'
 end
 
 group :test do

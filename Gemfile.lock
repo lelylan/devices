@@ -95,6 +95,9 @@ GEM
       thor (~> 0.14.6)
     guard-rspec (0.6.0)
       guard (>= 0.10.0)
+    guard-spork (0.5.2)
+      guard (>= 0.10.0)
+      spork (>= 0.8.4)
     hashie (1.0.0)
     hike (1.2.1)
     httparty (0.8.1)
@@ -186,6 +189,7 @@ GEM
       rubyzip
     shoulda (2.11.3)
     simple_oauth (0.1.5)
+    spork (1.0.0rc2)
     sprockets (2.1.2)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -224,6 +228,7 @@ DEPENDENCIES
   fuubar
   growl
   guard-rspec
+  guard-spork
   hashie
   httparty
   kaminari
@@ -236,6 +241,7 @@ DEPENDENCIES
   rspec-rails (~> 2.6)
   sass-rails (~> 3.2.3)
   shoulda
+  spork (~> 1.0rc)
   type_ruby!
   uglifier (~> 1.0.3)
   validate_url
