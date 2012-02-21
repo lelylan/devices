@@ -1,5 +1,4 @@
 module HelperMethods
-
   # Basic authentication.
   def basic_auth
     body = { username: Settings.user.email, password: Settings.user.password }
@@ -25,11 +24,6 @@ module HelperMethods
   # Valid JSON
   def should_have_valid_json(body)
     expect { JSON.parse(body) }.to_not raise_error
-  end
-
-  # Root key for a list of resources
-  def should_have_root_as(resource_name)
-    page.should have_content('"' + resource_name + '"')
   end
 end
 

@@ -1,17 +1,19 @@
-object @device => false
+object @device
 
-attributes :uri, :id, :name
-attributes :created_at, :updated_at
+node(:uri)  { |device| device.uri }
+node(:id)   { |device| device.id }
+node(:name) { |device| device.name }
+node(:type) { |device| { uri: device.type_uri } }
 
-node :type do |device|
-  { :uri => device.type_uri }
+node(:properties) do |device|
+  device.device_properties.map do |property|
+    { uri: property.uri, value: property.value }
+  end
 end
 
-child :device_properties do
-  attribute :uri
+node(:physical) do |device|
+  { uri: device.device_physicals.first.uri }
 end
 
-child :device_properties do
-  attribute :uri
-end
-
+node(:created_at) { |device| device.created_at }
+node(:updated_at) { |device| device.updated_at }

@@ -1,3 +1,3 @@
-collection @devices => 'resources'
+collection @devices
 
 extends "devices/show"

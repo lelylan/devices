@@ -17,13 +17,10 @@ feature "DevicesController" do
 
       scenario "view all resources" do
         visit @uri
-        save_and_open_page
         page.status_code.should == 200
         should_have_device(@resource)
         should_not_have_device(@resource_not_owned)
-        #should_have_pagination(@uri)
         should_have_valid_json(page.source)
-        #should_have_root_as('resources')
       end
     end
   end
