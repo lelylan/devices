@@ -7,12 +7,14 @@ require 'spork'
 Spork.prefork do
   ENV['RAILS_ENV'] ||= 'test'
  
+  # Mongoid models reload
   require "rails/mongoid"
   Spork.trap_class_method(Rails::Mongoid, :load_models)
+  # Routes and app/ classes reload
   require "rails/application"
   Spork.trap_method(Rails::Application::RoutesReloader, :reload!)
   Spork.trap_method(Rails::Application, :eager_load!)
-  
+  # Load railties
   require File.expand_path('../../config/environment', __FILE__)
   Rails.application.railties.all { |r| r.eager_load! }
 
