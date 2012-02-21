@@ -3,13 +3,11 @@ class DeviceProperty
   include Mongoid::Timestamps
 
   field :uri
-  field :name
   field :value
 
-  attr_accessible :uri, :name, :value
+  attr_accessible :uri, :value
 
   validates :uri, url: true
-  validates :name, presence: true
 
   embedded_in :device
 end
