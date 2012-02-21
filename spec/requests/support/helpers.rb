@@ -22,8 +22,8 @@ module HelperMethods
   end
 
   # Valid JSON
-  def should_have_valid_json(body)
-    expect { JSON.parse(body) }.to_not raise_error
+  def should_have_valid_json
+    expect { JSON.parse(page.source) }.to_not raise_error
   end
 end
 

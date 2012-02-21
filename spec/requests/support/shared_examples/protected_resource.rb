@@ -5,7 +5,7 @@ shared_examples_for "protected resource" do |action|
     it "is not authorized" do
       eval(action)
       should_not_be_authorized
-      should_have_valid_json(page.source)
+      should_have_valid_json
     end
   end
 end
