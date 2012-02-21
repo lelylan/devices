@@ -37,13 +37,11 @@ FactoryGirl.define do
   # --------------
 
   factory :device_status, class: :device_property do
-    name 'Status'
     uri Settings.properties.status.uri
     value 'off'
   end
 
   factory :device_intensity, class: :device_property do
-    name 'Intensity'
     uri Settings.properties.intensity.uri
     value '0.0'
   end

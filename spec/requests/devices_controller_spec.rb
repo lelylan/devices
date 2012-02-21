@@ -18,9 +18,8 @@ feature "DevicesController" do
       scenario "view all resources" do
         visit @uri
         page.status_code.should == 200
-        should_have_device(@resource)
-        should_not_have_device(@resource_not_owned)
-        should_have_valid_json(page.source)
+        should_have_valid_json page.source
+        should_have_only_owned_device @resource
       end
     end
   end
