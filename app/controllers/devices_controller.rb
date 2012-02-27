@@ -20,7 +20,7 @@ class DevicesController < ApplicationController
 
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
-      from = Device.where(uri: params[:after]).first if params[:after]
+      from = Device.where(uri: params[:from]).first if params[:from]
       @devices = @devices.where(:_id.gt => from.id) if from
     end
 

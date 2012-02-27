@@ -4,7 +4,9 @@ feature "DevicesController" do
   before { Device.destroy_all }
 
 
+  # --------------
   # GET /devices
+  # --------------
   context ".index" do
     before { @uri = "/devices" }
     before { @resource = Factory(:device) }
@@ -23,35 +25,6 @@ feature "DevicesController" do
         should_have_only_owned_device @resource
       end
 
-      context "with pagination" do
-        before { Device.destroy_all }
-        before { @resource = Factory(:device) }
-        before { @resources = FactoryGirl.create_list(:device, Settings.pagination.per + 5, uri: Settings.device.another.uri) }
-
-        scenario "show next page" do
-          visit "#{@uri}?after=#{@resource.uri}"
-          page.status_code.should == 200
-          should_have_valid_json
-          should_contain_device @resources.first
-          page.should_not have_content @resource.uri
-        end
-
-        scenario "show default resources" do
-          visit "#{@uri}"
-          JSON.parse(page.source).should have(Settings.pagination.per).items
-        end
-
-        scenario "show 5 resources" do
-          visit "#{@uri}?per=5"
-          JSON.parse(page.source).should have(5).items
-        end
-
-        scenario "show all resources" do
-          visit "#{@uri}?per=all"
-          JSON.parse(page.source).should have(Device.count).items
-          JSON.parse(page.source).should_not have(Settings.pagination.per).items
-        end
-      end
 
       context "when searching" do
         context "name" do
@@ -100,12 +73,48 @@ feature "DevicesController" do
           end
         end
       end
+
+
+      context "when paginating" do
+        before { Device.destroy_all }
+        before { @resource = Factory(:device) }
+        before { @resources = FactoryGirl.create_list(:device, Settings.pagination.per + 5, uri: Settings.device.another.uri) }
+
+        context "with :from" do
+          scenario "should show next page" do
+            visit "#{@uri}?from=#{@resource.uri}"
+            page.status_code.should == 200
+            should_have_valid_json
+            should_contain_device @resources.first
+            page.should_not have_content @resource.uri
+          end
+        end
+
+        context "with :per" do
+          scenario "show the default number of resources" do
+            visit "#{@uri}"
+            JSON.parse(page.source).should have(Settings.pagination.per).items
+          end
+
+          scenario "show 5 resources" do
+            visit "#{@uri}?per=5"
+            JSON.parse(page.source).should have(5).items
+          end
+
+          scenario "show all resources" do
+            visit "#{@uri}?per=all"
+            JSON.parse(page.source).should have(Device.count).items
+            JSON.parse(page.source).should_not have(Settings.pagination.per).items
+          end
+        end
+      end
     end
   end
 
 
-
+  # ------------------
   # GET /devices/:id
+  # ------------------
   context ".show" do
     before { @resource = Factory(:device) }
     before { @uri = "/devices/#{@resource.id.as_json}" }
