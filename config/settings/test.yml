@@ -1,10 +1,13 @@
 device:
   host: <%= device_host = "https://device.lelylan.com" %>
   uri: <%= "#{device_host}/devices/closet-dimmer" %>
-
+  another:
+    uri: <%= "#{device_host}/devices/another-closet-dimmer" %>
 type:
   host: <%= type_host = "https://type.lelylan.com" %>
-  uri: <%= "#{type_host}/type/dimmer" %>
+  uri: <%= "#{type_host}/types/dimmer" %>
+  another:
+    uri: <%= "#{type_host}/types/another-dimmer" %>
 
 physical:
   host: <%= physical_host = "https://node.lelylan.com" %>
@@ -31,6 +34,9 @@ properties:
     name: 'Intensity'
     default_value: '0.0'
     new_value: '100.0'
+  another:
+    uri: <%= "#{type_host}/properties/another-property" %>
+    value: '25.0'
 
 consumptions:
   instantaneous:
