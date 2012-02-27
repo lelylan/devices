@@ -14,13 +14,6 @@ module HelperMethods
     page.driver.browser.authorize('', '')
   end
 
-  # Not authorized behavior
-  def should_not_be_authorized
-    page.status_code.should == 401
-    page.should have_content '"access.denied"'
-    page.should have_content 'Access denied'
-  end
-
   # Valid JSON
   def should_have_valid_json
     expect { JSON.parse(page.source) }.to_not raise_error

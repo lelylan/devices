@@ -4,6 +4,7 @@ feature "DevicesController" do
   before { Device.destroy_all }
 
 
+
   # --------------
   # GET /devices
   # --------------
@@ -12,7 +13,7 @@ feature "DevicesController" do
     before { @resource = Factory(:device) }
     before { @resource_not_owned = Factory(:device_not_owned) }
 
-    it_should_behave_like "protected resource", "visit(@uri)"
+    it_should_behave_like "not authorized resource", "visit(@uri)"
 
 
     context "when logged in" do
@@ -112,6 +113,7 @@ feature "DevicesController" do
   end
 
 
+
   # ------------------
   # GET /devices/:id
   # ------------------
@@ -120,7 +122,7 @@ feature "DevicesController" do
     before { @uri = "/devices/#{@resource.id.as_json}" }
     before { @resource_not_owned = Factory(:device_not_owned) }
 
-    it_should_behave_like "protected resource", "visit(@uri)"
+    it_should_behave_like "not authorized resource", "visit(@uri)"
 
     context "when logged in" do
       before { basic_auth }
@@ -132,7 +134,7 @@ feature "DevicesController" do
         should_have_device @resource
       end
 
-      #it_should_behave_like "a rescued 404 resource", "visit @uri", "devices"
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "devices"
     end
   end
 

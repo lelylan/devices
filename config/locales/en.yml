@@ -1,6 +1,6 @@
 en:
   notifications:
-    document:
+    resource:
       not_found: "Resource not found"
       not_valid: "Not valid attributes"
       not_updatable: "This resource can not be updated (default status)"
