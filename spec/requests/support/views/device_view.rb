@@ -12,6 +12,7 @@ module DeviceViewMethods
   end
 
   def should_have_device(device, json = nil)
+    should_have_valid_json
     json = JSON.parse(page.source) unless json 
     json = Hashie::Mash.new json
     json.uri.should == device.uri
@@ -27,6 +28,7 @@ module DeviceViewMethods
   end
 
   def should_not_have_not_owned_devices
+    should_have_valid_json
     json = JSON.parse(page.source)
     json.should have(1).item
     Device.all.should have(2).items

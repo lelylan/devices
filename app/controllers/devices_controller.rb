@@ -2,13 +2,15 @@ class DevicesController < ApplicationController
   before_filter :find_owned_resources
   before_filter :pagination, only: 'index'
   before_filter :search_params, only: 'index'
+  before_filter :find_resource, only: %w(show update destroy)
+
+
 
   def index
     @devices = @devices.limit(params[:per])
   end
 
   def show
-    @device = @devices.find(params[:id])
   end
 
   def create
@@ -20,6 +22,21 @@ class DevicesController < ApplicationController
     else
       render_422 "notifications.resource.not_valid", @device.errors
     end
+  end
+
+  def update
+    body = JSON.parse(request.body.read)
+    body.delete('type_uri')
+    if @device.update_attributes(body)
+      render 'show'
+    else
+      render_422 'notifications.resource.not_valid', @device.errors
+    end
+  end
+  
+  def destroy
+    @device.destroy
+    render 'show'
   end
 
 
@@ -42,4 +59,8 @@ class DevicesController < ApplicationController
       @devices = @devices.any_in('device_properties.uri' => [params[:property_uri]]) if params[:property_uri]
       @devices = @devices.where('device_properties.value' => params[:property_value]) if params[:property_value]
     end 
+
+    def find_resource
+      @device = @devices.find(params[:id])
+    end
 end

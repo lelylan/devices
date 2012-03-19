@@ -21,7 +21,6 @@ feature "DevicesController" do
       scenario "view all resources" do
         visit @uri
         page.status_code.should == 200
-        should_have_valid_json
         should_have_only_owned_device @resource
       end
 
@@ -90,7 +89,6 @@ feature "DevicesController" do
           it "should show next page" do
             visit "#{@uri}?from=#{@resource.uri}"
             page.status_code.should == 200
-            should_have_valid_json
             should_contain_device @resources.first
             page.should_not have_content @resource.uri
           end
@@ -134,7 +132,6 @@ feature "DevicesController" do
       it "view owned resource" do
         visit @uri
         page.status_code.should == 200
-        should_have_valid_json
         should_have_device @resource
       end
 
@@ -155,13 +152,12 @@ feature "DevicesController" do
 
     context "when logged in" do
       before { basic_auth } 
-      before { @params = { name: 'New closet dimmer', type_uri: Settings.type.uri, physical: {uri: Settings.physical.uri}  } }
+      before { @params = { name: 'New closet dimmer', type_uri: Settings.type.uri, physical: {uri: Settings.physical.uri} } }
 
       it "creates a resource" do
         page.driver.post @uri, @params.to_json
         @resource = Device.last
         page.status_code.should == 201
-        should_have_valid_json
         should_have_device @resource
       end
 
@@ -169,7 +165,6 @@ feature "DevicesController" do
         it "does not create a resource" do
           page.driver.post @uri, {}.to_json
           page.status_code.should == 422
-          should_have_valid_json
           should_have_a_not_valid_resource
         end
       end
@@ -182,7 +177,7 @@ feature "DevicesController" do
           it "does not create a resource" do
             page.driver.post @uri, @params.to_json
             code = 'notifications.type.unauthorized'
-            should_have_a_not_valid_resource code, I18n.t(code)
+            should_have_a_not_valid_resource code: code, error: I18n.t(code)
           end
         end
 
@@ -193,7 +188,7 @@ feature "DevicesController" do
           scenario "does not create a resource" do
             page.driver.post @uri, @params.to_json
             code = 'notifications.type.not_found'
-            should_have_a_not_valid_resource code, I18n.t(code)
+            should_have_a_not_valid_resource code: code, error: I18n.t(code)
           end
         end
 
@@ -204,7 +199,7 @@ feature "DevicesController" do
           scenario "does not create a resource" do
             page.driver.post @uri, @params.to_json
             code = 'notifications.type.error'
-            should_have_a_not_valid_resource code, I18n.t(code)
+            should_have_a_not_valid_resource code: code, error: I18n.t(code)
           end
         end
 
@@ -215,10 +210,71 @@ feature "DevicesController" do
           scenario "does not create a resource" do
             page.driver.post @uri, @params.to_json
             code = 'notifications.type.unavailable'
-            should_have_a_not_valid_resource code, I18n.t(code)
+            should_have_a_not_valid_resource code: code, error: I18n.t(code)
           end
         end
+
       end
+    end
+  end
+
+
+
+  # ------------------
+  # PUT /devices/:id
+  # ------------------
+  context ".update" do
+    before { @resource = Factory(:device) }
+    before { @uri = "/devices/#{@resource.id.as_json}" }
+    before { @resource_not_owned = Factory(:device_not_owned) }
+
+    it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+      before { @params = { name: "Closet dimmer updated", physical: {uri: Settings.physical.uri + '-updated'} } }
+
+      it "updates a resource" do
+        page.driver.put @uri, @params.to_json
+        @resource.reload
+        page.status_code.should == 200
+        should_have_device @resource
+        page.should have_content "updated"
+      end
+
+      context "not valid params" do
+        it "does not update the resource" do
+          @params[:name] = ""
+          page.driver.put @uri, @params.to_json
+          should_have_a_not_valid_resource error: 'can\'t be blank', method: 'PUT'
+        end
+      end
+
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "devices"
+    end
+  end
+
+
+  # ---------------------
+  # DELETE /devices/:id
+  # ---------------------
+  context ".destroy" do
+    before { @resource = Factory(:device) }
+    before { @uri =  "/devices/#{@resource.id.as_json}" }
+    before { @resource_not_owned = Factory(:device_not_owned) }
+
+    it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
+
+    context "when logged in" do
+      before { basic_auth } 
+
+      scenario "delete resource" do
+        expect{page.driver.delete(@uri, {}.to_json)}.to change{Device.count}.by(-1)
+        page.status_code.should == 200
+        should_have_device @resource
+      end
+
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "devices"
     end
   end
 
