@@ -48,25 +48,35 @@ module Lelylan
         render_422 "notifications.query.time", e.message
       end
 
-      # 401 type service 
+      # --------------------
+      # Lelylan Type access
+      # --------------------
+
+      # 401 response
       def lelylan_type_unauthorized(e)
-        render_422 "notifications.type.unauthorized", e.message.meta.request
+        code = "notifications.type.unauthorized"
+        render_422 code, I18n.t(code)
       end
 
-      # 404 type service
+      # 404 response
       def lelylan_type_not_found(e)
-        render_422 "notifications.type.not_found", e.message.meta.request
+        code = "notifications.type.not_found"
+        render_422 code, I18n.t(code)
       end
 
       # 500 type service
       def lelylan_type_error(e)
-        render_422 "notifications.type.error", e.message.error.info
+        code = "notifications.type.error"
+        render_422 code, I18n.t(code)
       end
 
       # 503 type service
       def lelylan_type_service_unavailable(e)
-        render_422 "notifications.type.unavailable", e.message.error.info
+        code = "notifications.type.unavailable"
+        render_422 code, I18n.t(code)
       end
+
+
 
       # --------
       # Views
@@ -77,7 +87,7 @@ module Lelylan
         render 'shared/401', status: 401 and return
       end
 
-      # Not found view
+      # Not found
       def render_404(message, info)
         @error_code = message
         @message = I18n.t message
@@ -85,14 +95,14 @@ module Lelylan
         render "shared/404", status: 404 and return
       end
 
-      # Error view
-      def render_422(message, info)
-        @error_code = message
-        @message = I18n.t message
-        @info = info.is_a?(String) ? info : info.full_messages.join('. ')
+      # Not valid
+      def render_422(code, error)
+        @body = clean_body
+        @code = code
+        @error = error.is_a?(String) ? error : error.full_messages.join('. ')
         render "shared/422", status: 422 and return
       end
-      
+
   
       private 
 
@@ -102,6 +112,14 @@ module Lelylan
             gsub("parse error: ", "").
             gsub(/ActiveSupport::HashWithIndifferentAccess/, "Hash").
             strip
+        end
+
+        def clean_body
+          body = request.request_parameters
+          # Hack to have a clean JSON. Not sure why, but it creates an hash where the 
+          # key is the params and the value is null. With this cicle we clean it up.
+          body.each_key {|key| body = JSON.parse key }
+          return body
         end
     end
   end

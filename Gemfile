@@ -19,6 +19,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 2.6'
   gem 'shoulda'
   gem 'capybara'
+  gem 'capybara-json'
   gem 'factory_girl_rails'
   gem 'database_cleaner'
   gem 'fuubar'

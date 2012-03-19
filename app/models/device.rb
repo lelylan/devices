@@ -85,7 +85,7 @@ class Device
     device_properties.create!(
       uri: property.uri,
       name: property.name,
-      value: property[:default] # Hashiw::Rash bug does not allow the usage of default as key
+      value: property[:default] || '' # Hashiw::Rash bug does not allow the usage of default as key
     )
   end
 

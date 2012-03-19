@@ -22,7 +22,8 @@ module DeviceViewMethods
       property.uri.should == device.device_properties[index].uri
       property.value.should == device.device_properties[index].value
     end
-    json.physical.uri.should == device.device_physicals.first.uri
+    json.physical.uri.should == device.device_physicals.first.uri if device.device_physicals.first
+    json.physical.should be_false if !device.device_physicals.first
   end
 
   def should_not_have_not_owned_devices

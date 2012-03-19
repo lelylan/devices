@@ -12,11 +12,6 @@ module ViewNotFoundMethods
     json.error.description.should include 'not found'
   end
 
-
-  # Resource not valid
-  def should_have_a_not_valid_resource
-    page.status_code.should == 422
-  end
 end
 
 RSpec.configuration.include ViewNotFoundMethods

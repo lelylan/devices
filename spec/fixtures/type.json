@@ -17,6 +17,7 @@
     "uri": "https://type.lelylan.com/properties/status",
     "id": "4dd4d3ecd033a92a0a000084",
     "name": "Status",
+    "default": "off",
     "values": ["on","off"]
   }
   ,
@@ -39,7 +40,7 @@
       "secret": false,
       "before": false
     },
-    { 
+    {
       "uri": "https://type.lelylan.com/properties/intensity", 
       "value": "",
       "secret": true,

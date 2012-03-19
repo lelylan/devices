@@ -20,10 +20,10 @@ en:
     access:
       denied: "Access denied. HTTP Basic authentication failed"
     type:
-      unauthorized: "Access denied (Type service)"
-      not_found: "Resource not found (Type service)"
-      error: "Something is technically wrong"
-      unavailable: "Type service is over capacity"
+      unauthorized: "Unauthorized access for the requested type resource"
+      not_found: "The type resource was not found. Please check the type URI."
+      error: "Something is tecnically wrong on the type service. Please write to dev@lelylan.com"
+      unavailable: "Type service is over capacity. Please try again in few minutes. If the problem persist write to dev@lelylan.com"
     query:
       time: "Not valid time"
       time_message: "The value '%{value}' is not valid for the query param '%{key}'"

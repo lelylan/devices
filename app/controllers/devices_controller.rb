@@ -11,6 +11,18 @@ class DevicesController < ApplicationController
     @device = @devices.find(params[:id])
   end
 
+  def create
+    body = JSON.parse(request.body.read)
+    @device = Device.base(body, request, current_user)
+    if @device.save
+      @device.synchronize_type
+      render 'show', status: 201, location: @device.uri
+    else
+      render_422 "notifications.resource.not_valid", @device.errors
+    end
+  end
+
+
 
   private
 

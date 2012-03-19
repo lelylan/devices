@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
 feature "DevicesController" do
   before { Device.destroy_all }
-
+  before { host! "http://" + host }
 
 
   # --------------
@@ -15,7 +15,6 @@ feature "DevicesController" do
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
 
-
     context "when logged in" do
       before { basic_auth }
 
@@ -27,6 +26,9 @@ feature "DevicesController" do
       end
 
 
+      # ---------
+      # Search
+      # ---------
       context "when searching" do
         context "name" do
           before { @name = "My name is device" }
@@ -76,13 +78,16 @@ feature "DevicesController" do
       end
 
 
+      # ------------
+      # Pagination
+      # ------------
       context "when paginating" do
         before { Device.destroy_all }
         before { @resource = Factory(:device) }
         before { @resources = FactoryGirl.create_list(:device, Settings.pagination.per + 5, uri: Settings.device.another.uri) }
 
         context "with :from" do
-          scenario "should show next page" do
+          it "should show next page" do
             visit "#{@uri}?from=#{@resource.uri}"
             page.status_code.should == 200
             should_have_valid_json
@@ -92,20 +97,19 @@ feature "DevicesController" do
         end
 
         context "with :per" do
-          scenario "show the default number of resources" do
+          it "show the default number of resources" do
             visit "#{@uri}"
             JSON.parse(page.source).should have(Settings.pagination.per).items
           end
 
-          scenario "show 5 resources" do
+          it "show 5 resources" do
             visit "#{@uri}?per=5"
             JSON.parse(page.source).should have(5).items
           end
 
-          scenario "show all resources" do
+          it "show all resources" do
             visit "#{@uri}?per=all"
             JSON.parse(page.source).should have(Device.count).items
-            JSON.parse(page.source).should_not have(Settings.pagination.per).items
           end
         end
       end
@@ -127,7 +131,7 @@ feature "DevicesController" do
     context "when logged in" do
       before { basic_auth }
 
-      scenario "view owned resource" do
+      it "view owned resource" do
         visit @uri
         page.status_code.should == 200
         should_have_valid_json
@@ -135,6 +139,86 @@ feature "DevicesController" do
       end
 
       it_should_behave_like "a rescued 404 resource", "visit @uri", "devices"
+    end
+  end
+
+
+
+  # ---------------
+  # POST /devices
+  # ---------------
+  context ".create" do
+    before { @uri =  "/devices" }
+    before { stub_get(Settings.type.uri).to_return(body: fixture('type.json')) }
+
+    it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
+
+    context "when logged in" do
+      before { basic_auth } 
+      before { @params = { name: 'New closet dimmer', type_uri: Settings.type.uri, physical: {uri: Settings.physical.uri}  } }
+
+      it "creates a resource" do
+        page.driver.post @uri, @params.to_json
+        @resource = Device.last
+        page.status_code.should == 201
+        should_have_valid_json
+        should_have_device @resource
+      end
+
+      context "with no valid params" do
+        it "does not create a resource" do
+          page.driver.post @uri, {}.to_json
+          page.status_code.should == 422
+          should_have_valid_json
+          should_have_a_not_valid_resource
+        end
+      end
+
+      context "when Lelylan Type" do
+        context "returns unauthorized access" do
+          before { @params[:type_uri] = @params[:type_uri] + "-401" }
+          before { stub_get(@params[:type_uri]).to_return(status: 401, body: fixture('errors/401.json')) }
+
+          it "does not create a resource" do
+            page.driver.post @uri, @params.to_json
+            code = 'notifications.type.unauthorized'
+            should_have_a_not_valid_resource code, I18n.t(code)
+          end
+        end
+
+        context "returns not found resource" do
+          before { @params[:type_uri] = @params[:type_uri] + "-404" }
+          before { stub_get(@params[:type_uri]).to_return(status: 404, body: fixture('errors/404.json')) }
+
+          scenario "does not create a resource" do
+            page.driver.post @uri, @params.to_json
+            code = 'notifications.type.not_found'
+            should_have_a_not_valid_resource code, I18n.t(code)
+          end
+        end
+
+        context "returns technically wrong error" do
+          before { @params[:type_uri] = @params[:type_uri] + "-500" }
+          before { stub_get(@params[:type_uri]).to_return(status: 500, body: fixture('errors/500.json')) }
+
+          scenario "does not create a resource" do
+            page.driver.post @uri, @params.to_json
+            code = 'notifications.type.error'
+            should_have_a_not_valid_resource code, I18n.t(code)
+          end
+        end
+
+        context "returns service over capacity" do
+          before { @params[:type_uri] = @params[:type_uri] + "-503" }
+          before { stub_get(@params[:type_uri]).to_return(status: 503, body: fixture('errors/503.json')) }
+
+          scenario "does not create a resource" do
+            page.driver.post @uri, @params.to_json
+            code = 'notifications.type.unavailable'
+            should_have_a_not_valid_resource code, I18n.t(code)
+          end
+        end
+      end
     end
   end
 
