@@ -254,6 +254,14 @@ feature "DevicesController" do
         end
       end
 
+      context "when changing type_uri" do
+        it "ignores type_uri" do
+          @params[:type_uri] = Settings.type.another.uri
+          page.driver.put @uri, @params.to_json
+          page.should_not have_content Settings.type.another.uri
+        end
+      end
+
       it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "devices"
     end
   end

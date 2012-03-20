@@ -6,7 +6,7 @@ module ViewNotAuthorizedMethods
     json = Hashie::Mash.new json
 
     json.status.should == '401'
-    json.request.should match uri
+    json.request.should match Regexp.escape(uri)
     json.error.code.should == 'notifications.access.denied'
     json.error.description.should include 'Access denied'
   end

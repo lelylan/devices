@@ -27,3 +27,6 @@ en:
     query:
       time: "Not valid time"
       time_message: "The value '%{value}' is not valid for the query param '%{key}'"
+    function:
+      not_found: "Function not found"
+ 

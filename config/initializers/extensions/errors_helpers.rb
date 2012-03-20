@@ -18,19 +18,24 @@ module Lelylan
         base.rescue_from Lelylan::Type::ServiceUnavailable, with: :lelylan_type_service_unavailable
       end
 
+      # --------------------
       # Document not found
+      # --------------------
       def document_not_found
-        render_404 "notifications.document.not_found", {id: params[:id]}
+        render_404 "notifications.resource.not_found"
       end
 
       # Wrong ID for MongoDB
       def bson_invalid_object_id(e)
-        render_404 "notifications.document.not_found", {id: params[:id]}
+        render_404 "notifications.document.not_found"
       end
 
+      # ----------------------------
       # Parsing error on JSON body
+      # ----------------------------
       def json_parse_error(e)
-        render_422 "notifications.json.not_valid", parse_error(e)
+        code = "notifications.json.not_valid" 
+        render_422 code, I18n.t(code), dirty_body
       end
       
       # Assignation of wrong type to model field (e.g. hash instead of array)
@@ -41,6 +46,8 @@ module Lelylan
       def lelylan_errors_time(e)
         render_422 "notifications.query.time", e.message
       end
+
+
 
       # --------------------
       # Lelylan Type access
@@ -72,9 +79,9 @@ module Lelylan
 
 
 
-      # --------
-      # Views
-      # --------
+      # --------------
+      # Render views
+      # --------------
 
       # Not authorized
       def render_401
@@ -82,38 +89,45 @@ module Lelylan
       end
 
       # Not found
-      def render_404(message, info)
-        @error_code = message
-        @message = I18n.t message
-        @info = info.to_json
+      def render_404(code = 'notifications.resource.not_found', uri)
+        @code  = code
+        @error = I18n.t(code)
+        @uri   = uri || request.url
         render "shared/404", status: 404 and return
       end
 
       # Not valid
-      def render_422(code, error)
-        @body = clean_body
+      def render_422(code, error, body=nil)
+        @body = body || clean_body
         @code = code
         @error = error.is_a?(String) ? error : error.full_messages.join('. ')
         render "shared/422", status: 422 and return
       end
 
-  
+
+
       private 
 
         def parse_error(e)
-          e.message.gsub("(right here) ------^\n", " ").
-            gsub("'\n          ", " ").
-            gsub("parse error: ", "").
-            gsub(/ActiveSupport::HashWithIndifferentAccess/, "Hash").
-            strip
+          e.message
         end
 
+        # Body content as JSON
         def clean_body
           body = request.request_parameters
           # Hack to have a clean JSON. Not sure why, but it creates an hash where the 
           # key is the params and the value is null. With this cicle we clean it up.
           body.each_key {|key| body = JSON.parse key }
           return body
+        end
+
+        # Body JSON as string
+        def dirty_body
+          body = request.request_parameters
+          # Hack to have a clean JSON. Not sure why, but it creates an hash where the 
+          # key is the params and the value is null. With this cicle we clean it up.
+          body.each_key {|key| body = key }
+          body
         end
     end
   end

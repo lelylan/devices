@@ -7,7 +7,7 @@ module ViewNotFoundMethods
     json = Hashie::Mash.new json
 
     json.status.should == '404'
-    json.request.should match uri
+    json.request.should match Regexp.escape(uri)
     json.error.code.should == error_code
     json.error.description.should include 'not found'
   end

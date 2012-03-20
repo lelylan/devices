@@ -38,6 +38,14 @@ properties:
     uri: <%= "#{type_host}/properties/another-property" %>
     value: '25.0'
 
+functions:
+  set_status:
+    uri: <%= set_status_uri = "#{type_host}/functions/set-status" %>
+  set_intensity:
+    uri: <%= set_intensity_uri = "#{type_host}/functions/set-intensity" %> 
+  another:
+    uri: <%= "#{type_host}/functions/another-function" %>
+
 consumptions:
   instantaneous:
     uri: <%= "#{device_host}/consumptions/instantaneous" %>

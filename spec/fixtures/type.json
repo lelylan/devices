@@ -36,7 +36,7 @@
     "properties": [
     {
       "uri": "https://type.lelylan.com/properties/status", 
-      "value": "off",
+      "value": "on",
       "secret": false,
       "before": false
     },

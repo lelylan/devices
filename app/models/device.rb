@@ -97,6 +97,7 @@ class Device
   def synchronize_device(properties)
     update_properties(properties)
     synchronize_physical(properties) if physical_connection?
+    return self
   end
 
   # Update the device properties.
