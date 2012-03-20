@@ -26,6 +26,10 @@ feature "FunctionsController" do
       before { basic_auth } 
       before { stub_request(:put, Settings.physical.uri) }
 
+
+      # ------------------
+      # Property updates
+      # ------------------
       context "when updating device properties" do
 
         # Nothing is sent into the request
@@ -73,34 +77,50 @@ feature "FunctionsController" do
         end
       end
 
-      context "with function uri is not found" do
+
+      # -------------------------
+      # Physical device related
+      # -------------------------
+      context "with a physical device" do
+        it "updates physical device" do
+          page.driver.put @uri, @params.to_json
+          page.status_code.should == 200
+          a_put(Settings.physical.uri).with(body: {properties: @properties}).should have_been_made.once
+        end
+      end
+
+      context "with no physical device" do
+        before { @resource = Factory(:device_no_physical) }
+        before { @uri = "/devices/#{@resource.id.as_json}/functions?uri=#{Settings.functions.set_intensity.uri}" }
+
+        it "does not update physical device" do
+          page.driver.put @uri, @params.to_json
+          page.status_code.should == 200
+          a_put(Settings.physical.uri).with(body: {properties: @properties}).should_not have_been_made
+        end
+      end
+
+
+      # ---------
+      # History 
+      # ---------
+      it "creates history resource" do
+      end
+
+
+      # --------------------------------
+      # Resource or function not found
+      # --------------------------------
+      context "when function uri is not found" do
         before { @uri = "/devices/#{@resource.id.as_json}/functions?uri=#{Settings.functions.another.uri}" }
 
         it "returns a not found message" do
           page.driver.put @uri, @params.to_json
-          save_and_open_page
           page.status_code.should == 404
-          page.should have_content 'notifications.function.not_found'
-          should_have_valid_json
+          should_have_not_found_resource uri: Settings.functions.another.uri, code: 'notifications.function.not_found'
         end
       end
 
-      it "creates history resource" do
-      end
-
-      context "with a physical device" do
-        #before { stub_request(:put, Settings.physical.uri).with(body: {properties: @properties}) }
-
-        #it "updates physical device" do
-          #page.driver.put @uri, @params.to_json
-          #page.status_code.should == 200
-          #a_put(Settings.physical.uri).should have_been_made
-        #end
-      end
-
-      context "with no physical device" do
-      end
- 
       it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "devices"
     end
   end

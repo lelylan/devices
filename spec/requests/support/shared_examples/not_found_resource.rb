@@ -4,7 +4,7 @@ shared_examples_for "a rescued 404 resource" do |action, controller|
       @resource.destroy
       eval(action)
       should_have_valid_json
-      should_have_not_found_resource @uri
+      should_have_not_found_resource uri: @uri
     end
   end
 
@@ -13,7 +13,7 @@ shared_examples_for "a rescued 404 resource" do |action, controller|
       @uri = "/#{controller}/#{@resource_not_owned.id.as_json}"
       eval(action)
       should_have_valid_json
-      should_have_not_found_resource @uri
+      should_have_not_found_resource uri: @uri
     end
   end
 
@@ -22,7 +22,7 @@ shared_examples_for "a rescued 404 resource" do |action, controller|
       @uri = "/#{controller}/0"
       eval(action)
       should_have_valid_json
-      should_have_not_found_resource @uri
+      should_have_not_found_resource uri: @uri
     end
   end
 end

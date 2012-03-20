@@ -2,7 +2,7 @@ module ViewNotValidMethods
 
   # Resource not valid
   def should_have_a_not_valid_resource(options = {})
-    options = default.merge(options)
+    options = not_valid_default.merge(options)
     json = JSON.parse(page.source)
     json = Hashie::Mash.new json
 
@@ -13,7 +13,7 @@ module ViewNotValidMethods
     json.error.description.should include options[:error]
   end
 
-  def default
+  def not_valid_default
     {
       method: 'POST',
       code: 'notifications.resource.not_valid',
