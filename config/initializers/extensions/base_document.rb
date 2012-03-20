@@ -8,12 +8,12 @@ module Lelylan
       module ClassMethods
         # Initialize the model adding resource and creator URI
         def base(body, request, current_user)
-          pp body.class.inspect
           resource = self.new(body)
           resource.created_from = current_user.uri
           resource.uri  = self.base_uri(request, resource)
           return resource
         end
+
         # Create the resource URI
         def base_uri(request, resource)
           protocol = request.protocol

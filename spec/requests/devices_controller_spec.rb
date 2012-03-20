@@ -4,6 +4,10 @@ feature "DevicesController" do
   before { Device.destroy_all }
   before { host! "http://" + host }
 
+  # General stub
+  before { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
+  before { stub_get(Settings.type.another.uri).to_return(body: fixture('type.json') ) }
+
 
   # --------------
   # GET /devices
@@ -63,8 +67,8 @@ feature "DevicesController" do
           end
         end
 
-        context "property_name" do
-          before { @property_value = Settings.properties.another.uri }
+        context "property_value" do
+          before { @property_value = Settings.properties.another.value }
           before { @result = Factory(:device) }
           before { @result.device_properties.first.update_attributes(value: @property_value) }
 
@@ -85,9 +89,9 @@ feature "DevicesController" do
         before { @resource = Factory(:device) }
         before { @resources = FactoryGirl.create_list(:device, Settings.pagination.per + 5, uri: Settings.device.another.uri) }
 
-        context "with :from" do
+        context "with :start" do
           it "should show next page" do
-            visit "#{@uri}?from=#{@resource.uri}"
+            visit "#{@uri}?start=#{@resource.uri}"
             page.status_code.should == 200
             should_contain_device @resources.first
             page.should_not have_content @resource.uri
@@ -141,9 +145,9 @@ feature "DevicesController" do
 
 
 
-  # ---------------
-  # POST /devices
-  # ---------------
+  ## ---------------
+  ## POST /devices
+  ## ---------------
   context ".create" do
     before { @uri =  "/devices" }
     before { stub_get(Settings.type.uri).to_return(body: fixture('type.json')) }
@@ -238,8 +242,8 @@ feature "DevicesController" do
         page.driver.put @uri, @params.to_json
         @resource.reload
         page.status_code.should == 200
-        should_have_device @resource
-        page.should have_content "updated"
+        page.should have_content "Closet dimmer updated"
+        page.should have_content Settings.physical.uri + "-updated"
       end
 
       context "not valid params" do

@@ -17,7 +17,6 @@ class DevicesController < ApplicationController
     body = JSON.parse(request.body.read)
     @device = Device.base(body, request, current_user)
     if @device.save
-      @device.synchronize_type
       render 'show', status: 201, location: @device.uri
     else
       render_422 "notifications.resource.not_valid", @device.errors
@@ -33,7 +32,7 @@ class DevicesController < ApplicationController
       render_422 'notifications.resource.not_valid', @device.errors
     end
   end
-  
+
   def destroy
     @device.destroy
     render 'show'
@@ -49,8 +48,8 @@ class DevicesController < ApplicationController
 
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
-      from = Device.where(uri: params[:from]).first if params[:from]
-      @devices = @devices.where(:_id.gt => from.id) if from
+      start = Device.where(uri: params[:start]).first if params[:start]
+      @devices = @devices.where(:_id.gt => start.id) if start
     end
 
     def search_params

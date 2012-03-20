@@ -10,7 +10,7 @@ class Device
   field :labels, type: Array, default: []
 
   attr_accessor :physical  
-  attr_accessible :name, :type_uri, :labels
+  attr_accessible :name, :type_uri, :physical, :labels
 
   embeds_many :device_properties  # properties inherited from type
   embeds_many :device_physicals   # physical devices
@@ -20,6 +20,7 @@ class Device
   validates :name, presence: true
   validates :type_uri, presence: true, url: true
 
+  before_create :synchronize_type
   before_save :create_physical_connection
 
 
@@ -69,7 +70,6 @@ class Device
   def synchronize_type
     type = Lelylan::Type.type(type_uri)
     synchronize_properties(type.properties)
-    self.save
   end
 
   # Sync properties
@@ -82,7 +82,7 @@ class Device
 
   # Create a device property
   def create_device_property(property)
-    device_properties.create!(
+    device_properties.build(
       uri: property.uri,
       name: property.name,
       value: property[:default] || '' # Hashiw::Rash bug does not allow the usage of default as key
