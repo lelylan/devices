@@ -8,5 +8,4 @@ class HistoryProperty
   embedded_in :histoy
 
   validates :uri, presence: true, url: true
-  validates :value, presence:true
 end

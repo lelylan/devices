@@ -6,6 +6,8 @@ class History
   field :uri
   field :device_uri
 
+  #attr_accessible :device_uri
+
   embeds_many :history_properties
 
   validates :uri, presence: true, url: true
@@ -25,6 +27,7 @@ class History
   # Add properties to the history resource
   def create_properties(properties)
     properties.each do |property|
+      property = HashWithIndifferentAccess.new(property)
       self.history_properties.create!(
         uri: property[:uri],
         value: property[:value])
