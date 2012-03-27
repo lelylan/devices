@@ -18,7 +18,7 @@ user:
   auth: <%= "#{people_host}/authentication" %>
   uri: <%= "#{people_host}/users/alice" %>
   email: 'alice@example.com'
-  password: 'example' 
+  password: 'example'
   another: 
     uri: <%= "#{people_host}/users/bob" %>
     email: 'bob@example.com'
@@ -37,6 +37,14 @@ properties:
   another:
     uri: <%= "#{type_host}/properties/another-property" %>
     value: '25.0'
+
+functions:
+  set_status:
+    uri: <%= set_status_uri = "#{type_host}/functions/set-status" %>
+  set_intensity:
+    uri: <%= set_intensity_uri = "#{type_host}/functions/set-intensity" %> 
+  another:
+    uri: <%= "#{type_host}/functions/another-function" %>
 
 consumptions:
   instantaneous:

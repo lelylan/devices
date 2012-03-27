@@ -1,8 +1,6 @@
 class ApplicationController < ActionController::Base
-  include Lelylan::Rescue::Helpers        # HTTP errors to JSON view
-  include Lelylan::View::Helpers          # JSON error views
+  include Lelylan::Errors::Helpers        # JSON error views
   include Lelylan::Resources::Public      # public resources
-  include Lelylan::Pagination::Helpers    # pagination system
 
   protect_from_forgery
 

@@ -12,7 +12,11 @@ node(:properties) do |device|
 end
 
 node(:physical) do |device|
-  { uri: device.device_physicals.first.uri }
+  if device.device_physicals.first
+    { uri: device.device_physicals.first.uri }
+  else
+    false
+  end
 end
 
 node(:created_at) { |device| device.created_at }

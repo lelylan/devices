@@ -53,6 +53,10 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 0.1.4)
+    capybara-json (0.1.2)
+      capybara
+      httpclient
+      multi_json
     childprocess (0.3.1)
       ffi (~> 1.0.6)
     chronic (0.6.7)
@@ -103,6 +107,7 @@ GEM
     httparty (0.8.1)
       multi_json
       multi_xml
+    httpclient (2.2.4)
     i18n (0.6.0)
     journey (1.0.1)
     json (1.6.5)
@@ -128,7 +133,7 @@ GEM
     multipart-post (1.1.5)
     nokogiri (1.5.0)
     polyglot (0.3.3)
-    rabl (0.5.4)
+    rabl (0.6.0)
       activesupport (>= 2.3.14)
       multi_json (~> 1.0.3)
     rack (1.4.1)
@@ -219,6 +224,7 @@ DEPENDENCIES
   bcrypt-ruby
   bson_ext (~> 1.5)
   capybara
+  capybara-json
   chronic
   coffee-rails (~> 3.2.1)
   database_cleaner

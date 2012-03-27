@@ -19,7 +19,8 @@ describe Device do
   it { should_not allow_mass_assignment_of(:uri) }
   it { should_not allow_mass_assignment_of(:created_from) }
 
-
+  # general stub
+  before  { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
 
   describe "#create_physical_connection" do
     context "when valid" do
@@ -52,23 +53,22 @@ describe Device do
 
 
   context "#synchronize_type" do
-    before { @device = Factory(:device_no_connections) }
-
-    before  { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
-    before  { @device.synchronize_type }
-    subject { @device.reload }
+    before  { @device = Factory(:device_no_connections) }
+    subject { @device }
 
     its(:device_properties) { should have(2).properties }
 
     context "Lelylan::Type.type" do
       before { @type = Lelylan::Type.type(Settings.type.uri) }
-      it "gets json representation" do
+
+      it "returns a json representation" do
         @type[:name].should == "Dimmer"
       end
 
       context "#synchronize_properties" do
-        before  { @device.synchronize_properties(@type[:properties]) }
-        subject { @device.reload.device_properties }
+        before  { @device = Factory.build(:device_no_connections) }
+        before  { @device.synchronize_properties(@type[:properties]); }
+        subject { @device.device_properties }
         it { should have(2).properties }
       end
     end

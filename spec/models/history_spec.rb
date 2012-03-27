@@ -11,7 +11,8 @@ describe History do
   it { should allow_value(Settings.validation.uri.valid).for(:device_uri) }
   it { should_not allow_value(Settings.validation.uri.not_valid).for(:device_uri) }
 
-
+  # general stub
+  before  { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
 
   context "#create_history" do
     before { @device = Factory(:device) }

@@ -1,14 +1,9 @@
 {
-  "meta": 
-  { 
     "status": "404",
-    "request": "https://device.lelylan.com/devices/4dd4d3ecd033a92a0a0000a2"
-  },
-  "error": 
-  {
-    "code": "notifications.document.not_found",
-    "message": "Resource not found",
-    "info": {"id":"4dd4d3ecd033a92a0a0000a2"} 
-  }
+    "method": "GET",
+    "request": "http://www.example.com/devices/4f6759a7d033a91ac2000261",
+    "error": {
+        "code": "notifications.resource.not_found",
+        "description": "Resource not found"
+    }
 }
-
