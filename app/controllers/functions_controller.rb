@@ -6,7 +6,7 @@ class FunctionsController < ApplicationController
 
   def update
     @device = @device.synchronize_device(@properties)
-    History.create_history({device_uri: @device.uri}, @properties, request) 
+    History.create_history({device_uri: @device.uri}, @device.device_properties, request) 
     render "/devices/show"
   end
   

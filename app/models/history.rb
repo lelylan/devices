@@ -27,7 +27,6 @@ class History
   # Add properties to the history resource
   def create_properties(properties)
     properties.each do |property|
-      property = HashWithIndifferentAccess.new(property)
       self.history_properties.create!(
         uri: property[:uri],
         value: property[:value])

@@ -1,10 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
 feature "FunctionsController" do
-  before { host! "http://" + host }
   before { Device.destroy_all }
- 
-  # General stub
   before { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
 
 
@@ -66,7 +63,7 @@ feature "FunctionsController" do
 
         # Status is sent through the request with a different value 
         # from the one preset in the function
-        it "overrides one function property" do
+        it "overrides presetted function property" do
           @params[:properties][0][:value] = 'off'
           page.driver.put @uri, @params.to_json
           @resource.reload
@@ -105,6 +102,8 @@ feature "FunctionsController" do
       # History 
       # ---------
       it "creates history resource" do
+        expect{ page.driver.put @uri, @params.to_json }.to change{ History.count }.by(1)
+        History.last.history_properties.should have(2).items
       end
 
 
