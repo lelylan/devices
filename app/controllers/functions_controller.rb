@@ -3,11 +3,12 @@ class FunctionsController < ApplicationController
   before_filter :find_resource
   before_filter :find_function
   before_filter :merge_properties
+  before_filter :status
 
   def update
     @device = @device.synchronize_device(@properties)
-    History.create_history({device_uri: @device.uri}, @device.device_properties, request) 
-    render "/devices/show"
+    History.create_history({device_uri: @device.uri}, @device.device_properties, request)
+    render "/devices/show", status: @status
   end
   
   private 
@@ -34,6 +35,9 @@ class FunctionsController < ApplicationController
       end
     end
 
+    def status
+      @status = @device.physical_connection? ? 202 : 200
+    end
 
       # -----------------
       # Helper methods

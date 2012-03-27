@@ -36,7 +36,7 @@ feature "FunctionsController" do
           @resource.device_properties[0][:value].should == "on"
           @resource.device_properties[1][:value].should == ""
           @resource.device_properties[1][:value].should_not == "100.0"
-          page.status_code.should == 200
+          page.status_code.should == 202
           should_have_valid_json
         end
 
@@ -47,7 +47,7 @@ feature "FunctionsController" do
           @resource.reload
           @resource.device_properties[0][:value].should == "on"
           @resource.device_properties[1][:value].should == "100.0"
-          page.status_code.should == 200
+          page.status_code.should == 202
           should_have_valid_json
         end
 
@@ -57,7 +57,7 @@ feature "FunctionsController" do
           @resource.reload
           @resource.device_properties[0][:value].should == "on"
           @resource.device_properties[1][:value].should == "100.0"
-          page.status_code.should == 200
+          page.status_code.should == 202
           should_have_valid_json
         end
 
@@ -69,7 +69,7 @@ feature "FunctionsController" do
           @resource.reload
           @resource.device_properties[0][:value].should == "off"
           @resource.device_properties[1][:value].should == "100.0"
-          page.status_code.should == 200
+          page.status_code.should == 202
           should_have_valid_json
         end
       end
@@ -81,7 +81,7 @@ feature "FunctionsController" do
       context "with a physical device" do
         it "updates physical device" do
           page.driver.put @uri, @params.to_json
-          page.status_code.should == 200
+          page.status_code.should == 202
           a_put(Settings.physical.uri).with(body: {properties: @properties}).should have_been_made.once
         end
       end
