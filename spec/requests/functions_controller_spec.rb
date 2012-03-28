@@ -30,7 +30,7 @@ feature "FunctionsController" do
       context "when updating device properties" do
 
         # Nothing is sent into the request
-        it "uses function properties" do
+        it "should use function properties" do
           page.driver.put @uri, nil
           @resource.reload
           @resource.device_properties[0][:value].should == "on"
@@ -41,7 +41,7 @@ feature "FunctionsController" do
         end
 
         # Intensity is sent through the request
-        it "override not setted function property" do
+        it "should override not setted function property" do
           @params[:properties].delete_at(0)
           page.driver.put @uri, @params.to_json
           @resource.reload
@@ -52,7 +52,7 @@ feature "FunctionsController" do
         end
 
         # Intensity and status values are sent through the request
-        it "overrides all functions properties" do
+        it "should override all functions properties" do
           page.driver.put @uri, @params.to_json
           @resource.reload
           @resource.device_properties[0][:value].should == "on"
@@ -63,7 +63,7 @@ feature "FunctionsController" do
 
         # Status is sent through the request with a different value 
         # from the one preset in the function
-        it "overrides presetted function property" do
+        it "should override presetted function property" do
           @params[:properties][0][:value] = 'off'
           page.driver.put @uri, @params.to_json
           @resource.reload
@@ -79,7 +79,7 @@ feature "FunctionsController" do
       # Physical device related
       # -------------------------
       context "with a physical device" do
-        it "updates physical device" do
+        it "should update physical device" do
           page.driver.put @uri, @params.to_json
           page.status_code.should == 202
           a_put(Settings.physical.uri).with(body: {properties: @properties}).should have_been_made.once
@@ -90,7 +90,7 @@ feature "FunctionsController" do
         before { @resource = Factory(:device_no_physical) }
         before { @uri = "/devices/#{@resource.id.as_json}/functions?uri=#{Settings.functions.set_intensity.uri}" }
 
-        it "does not update physical device" do
+        it "should not update physical device" do
           page.driver.put @uri, @params.to_json
           page.status_code.should == 200
           a_put(Settings.physical.uri).with(body: {properties: @properties}).should_not have_been_made
@@ -101,7 +101,7 @@ feature "FunctionsController" do
       # ---------
       # History 
       # ---------
-      it "creates history resource" do
+      it "should create history resource" do
         expect{ page.driver.put @uri, @params.to_json }.to change{ History.count }.by(1)
         History.last.history_properties.should have(2).items
       end
@@ -113,7 +113,7 @@ feature "FunctionsController" do
       context "when function uri is not found" do
         before { @uri = "/devices/#{@resource.id.as_json}/functions?uri=#{Settings.functions.another.uri}" }
 
-        it "returns a not found message" do
+        it "should return a not found message" do
           page.driver.put @uri, @params.to_json
           page.status_code.should == 404
           should_have_not_found_resource uri: Settings.functions.another.uri, code: 'notifications.function.not_found'

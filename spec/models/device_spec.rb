@@ -61,7 +61,7 @@ describe Device do
     context "Lelylan::Type.type" do
       before { @type = Lelylan::Type.type(Settings.type.uri) }
 
-      it "returns a json representation" do
+      it "should return a json representation" do
         @type[:name].should == "Dimmer"
       end
 
@@ -80,19 +80,19 @@ describe Device do
     before { @properties = json_fixture('properties.json')[:properties] }
 
     context "with physical connection" do
-      before  { stub_http_request(:put, Settings.physical.uri).with(body: {properties: @properties}) }
+      before  { stub_request(:put, Settings.physical.uri).with(body: {properties: @properties}) }
       before  { @device = Factory(:device) }
       before  { @device.synchronize_device(@properties) }
 
-      it "changes device property status" do
+      it "should change device property status" do
         @device.reload.device_properties[0][:value].should == "on"
       end
 
-      it "changes device property intensity" do
+      it "should change device property intensity" do
         @device.reload.device_properties[1][:value].should == "100.0"
       end
 
-      it "update the physical device" do
+      it "should update the physical device" do
         a_put(Settings.physical.uri, false).with(body: {properties: @properties}).should have_been_made.once
       end
     end
@@ -102,11 +102,11 @@ describe Device do
       before  { @device = Factory(:device_no_physical) }
       before  { @device.synchronize_device(@properties) }
 
-      it "changes device property status" do
+      it "should change device property status" do
         @device.reload.device_properties[0][:value].should == "on"
       end
 
-      it "changes device property intensity" do
+      it "should change device property intensity" do
         @device.reload.device_properties[1][:value].should == "100.0"
       end
     end

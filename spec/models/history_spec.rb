@@ -21,13 +21,13 @@ describe History do
     before { @request = nil }
     before { History.stub(:base_uri).and_return(Settings.history.uri) }
 
-    it "creates history resource" do
+    it "should create history resource" do
       expect {
         @history = History.create_history(@params, @properties, @request)
       }.to change{ History.count }.by(1)
     end
 
-    it "creates history properties" do
+    it "should create history properties" do
       @history = History.create_history(@params, @properties, @request)
       @history.reload.history_properties.should have(2).items
     end

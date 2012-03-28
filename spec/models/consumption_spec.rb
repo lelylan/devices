@@ -34,7 +34,7 @@ describe Consumption do
       context "with all timing values" do
         before { @consumption = Factory.build(:consumption_durational) }
         before { @consumption.save! }
-        it "does not change timings" do
+        it "should not change timings" do
           @consumption.occur_at.should == @correct.occur_at
           @consumption.end_at.should == @correct.end_at
           @consumption.duration.should == @correct.duration
@@ -44,7 +44,7 @@ describe Consumption do
       context "with #duration missing" do
         before { @consumption = Factory.build(:consumption_durational, duration: nil) }
         before { @consumption.save! }
-        it "calculates duration field" do
+        it "should calculate duration field" do
           @consumption.duration.should == @correct.duration
         end
       end
@@ -52,7 +52,7 @@ describe Consumption do
       context "with #end_at missing" do
         before { @consumption = Factory.build(:consumption_durational, end_at: nil) }
         before { @consumption.save! }
-        it "calculates end_at field" do
+        it "should calculate end_at field" do
           @consumption.end_at.should == @correct.end_at
         end
       end
@@ -60,14 +60,14 @@ describe Consumption do
       context "with #occur_at missing" do
         before { @consumption = Factory.build(:consumption_durational, occur_at: nil) }
         before { @consumption.save! }
-        it "calculates occur_at field" do
+        it "should calculate occur_at field" do
           @consumption.occur_at.should == @correct.occur_at
         end
       end
 
       context "with two missing timing values" do
         before { @consumption = Factory.build(:consumption_durational, occur_at: nil, duration: nil) }
-        it "raise error" do
+        it "should raise error" do
           expect { @consumption.save! }.to raise_error
         end
       end
@@ -76,7 +76,7 @@ describe Consumption do
 
     context "with instantaneous consumption" do
       before  { @consumption = Factory(:consumption) }
-      it "is not called" do
+      it "should not not populate durational params" do
         @consumption.end_at.should be_nil
         @consumption.duration.should be_nil
       end

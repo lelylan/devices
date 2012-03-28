@@ -6,7 +6,7 @@ class History
   field :uri
   field :device_uri
 
-  #attr_accessible :device_uri
+  attr_accessible :device_uri
 
   embeds_many :history_properties
 

@@ -25,9 +25,11 @@ module Lelylan
         render_404 "notifications.resource.not_found"
       end
 
-      # Wrong ID for MongoDB
+      # -------------------
+      # Wrong id for mongo
+      # -------------------
       def bson_invalid_object_id(e)
-        render_404 "notifications.document.not_found"
+        render_404 "notifications.resource.not_found"
       end
 
       # ----------------------------
@@ -89,7 +91,7 @@ module Lelylan
       end
 
       # Not found
-      def render_404(code = 'notifications.resource.not_found', uri)
+      def render_404(code = 'notifications.resource.not_found', uri=nil)
         @code  = code
         @error = I18n.t(code)
         @uri   = uri || request.url
