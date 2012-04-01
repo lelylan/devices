@@ -39,7 +39,6 @@ feature "DevicesController" do
 
           it "should find a device" do
             visit "#{@uri}?name=name+is"
-            save_and_open_page
             should_contain_device @result
             page.should_not have_content @resource.name
           end
@@ -146,11 +145,10 @@ feature "DevicesController" do
         @resource.uri.should == uri
       end
 
-      context "with param host" do
-        it "should change the host URI" do
+      context "with host" do
+        it "should change the URI" do
           visit "#{@uri}?host=www.lelylan.com"
-          uri = "http://www.lelylan.com/devices/#{@resource.id.as_json}"
-          @resource.uri.should == uri
+          @resource.uri.should match("http://www.lelylan.com/")
         end
       end
 
