@@ -21,6 +21,7 @@ Spork.prefork do
   require 'rspec/rails'
   require 'capybara/rspec'
   require 'webmock/rspec'
+  require 'draper/rspec_integration'
 
   RSpec.configure do |config|
     config.mock_with :rspec

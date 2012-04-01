@@ -1,3 +1,3 @@
-collection @devices
+collection DeviceDecorator.decorate(@devices)
 
 extends "devices/show"

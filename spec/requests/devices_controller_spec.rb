@@ -86,15 +86,15 @@ feature "DevicesController" do
       # ------------
       context "when paginating" do
         before { Device.destroy_all }
-        before { @resource = Factory(:device) }
-        before { @resources = FactoryGirl.create_list(:device, Settings.pagination.per + 5, uri: Settings.device.another.uri) }
+        before { @resource = DeviceDecorator.decorate(Factory(:device)) }
+        before { @resources = FactoryGirl.create_list(:device, Settings.pagination.per + 5, name: 'Extra dimmer') }
 
         context "with :start" do
           it "should show next page" do
             visit "#{@uri}?start=#{@resource.uri}"
             page.status_code.should == 200
             should_contain_device @resources.first
-            page.should_not have_content @resource.uri
+            page.should_not have_content @resource.name
           end
         end
 

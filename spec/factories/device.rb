@@ -5,7 +5,6 @@ FactoryGirl.define do
 
   # Device
   factory :device do
-    uri Settings.device.uri
     name 'Closet dimmer'
     created_from Settings.user.uri
     type_uri Settings.type.uri

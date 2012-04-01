@@ -5,7 +5,6 @@ class DevicesController < ApplicationController
   before_filter :find_resource, only: %w(show update destroy)
 
 
-
   def index
     @devices = @devices.limit(params[:per])
   end
@@ -15,9 +14,10 @@ class DevicesController < ApplicationController
 
   def create
     body = JSON.parse(request.body.read)
-    @device = Device.base(body, request, current_user)
+    @device = Device.new(body)
+    @device.created_from = current_user.uri
     if @device.save
-      render 'show', status: 201, location: @device.uri
+      render 'show', status: 201, location: DeviceDecorator.decorate(@device).uri
     else
       render_422 "notifications.resource.not_valid", @device.errors
     end
@@ -48,8 +48,10 @@ class DevicesController < ApplicationController
 
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
-      start = Device.where(uri: params[:start]).first if params[:start]
-      @devices = @devices.where(:_id.gt => start.id) if start
+      if params[:start]
+        uri = Addressable::URI.parse(params[:start])
+        @devices = @devices.where(:_id.gt => uri.basename)
+      end
     end
 
     def search_params

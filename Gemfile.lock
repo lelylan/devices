@@ -72,6 +72,8 @@ GEM
     delorean (1.2.0)
       chronic
     diff-lcs (1.1.3)
+    draper (0.11.1)
+      activesupport (>= 2.3.10)
     email_validator (1.3.0)
       activemodel
     erubis (2.7.0)
@@ -221,6 +223,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
   bcrypt-ruby
   bson_ext (~> 1.5)
   capybara
@@ -229,6 +232,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   database_cleaner
   delorean
+  draper
   email_validator
   factory_girl_rails
   fuubar
