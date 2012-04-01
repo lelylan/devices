@@ -39,6 +39,7 @@ feature "DevicesController" do
 
           it "should find a device" do
             visit "#{@uri}?name=name+is"
+            save_and_open_page
             should_contain_device @result
             page.should_not have_content @resource.name
           end
@@ -124,7 +125,7 @@ feature "DevicesController" do
   # GET /devices/:id
   # ------------------
   context ".show" do
-    before { @resource = Factory(:device) }
+    before { @resource = DeviceDecorator.decorate(Factory(:device)) }
     before { @uri = "/devices/#{@resource.id.as_json}" }
     before { @resource_not_owned = Factory(:device_not_owned) }
 
@@ -137,6 +138,20 @@ feature "DevicesController" do
         visit @uri
         page.status_code.should == 200
         should_have_device @resource
+      end
+
+      it "should expose the device URI" do
+        visit @uri
+        uri = "http://www.example.com/devices/#{@resource.id.as_json}"
+        @resource.uri.should == uri
+      end
+
+      context "with param host" do
+        it "should change the host URI" do
+          visit "#{@uri}?host=www.lelylan.com"
+          uri = "http://www.lelylan.com/devices/#{@resource.id.as_json}"
+          @resource.uri.should == uri
+        end
       end
 
       it_should_behave_like "a rescued 404 resource", "visit @uri", "devices"
