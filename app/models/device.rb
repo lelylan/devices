@@ -1,7 +1,6 @@
 class Device
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Lelylan::Document::Base
 
   field :created_from
   field :name
