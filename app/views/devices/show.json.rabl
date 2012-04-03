@@ -1,4 +1,4 @@
-object @device
+object DeviceDecorator.decorate(@device)
 
 node(:uri)  { |device| device.uri }
 node(:id)   { |device| device.id }

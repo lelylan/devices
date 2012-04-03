@@ -22,7 +22,7 @@ feature "DevicesController" do
     context "when logged in" do
       before { basic_auth }
 
-      scenario "view all resources" do
+      it "should view all resources" do
         visit @uri
         page.status_code.should == 200
         should_have_only_owned_device @resource
@@ -86,30 +86,30 @@ feature "DevicesController" do
       # ------------
       context "when paginating" do
         before { Device.destroy_all }
-        before { @resource = Factory(:device) }
-        before { @resources = FactoryGirl.create_list(:device, Settings.pagination.per + 5, uri: Settings.device.another.uri) }
+        before { @resource = DeviceDecorator.decorate(Factory(:device)) }
+        before { @resources = FactoryGirl.create_list(:device, Settings.pagination.per + 5, name: 'Extra dimmer') }
 
         context "with :start" do
           it "should show next page" do
             visit "#{@uri}?start=#{@resource.uri}"
             page.status_code.should == 200
             should_contain_device @resources.first
-            page.should_not have_content @resource.uri
+            page.should_not have_content @resource.name
           end
         end
 
         context "with :per" do
-          it "show the default number of resources" do
+          it "should show the default number of resources" do
             visit "#{@uri}"
             JSON.parse(page.source).should have(Settings.pagination.per).items
           end
 
-          it "show 5 resources" do
+          it "should show 5 resources" do
             visit "#{@uri}?per=5"
             JSON.parse(page.source).should have(5).items
           end
 
-          it "show all resources" do
+          it "should show all resources" do
             visit "#{@uri}?per=all"
             JSON.parse(page.source).should have(Device.count).items
           end
@@ -124,7 +124,7 @@ feature "DevicesController" do
   # GET /devices/:id
   # ------------------
   context ".show" do
-    before { @resource = Factory(:device) }
+    before { @resource = DeviceDecorator.decorate(Factory(:device)) }
     before { @uri = "/devices/#{@resource.id.as_json}" }
     before { @resource_not_owned = Factory(:device_not_owned) }
 
@@ -133,10 +133,23 @@ feature "DevicesController" do
     context "when logged in" do
       before { basic_auth }
 
-      it "view owned resource" do
+      it "should view owned resource" do
         visit @uri
         page.status_code.should == 200
         should_have_device @resource
+      end
+
+      it "should expose the device URI" do
+        visit @uri
+        uri = "http://www.example.com/devices/#{@resource.id.as_json}"
+        @resource.uri.should == uri
+      end
+
+      context "with host" do
+        it "should change the URI" do
+          visit "#{@uri}?host=www.lelylan.com"
+          @resource.uri.should match("http://www.lelylan.com/")
+        end
       end
 
       it_should_behave_like "a rescued 404 resource", "visit @uri", "devices"
@@ -158,7 +171,7 @@ feature "DevicesController" do
       before { basic_auth } 
       before { @params = { name: 'New closet dimmer', type_uri: Settings.type.uri, physical: {uri: Settings.physical.uri} } }
 
-      it "creates a resource" do
+      it "should create a resource" do
         page.driver.post @uri, @params.to_json
         @resource = Device.last
         page.status_code.should == 201
@@ -166,7 +179,7 @@ feature "DevicesController" do
       end
 
       context "with no valid params" do
-        it "does not create a resource" do
+        it "should not create a resource" do
           page.driver.post @uri, {}.to_json
           page.status_code.should == 422
           should_have_a_not_valid_resource
@@ -178,7 +191,7 @@ feature "DevicesController" do
           before { @params[:type_uri] = @params[:type_uri] + "-401" }
           before { stub_get(@params[:type_uri]).to_return(status: 401, body: fixture('errors/401.json')) }
 
-          it "does not create a resource" do
+          it "should not create a resource" do
             page.driver.post @uri, @params.to_json
             code = 'notifications.type.unauthorized'
             should_have_a_not_valid_resource code: code, error: I18n.t(code)
@@ -189,7 +202,7 @@ feature "DevicesController" do
           before { @params[:type_uri] = @params[:type_uri] + "-404" }
           before { stub_get(@params[:type_uri]).to_return(status: 404, body: fixture('errors/404.json')) }
 
-          scenario "does not create a resource" do
+          it "should not create a resource" do
             page.driver.post @uri, @params.to_json
             code = 'notifications.type.not_found'
             should_have_a_not_valid_resource code: code, error: I18n.t(code)
@@ -200,7 +213,7 @@ feature "DevicesController" do
           before { @params[:type_uri] = @params[:type_uri] + "-500" }
           before { stub_get(@params[:type_uri]).to_return(status: 500, body: fixture('errors/500.json')) }
 
-          scenario "does not create a resource" do
+          it "should not create a resource" do
             page.driver.post @uri, @params.to_json
             code = 'notifications.type.error'
             should_have_a_not_valid_resource code: code, error: I18n.t(code)
@@ -211,14 +224,15 @@ feature "DevicesController" do
           before { @params[:type_uri] = @params[:type_uri] + "-503" }
           before { stub_get(@params[:type_uri]).to_return(status: 503, body: fixture('errors/503.json')) }
 
-          scenario "does not create a resource" do
+          it "should not create a resource" do
             page.driver.post @uri, @params.to_json
             code = 'notifications.type.unavailable'
             should_have_a_not_valid_resource code: code, error: I18n.t(code)
           end
         end
-
       end
+
+      it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", "POST"
     end
   end
 
@@ -246,14 +260,6 @@ feature "DevicesController" do
         page.should have_content Settings.physical.uri + "-updated"
       end
 
-      context "not valid params" do
-        it "does not update the resource" do
-          @params[:name] = ""
-          page.driver.put @uri, @params.to_json
-          should_have_a_not_valid_resource error: 'can\'t be blank', method: 'PUT'
-        end
-      end
-
       context "when changing type_uri" do
         it "ignores type_uri" do
           @params[:type_uri] = Settings.type.another.uri
@@ -263,6 +269,7 @@ feature "DevicesController" do
       end
 
       it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "devices"
+      it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", "PUT"
     end
   end
 

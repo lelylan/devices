@@ -1,17 +1,20 @@
 module DeviceViewMethods
 
   def should_have_only_owned_device(device)
+    device = DeviceDecorator.decorate(device)
     json = JSON.parse(page.source)
     should_contain_device(device)
     should_not_have_not_owned_devices
   end
 
   def should_contain_device(device)
+    device = DeviceDecorator.decorate(device)
     json = JSON.parse(page.source).first
     should_have_device(device, json)
   end
 
   def should_have_device(device, json = nil)
+    device = DeviceDecorator.decorate(device)
     should_have_valid_json
     json = JSON.parse(page.source) unless json 
     json = Hashie::Mash.new json

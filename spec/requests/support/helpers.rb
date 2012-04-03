@@ -2,7 +2,7 @@ module HelperMethods
   # Basic authentication.
   def basic_auth
     body = { username: Settings.user.email, password: Settings.user.password }
-    stub_http_request(:post, Settings.user.auth).with(body: body).to_return(body: fixture('user.json'))
+    stub_request(:post, Settings.user.auth).with(body: body).to_return(body: fixture('user.json'))
     page.driver.browser.authorize(Settings.user.email, Settings.user.password)
   end
 
@@ -10,7 +10,7 @@ module HelperMethods
   # sequenced requests keep the basic authentication valid.
   def basic_auth_cleanup
     body = { username: '', password: '' }
-    stub_http_request(:post, Settings.user.auth).with(body: body).to_return(status: 401)
+    stub_request(:post, Settings.user.auth).with(body: body).to_return(status: 401)
     page.driver.browser.authorize('', '')
   end
 

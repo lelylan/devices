@@ -1,9 +1,7 @@
 class Device
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Lelylan::Document::Base
 
-  field :uri
   field :created_from
   field :name
   field :type_uri
@@ -15,7 +13,6 @@ class Device
   embeds_many :device_properties  # properties inherited from type
   embeds_many :device_physicals   # physical devices
 
-  validates :uri, presence: true, url: true
   validates :created_from, presence: true, url: true
   validates :name, presence: true
   validates :type_uri, presence: true, url: true

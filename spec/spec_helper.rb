@@ -21,6 +21,7 @@ Spork.prefork do
   require 'rspec/rails'
   require 'capybara/rspec'
   require 'webmock/rspec'
+  require 'draper/rspec_integration'
 
   RSpec.configure do |config|
     config.mock_with :rspec
@@ -35,6 +36,8 @@ Spork.prefork do
     config.before(:each) do
       DatabaseCleaner.clean
     end
+
+    config.alias_it_should_behave_like_to :it_validates, "it validates"
 
     # If true, the base class of anonymous controllers will be inferred
     # automatically. This will be the default behavior in future rspec
