@@ -15,8 +15,8 @@ describe Device do
   describe "#create_physical_connection" do
     context "when valid" do
       before { @physical = {uri: Settings.physical.uri} }
-      subject { Factory(:device_no_physical, physical: @physical).device_physicals }
-      it { should have(1).item }
+      subject { Factory(:device_no_physical, physical: @physical).device_physical }
+      it { should_not be_nil }
     end
 
     context "when not valid" do

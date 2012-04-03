@@ -11,18 +11,18 @@ FactoryGirl.define do
     device_properties {[
       Factory.build(:device_status),
       Factory.build(:device_intensity) ]}
-    device_physicals {[ Factory.build(:device_physical) ]}
+    device_physical { Factory.build(:device_physical) }
   end
 
   # Device with no connections
   factory :device_no_connections, parent: :device do
     device_properties []
-    device_physicals []
+    device_physical nil
   end
 
   # Device with no physical connection
   factory :device_no_physical, parent: :device do
-    device_physicals []
+    device_physical nil
   end
 
   # Device not owned

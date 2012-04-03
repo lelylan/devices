@@ -11,7 +11,7 @@ class Device
   attr_accessible :name, :type_uri, :physical, :labels
 
   embeds_many :device_properties  # properties inherited from type
-  embeds_many :device_physicals   # physical devices
+  embeds_one :device_physical     # physical device
 
   validates :created_from, presence: true, url: true
   validates :name, presence: true
@@ -30,32 +30,18 @@ class Device
   # If an Array of physical device is sent an error is raised.
   def create_physical_connection
     if physical.is_a? Hash
-      device_physicals.destroy_all
-      device_physicals = build_device_physical || []
+      device_physical = build_device_physical(physical)
+      validate_device_physical(device_physical)
     elsif not physical.nil?
       raise Mongoid::Errors::InvalidType.new(::Hash, physical)
     end
   end
 
-  # Build a new device physical without saving it.
-  # In this way we can check if it is valid or not.
-  def build_device_physical
-    device_physical = device_physicals.new(physical)
-    validate_device_phisical(device_physical)
-    [device_physical]
-  end
-
   # Raise an error if the physical device connection is not valid
-  def validate_device_phisical(device_physical)
+  def validate_device_physical(device_physical)
     unless device_physical.valid?
       raise Mongoid::Errors::Validations.new(device_physical)    
     end
-  end
-
-  # Check if the device has a physical connection.
-  # Return true if a physical connection is present.
-  def physical_connection?
-    !device_physicals.empty?
   end
 
 
@@ -93,7 +79,7 @@ class Device
 
   def synchronize_device(properties)
     update_properties(properties)
-    synchronize_physical(properties) if physical_connection?
+    synchronize_physical(properties) if device_physical
     return self
   end
 
@@ -111,7 +97,7 @@ class Device
   def synchronize_physical(properties)
     options = { body: { properties: properties }.to_json, 
                 headers: { 'Content-Type' => 'application/json', 'Accept'=>'application/json' } }
-    HTTParty.put device_physicals.first.uri, options
+    HTTParty.put device_physical.uri, options
     # For now we do not check the result
   end
 end

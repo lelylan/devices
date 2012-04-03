@@ -37,7 +37,7 @@ class FunctionsController < ApplicationController
     end
 
     def status
-      @status = @device.physical_connection? ? 202 : 200
+      @status = @device.device_physical ? 202 : 200
     end
 
       # -----------------

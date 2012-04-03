@@ -12,8 +12,8 @@ node(:properties) do |device|
 end
 
 node(:physical) do |device|
-  if device.device_physicals.first
-    { uri: device.device_physicals.first.uri }
+  if device.device_physical
+    { uri: device.device_physical.uri }
   else
     false
   end
