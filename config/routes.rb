@@ -5,6 +5,7 @@ Devices::Application.routes.draw do
       put    'properties' => 'properties#update'
       put    'physical'  => 'physicals#update'
       delete 'physical'  => 'physicals#destroy'
+      get    'histories'  => 'histories#index'
     end
   end
 end

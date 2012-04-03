@@ -3,8 +3,8 @@ Settings.reload!
 
 FactoryGirl.define do
   factory :history do
-    uri Settings.history.uri
     device_uri Settings.device.uri
+    created_from Settings.user.uri
     history_properties {[
       Factory.build(:history_property_intensity),
       Factory.build(:history_property_status)
@@ -16,9 +16,12 @@ FactoryGirl.define do
   end
 
   factory :history_not_owned, parent: :history do
-    device_uri Settings.device.uri + 'not-owned'
+    created_from Settings.user.another.uri
   end
 
+  factory :history_not_owned_device, parent: :history do
+    device_uri Settings.device.another.uri
+  end
 
   # -------------
   # Connections
