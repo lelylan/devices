@@ -12,6 +12,8 @@ type:
 physical:
   host: <%= physical_host = "https://node.lelylan.com" %>
   uri: <%= "#{physical_host}/devices/physical-dimmer" %>
+  another: 
+    uri: <%= "#{physical_host}/devices/another-physical-dimmer" %>
 
 user: 
   host: <%= people_host = "https://people.lelylan.com" %>

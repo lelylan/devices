@@ -8,6 +8,7 @@ module Lelylan
 
       def self.included(base)
         base.rescue_from Mongoid::Errors::DocumentNotFound, with: :document_not_found
+        base.rescue_from Mongoid::Errors::Validations, with: :document_not_valid
         base.rescue_from BSON::InvalidObjectId, with: :bson_invalid_object_id
         base.rescue_from JSON::ParserError, with: :json_parse_error
         base.rescue_from Mongoid::Errors::InvalidType, with: :mongoid_errors_invalid_type
@@ -23,6 +24,13 @@ module Lelylan
       # --------------------
       def document_not_found
         render_404 "notifications.resource.not_found"
+      end
+
+      # --------------------
+      # Document not valid
+      # --------------------
+      def document_not_valid(e)
+        render_422 "notifications.resource.not_valid", e.message, clean_body
       end
 
       # -------------------
