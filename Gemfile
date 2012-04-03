@@ -30,6 +30,7 @@ group :development, :test do
   gem 'hashie'
   gem 'spork', '~> 1.0rc'
   gem 'guard-spork'
+  gem 'rails_best_practices'
 end
 
 group :test do

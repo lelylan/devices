@@ -46,6 +46,7 @@ class DevicesController < ApplicationController
       @devices = Device.where(created_from: current_user.uri)
     end
 
+    # TODO: put logic into model.
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
       if params[:start]
@@ -54,11 +55,16 @@ class DevicesController < ApplicationController
       end
     end
 
+    # TODO: put logic into model.
     def search_params
       @devices = @devices.where('name' => /.*#{params[:name]}.*/i) if params[:name]
       @devices = @devices.where('type_uri' => params[:type_uri]) if params[:type_uri]
-      @devices = @devices.any_in('device_properties.uri' => [params[:property_uri]]) if params[:property_uri]
-      @devices = @devices.where('device_properties.value' => params[:property_value]) if params[:property_value]
+      if (params[:property_uri] and params[:property_value])
+        @devices = @devices.where('device_properties' => { '$elemMatch' => {uri: params[:property_uri], value: params[:property_value]}})
+      else
+        @devices = @devices.where('device_properties.uri' => params[:property_uri]) if params[:property_uri]
+        @devices = @devices.where('device_properties.value' => params[:property_value]) if params[:property_value]
+      end
     end 
 
     def find_resource

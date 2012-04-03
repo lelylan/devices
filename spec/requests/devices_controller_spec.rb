@@ -78,6 +78,38 @@ feature "DevicesController" do
             page.should_not have_content @resource.device_properties.first.value
           end
         end
+
+        # Property uri and property value belong to the same embedded property
+        # In this case the search does match with a property
+        context "property_uri and property_value" do
+          before { @result = Factory(:device) }
+          before { @property_uri = Settings.properties.another.uri }
+          before { @property_value = Settings.properties.another.value }
+          before { @result.device_properties.first.update_attributes(uri: @property_uri) }
+          before { @result.device_properties.first.update_attributes(value: @property_value) }
+
+          it "should filter the searched value" do
+            visit "#{@uri}?property_uri=#{@property_uri}&property_value=#{@property_value}"
+            should_contain_device @result
+            page.should_not have_content @resource.device_properties.first.uri
+            page.should_not have_content @resource.device_properties.first.value
+          end
+        end
+
+        # Property uri and property value belong to two different embedded properties.
+        # In this case the search does not match with any property.
+        context "property_uri and property_value for different properties" do
+          before { @property_uri = Settings.properties.another.uri }
+          before { @property_value = Settings.properties.another.value }
+          before { @result = Factory(:device) }
+          before { @result.device_properties.first.update_attributes(uri: @property_uri) }
+          before { @result.device_properties.first.update_attributes(value: @property_value) }
+
+          it "should filter the searched value" do
+            visit "#{@uri}?property_uri=#{Settings.properties.intensity.uri}&property_value=#{@property_value}"
+            JSON.parse(page.source).should be_empty
+          end
+        end
       end
 
 
