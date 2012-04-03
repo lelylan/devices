@@ -14,8 +14,9 @@ class PhysicalsController < ApplicationController
   end
 
   def destroy
-    @device.destroy
-    render 'show'
+    @device.device_physical.destroy
+    @device.reload
+    render 'devices/show'
   end
 
 

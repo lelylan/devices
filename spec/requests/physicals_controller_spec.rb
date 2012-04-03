@@ -7,40 +7,43 @@ feature "PhysicalsController" do
   before { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
   before { stub_get(Settings.type.another.uri).to_return(body: fixture('type.json') ) }
 
+  before { @resource = Factory(:device) }
+  before { @resource_not_owned = Factory(:device_not_owned) }
+  before { @uri = "/devices/#{@resource.id.as_json}/physical" }
+  before { @params = { uri: Settings.physical.uri } }
 
 
   ## ----------------------------
   ## PUT /devices/:id/physical
   ## ----------------------------
   context ".update" do
-    before { @resource = Factory(:device_no_physical) }
-    before { @uri =  "/devices/#{@resource.id.as_json}/physical" }
 
     it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
 
     context "when logged in" do
       before { basic_auth }
-      before { @params = { uri: Settings.physical.uri } }
 
-      it "should connect the physical device" do
-        page.driver.put @uri, @params.to_json
-        @resource.reload
-        page.status_code.should == 200
-        should_have_device @resource
-        page.should have_content @params[:uri]
-      end
-
-      context "when exist physical device connection" do
-        before { @resource = Factory(:device) }
-        before { @uri =  "/devices/#{@resource.id.as_json}/physical" }
-        before { @params = { uri: Settings.physical.another.uri } }
-
+      context "with exisiting physical connection" do
         it "should replace it" do
           page.driver.put @uri, @params.to_json
           @resource.reload
           page.status_code.should == 200
           should_have_device @resource
-        page.should have_content @params[:uri]
+          page.should have_content @params[:uri]
+        end
+      end
+
+      context "whit not existing physical connection" do
+        before { @resource = Factory(:device_no_physical) }
+        before { @uri =  "/devices/#{@resource.id.as_json}/physical" }
+        before { @params = { uri: Settings.physical.another.uri } }
+
+        it "should create it" do
+          page.driver.put @uri, @params.to_json
+          @resource.reload
+          page.status_code.should == 200
+          should_have_device @resource
+          page.should have_content @params[:uri]
         end
       end
 
@@ -52,32 +55,32 @@ feature "PhysicalsController" do
         end
       end
 
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "devices"
       it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", "PUT"
     end
   end
 
 
-  # ---------------------
-  # DELETE /devices/:id
-  # ---------------------
-  #context ".destroy" do
-    #before { @resource = Factory(:device) }
-    #before { @uri =  "/devices/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = Factory(:device_not_owned) }
+  #------------------------------
+  # DELETE /devices/:id/physical
+  #------------------------------
+  context ".destroy" do
 
-    #it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth } 
+    context "when logged in" do
+      before { basic_auth } 
 
-      #scenario "delete resource" do
-        #expect{page.driver.delete(@uri, {}.to_json)}.to change{Device.count}.by(-1)
-        #page.status_code.should == 200
-        #should_have_device @resource
-      #end
+      scenario "delete resource" do
+        page.driver.delete(@uri, @params.to_json) 
+        @resource.reload
+        page.status_code.should == 200
+        should_have_device @resource
+        page.should_not have_content @params[:uri]
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "devices"
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "devices"
+    end
+  end
 
 end
