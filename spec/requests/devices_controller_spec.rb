@@ -230,8 +230,9 @@ feature "DevicesController" do
             should_have_a_not_valid_resource code: code, error: I18n.t(code)
           end
         end
-
       end
+
+      it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", "POST"
     end
   end
 
@@ -259,14 +260,6 @@ feature "DevicesController" do
         page.should have_content Settings.physical.uri + "-updated"
       end
 
-      context "not valid params" do
-        it "does not update the resource" do
-          @params[:name] = ""
-          page.driver.put @uri, @params.to_json
-          should_have_a_not_valid_resource error: 'can\'t be blank', method: 'PUT'
-        end
-      end
-
       context "when changing type_uri" do
         it "ignores type_uri" do
           @params[:type_uri] = Settings.type.another.uri
@@ -276,6 +269,7 @@ feature "DevicesController" do
       end
 
       it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "devices"
+      it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", "PUT"
     end
   end
 

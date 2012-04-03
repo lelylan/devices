@@ -3,12 +3,14 @@ class History
   include Mongoid::Timestamps
 
   field :device_uri
+  field :created_from
 
-  attr_accessible :device_uri
+  attr_accessible :device_uri, :created_from
 
   embeds_many :history_properties
 
   validates :device_uri, presence:true, url: true
+  validates :created_from, presence:true, url: true
 
 
   # Create an history resource with the connected properties

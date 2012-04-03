@@ -7,12 +7,13 @@ class FunctionsController < ApplicationController
 
   def update
     @device = @device.synchronize_device(@properties)
-    History.create_history({device_uri: DeviceDecorator.decorate(@device).uri}, @device.device_properties)
+    params  = {device_uri: DeviceDecorator.decorate(@device).uri, created_from: current_user.uri}
+    History.create_history(params, @device.device_properties)
     render '/devices/show', status: @status
   end
-  
+
   private 
-  
+
     def find_owned_resources
       @devices = Device.where(created_from: current_user.uri)
     end

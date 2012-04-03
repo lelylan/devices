@@ -37,6 +37,8 @@ Spork.prefork do
       DatabaseCleaner.clean
     end
 
+    config.alias_it_should_behave_like_to :it_validates, "it validates"
+
     # If true, the base class of anonymous controllers will be inferred
     # automatically. This will be the default behavior in future rspec
     config.infer_base_class_for_anonymous_controllers = false

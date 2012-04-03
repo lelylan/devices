@@ -72,6 +72,8 @@ feature "FunctionsController" do
           page.status_code.should == 202
           should_have_valid_json
         end
+
+        it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", "PUT"
       end
 
 
@@ -103,7 +105,10 @@ feature "FunctionsController" do
       # ---------
       it "should create history resource" do
         expect{ page.driver.put @uri, @params.to_json }.to change{ History.count }.by(1)
-        History.last.history_properties.should have(2).items
+        history = History.last
+        history.device_uri.should == DeviceDecorator.decorate(@resource).uri
+        history.created_from.should == Settings.user.uri
+        history.history_properties.should have(2).items
       end
 
 

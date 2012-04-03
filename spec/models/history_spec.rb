@@ -3,12 +3,13 @@ require 'spec_helper'
 describe History do
   # presence
   it { should validate_presence_of :device_uri }
+  it { should validate_presence_of :created_from }
 
   # general stub
   before  { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
 
   context "#create_history" do
-    before { @params = { device_uri: Settings.device.uri }}
+    before { @params = { device_uri: Settings.device.uri, created_from: Settings.user.uri }}
     before { @properties = json_fixture('properties.json')[:properties] }
 
     it "should create history resource" do
