@@ -16,7 +16,8 @@ feature "HistoriesController" do
   context ".index" do
     before { @device = Factory(:device) }
     before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
-    before { @resource = Factory(:history, device_uri: @device_uri) }
+    before { @created_at = Chronic.parse('1 week ago') }
+    before { @resource = HistoryDecorator.decorate(Factory(:history, device_uri: @device_uri, created_at: @created_at)) }
     before { @resource_not_owned = Factory(:history_not_owned) }
     before { @uri = "/devices/#{@device.id.as_json}/histories" }
 
@@ -27,141 +28,90 @@ feature "HistoriesController" do
 
       it "should view all resources" do
         visit @uri
-        save_and_open_page
         page.status_code.should == 200
         should_have_only_owned_history @resource
       end
 
 
-      ## ---------
-      ## Search
-      ## ---------
-      #context "when searching" do
-        #context "from" do
-          #before { @created_at = Chronic.parse('1 week ago') }
-          #before { @result = Factory(:history, device_uri: @device_uri, created_at: @created_at) }
+      # ---------
+      # Search
+      # ---------
+      context "when searching" do
+        before { @created_at = Chronic.parse('1 week ago') }
+        before { @result = Factory(:history, device_uri: @device_uri) }
 
-          #it "should find a device" do
-            #visit "#{@uri}?name=name+is"
-            #should_contain_device @result
-            #page.should_not have_content @resource.name
-          #end
-        #end
+        context "with :from" do
+          it "should find an history" do
+            visit "#{@uri}?from=yesterday"
+            should_contain_history @result
+            JSON.parse(page.source).should have(1).item
+          end
 
-        #context "params[:from]" do
-          #before { @to_search = 'yesterday' }
-          #before { @occur_at = Chronic.parse('1 week ago') }
-          #before { @not_visible = Factory(:history, created_at: @occur_at)}
-          #before { visit "#{@uri}?from=#{@to_search}" }
-          #it "should filter the searched value" do
-            #should_have_history(@history)
-            #page.should_not have_content @occur_at.to_s
-          #end
-        #end
+          it "should find all histories" do
+            visit "#{@uri}?from=one+year+ago"
+            should_contain_history @resource
+            JSON.parse(page.source).should have(2).item
+          end
+        end
 
-        #context "type_uri" do
-          #before { @type_uri = Settings.type.another.uri }
-          #before { @result = Factory(:device, type_uri: @type_uri)}
+        context "with :to" do
+          it "should find an history" do
+            visit "#{@uri}?to=yesterday"
+            should_contain_history @resource
+            JSON.parse(page.source).should have(1).item
+          end
 
-          #it "should find a device" do
-            #visit "#{@uri}?type_uri=#{@type_uri}"
-            #should_contain_device @result
-            #page.should_not have_content @resource.type_uri
-          #end
-        #end
+          it "should not find histories" do
+            visit "#{@uri}?to=one+year+ago"
+            JSON.parse(page.source).should be_empty
+          end
+        end
 
-        #context "property_uri" do
-          #before { @property_uri = Settings.properties.another.uri }
-          #before { @result = Factory(:device) }
-          #before { @result.device_properties.first.update_attributes(uri: @property_uri) }
-
-          #it "should filter the searched value" do
-            #visit "#{@uri}?property_uri=#{@property_uri}"
-            #should_contain_device @result
-            #page.should_not have_content @resource.device_properties.first.uri
-          #end
-        #end
-
-        #context "property_value" do
-          #before { @property_value = Settings.properties.another.value }
-          #before { @result = Factory(:device) }
-          #before { @result.device_properties.first.update_attributes(value: @property_value) }
-
-          #it "should filter the searched value" do
-            #visit "#{@uri}?property_value=#{@property_value}"
-            #should_contain_device @result
-            #page.should_not have_content @resource.device_properties.first.value
-          #end
-        #end
-
-        ## Property uri and property value belong to the same embedded property
-        ## In this case the search does match with a property
-        #context "property_uri and property_value" do
-          #before { @result = Factory(:device) }
-          #before { @property_uri = Settings.properties.another.uri }
-          #before { @property_value = Settings.properties.another.value }
-          #before { @result.device_properties.first.update_attributes(uri: @property_uri) }
-          #before { @result.device_properties.first.update_attributes(value: @property_value) }
-
-          #it "should filter the searched value" do
-            #visit "#{@uri}?property_uri=#{@property_uri}&property_value=#{@property_value}"
-            #should_contain_device @result
-            #page.should_not have_content @resource.device_properties.first.uri
-            #page.should_not have_content @resource.device_properties.first.value
-          #end
-        #end
-
-        ## Property uri and property value belong to two different embedded properties.
-        ## In this case the search does not match with any property.
-        #context "property_uri and property_value for different properties" do
-          #before { @property_uri = Settings.properties.another.uri }
-          #before { @property_value = Settings.properties.another.value }
-          #before { @result = Factory(:device) }
-          #before { @result.device_properties.first.update_attributes(uri: @property_uri) }
-          #before { @result.device_properties.first.update_attributes(value: @property_value) }
-
-          #it "should filter the searched value" do
-            #visit "#{@uri}?property_uri=#{Settings.properties.intensity.uri}&property_value=#{@property_value}"
-            #JSON.parse(page.source).should be_empty
-          #end
-        #end
-      #end
+        context "with :from and :to" do
+          it "should find an history" do
+            visit "#{@uri}?from=two+weeks+ago&to=yesterday"
+            should_contain_history @resource
+            JSON.parse(page.source).should have(1).item
+          end
+        end
+      end
 
 
-      ## ------------
-      ## Pagination
-      ## ------------
-      #context "when paginating" do
-        #before { Device.destroy_all }
-        #before { @resource = DeviceDecorator.decorate(Factory(:device)) }
-        #before { @resources = FactoryGirl.create_list(:device, Settings.pagination.per + 5, name: 'Extra dimmer') }
+      # ------------
+      # Pagination
+      # ------------
+      context "when paginating" do
+        before { History.destroy_all }
+        before { @created_at = Chronic.parse('1 week ago') }
+        before { @resource = HistoryDecorator.decorate(Factory(:history, device_uri: @device_uri, created_at: @created_at)) }
+        before { @resources = FactoryGirl.create_list(:history, Settings.pagination.per + 5, device_uri: @device_uri) }
 
-        #context "with :start" do
-          #it "should show next page" do
-            #visit "#{@uri}?start=#{@resource.uri}"
-            #page.status_code.should == 200
-            #should_contain_device @resources.first
-            #page.should_not have_content @resource.name
-          #end
-        #end
+        context "with :start" do
+          it "should show next resources" do
+            visit "#{@uri}?start=#{@resource.uri}"
+            page.status_code.should == 200
+            should_contain_history @resources.first
+            page.should_not have_content @resource.created_at.strftime("%Y-%m-%d")
+          end
+        end
 
-        #context "with :per" do
-          #it "should show the default number of resources" do
-            #visit "#{@uri}"
-            #JSON.parse(page.source).should have(Settings.pagination.per).items
-          #end
+        context "with :per" do
+          it "should show the default number of resources" do
+            visit "#{@uri}"
+            JSON.parse(page.source).should have(Settings.pagination.per).items
+          end
 
-          #it "should show 5 resources" do
-            #visit "#{@uri}?per=5"
-            #JSON.parse(page.source).should have(5).items
-          #end
+          it "should show 5 resources" do
+            visit "#{@uri}?per=5"
+            JSON.parse(page.source).should have(5).items
+          end
 
-          #it "should show all resources" do
-            #visit "#{@uri}?per=all"
-            #JSON.parse(page.source).should have(Device.count).items
-          #end
-        #end
-      #end
+          it "should show all resources" do
+            visit "#{@uri}?per=all"
+            JSON.parse(page.source).should have(History.count).items
+          end
+        end
+      end
     end
   end
 

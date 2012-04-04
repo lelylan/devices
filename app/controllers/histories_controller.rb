@@ -18,7 +18,6 @@ class HistoriesController < ApplicationController
     end
 
     def find_resource
-      puts params.inspect
       @device = @devices.find(params[:id])
     end
 

@@ -11,4 +11,3 @@ node(:properties) do |history|
 end
 
 node(:created_at) { |history| history.created_at }
-node(:updated_at) { |history| history.updated_at }
