@@ -17,8 +17,8 @@ feature "HistoriesController" do
     before { @device = Factory(:device) }
     before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
     before { @resource = Factory(:history, device_uri: @device_uri) }
-    before { @uri = "/devices/#{@device.id.as_json}/histories" }
     before { @resource_not_owned = Factory(:history_not_owned) }
+    before { @uri = "/devices/#{@device.id.as_json}/histories" }
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
 
@@ -29,7 +29,7 @@ feature "HistoriesController" do
         visit @uri
         save_and_open_page
         page.status_code.should == 200
-        should_have_only_owned_history @resource, @device.id.as_json
+        should_have_only_owned_history @resource
       end
 
 
@@ -37,14 +37,25 @@ feature "HistoriesController" do
       ## Search
       ## ---------
       #context "when searching" do
-        #context "name" do
-          #before { @name = "My name is device" }
-          #before { @result = Factory(:device, name: @name) }
+        #context "from" do
+          #before { @created_at = Chronic.parse('1 week ago') }
+          #before { @result = Factory(:history, device_uri: @device_uri, created_at: @created_at) }
 
           #it "should find a device" do
             #visit "#{@uri}?name=name+is"
             #should_contain_device @result
             #page.should_not have_content @resource.name
+          #end
+        #end
+
+        #context "params[:from]" do
+          #before { @to_search = 'yesterday' }
+          #before { @occur_at = Chronic.parse('1 week ago') }
+          #before { @not_visible = Factory(:history, created_at: @occur_at)}
+          #before { visit "#{@uri}?from=#{@to_search}" }
+          #it "should filter the searched value" do
+            #should_have_history(@history)
+            #page.should_not have_content @occur_at.to_s
           #end
         #end
 
