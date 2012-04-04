@@ -20,7 +20,7 @@ class PhysicalsController < ApplicationController
   end
 
 
-  private 
+  private
 
     def find_owned_resources
       @devices = Device.where(created_from: current_user.uri)

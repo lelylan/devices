@@ -1,8 +1,8 @@
 class DevicesController < ApplicationController
   before_filter :find_owned_resources
-  before_filter :pagination, only: 'index'
-  before_filter :search_params, only: 'index'
   before_filter :find_resource, only: %w(show update destroy)
+  before_filter :search_params, only: 'index'
+  before_filter :pagination, only: 'index'
 
 
   def index
@@ -34,8 +34,8 @@ class DevicesController < ApplicationController
   end
 
   def destroy
-    @device.destroy
     render 'show'
+    @device.destroy
   end
 
 
