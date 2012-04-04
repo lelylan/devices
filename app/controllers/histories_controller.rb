@@ -1,28 +1,37 @@
 class HistoriesController < ApplicationController
+  before_filter :find_history, only: 'show'
   before_filter :find_owned_resources
   before_filter :find_resource
-  before_filter :find_histories
-  before_filter :pagination
-  before_filter :filter_params
+  before_filter :find_histories, only: 'index'
+  before_filter :search_params, only: 'index'
+  before_filter :pagination, only: 'index'
 
 
   def index
     @histories = @histories.limit(params[:per])
   end
 
+  def show
+  end
 
   private
+
+    def find_history
+      @history = History.find(params[:id])
+      uri = Addressable::URI.parse(@history.device_uri)
+      params[:device_id] = uri.basename
+    end
 
     def find_owned_resources
       @devices = Device.where(created_from: current_user.uri)
     end
 
     def find_resource
-      @device = @devices.find(params[:id])
+      @device = @devices.find(params[:device_id])
+      @device = DeviceDecorator.decorate(@device)
     end
 
     def find_histories
-      @device = DeviceDecorator.decorate(@device)
       @histories = History.where(device_uri: @device.uri)
     end
 
@@ -34,7 +43,7 @@ class HistoriesController < ApplicationController
       end
     end
 
-    def filter_params
+    def search_params
       parse_time_params
       @histories = @histories.where(:created_at.gte => Chronic.parse(params[:from])) if params[:from]
       @histories = @histories.where(:created_at.lte => Chronic.parse(params[:to]))   if params[:to]

@@ -5,21 +5,21 @@ feature "HistoriesController" do
   before { History.destroy_all }
   before { host! "http://" + host }
 
-  # General stub
   before { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
   before { stub_get(Settings.type.another.uri).to_return(body: fixture('type.json') ) }
+
+  before { @device = Factory(:device) }
+  before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
+  before { @created_at = Chronic.parse('1 week ago') }
+  before { @resource = HistoryDecorator.decorate(Factory(:history, device_uri: @device_uri, created_at: @created_at)) }
+  before { @resource_not_owned = Factory(:history_not_owned) }
 
 
   # ----------------------------
   # GET /devices/:id/histories
   # ----------------------------
   context ".index" do
-    before { @device = Factory(:device) }
-    before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
-    before { @created_at = Chronic.parse('1 week ago') }
-    before { @resource = HistoryDecorator.decorate(Factory(:history, device_uri: @device_uri, created_at: @created_at)) }
-    before { @resource_not_owned = Factory(:history_not_owned) }
-    before { @uri = "/devices/#{@device.id.as_json}/histories" }
+   before { @uri = "/devices/#{@device.id.as_json}/histories" }
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
 
@@ -115,4 +115,38 @@ feature "HistoriesController" do
     end
   end
 
+
+  # -------------------
+  # GET /histories/:id
+  # -------------------
+  context ".show" do
+    before { @uri = "/histories/#{@resource.id.as_json}" }
+
+    it_should_behave_like "not authorized resource", "visit(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+
+      it "should view owned resource" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_history @resource
+      end
+
+      it "should expose the history URI" do
+        visit @uri
+        uri = "http://www.example.com/histories/#{@resource.id.as_json}"
+        @resource.uri.should == uri
+      end
+
+      context "with :host" do
+        it "should change the URI" do
+          visit "#{@uri}?host=www.lelylan.com"
+          @resource.uri.should match("http://www.lelylan.com/")
+        end
+      end
+
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "devices"
+    end
+  end
 end
