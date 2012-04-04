@@ -34,8 +34,8 @@ class DevicesController < ApplicationController
   end
 
   def destroy
-    @device.destroy
     render 'show'
+    @device.destroy
   end
 
 

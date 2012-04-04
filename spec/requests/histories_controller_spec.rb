@@ -27,8 +27,9 @@ feature "HistoriesController" do
 
       it "should view all resources" do
         visit @uri
+        save_and_open_page
         page.status_code.should == 200
-        should_have_only_owned_history @resource
+        should_have_only_owned_history @resource, @device.id.as_json
       end
 
 

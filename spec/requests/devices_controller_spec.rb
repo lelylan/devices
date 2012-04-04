@@ -321,6 +321,7 @@ feature "DevicesController" do
 
       scenario "delete resource" do
         expect{page.driver.delete(@uri, {}.to_json)}.to change{Device.count}.by(-1)
+        save_and_open_page
         page.status_code.should == 200
         should_have_device @resource
       end

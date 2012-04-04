@@ -1,6 +1,6 @@
 object HistoryDecorator.decorate(@history)
 
-node(:uri)    { |history| history.uri }
+node(:uri)    { |history| history.uri(params[:device_id]) }
 node(:id)     { |history| history.id }
 node(:device) { |history| { uri: history.device_uri } }
 

@@ -18,7 +18,8 @@ class HistoriesController < ApplicationController
     end
 
     def find_resource
-      @device = @devices.find(params[:id])
+      puts params.inspect
+      @device = @devices.find(params[:device_id])
     end
 
     def find_histories

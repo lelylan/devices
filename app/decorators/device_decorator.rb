@@ -2,6 +2,6 @@ class DeviceDecorator < ApplicationDecorator
   decorates :Device
 
   def uri
-    base_uri('devices')
+    h.device_path(model, default_options)
   end
 end

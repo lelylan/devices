@@ -1,24 +1,24 @@
 module HistoryViewMethods
 
-  def should_have_only_owned_history(history)
+  def should_have_only_owned_history(history, device_id)
     history = HistoryDecorator.decorate(history)
     json = JSON.parse(page.source)
-    should_contain_history(history)
+    should_contain_history(history, device_id)
     should_not_have_not_owned_histories
   end
 
-  def should_contain_history(history)
+  def should_contain_history(history, device_id)
     history = HistoryDecorator.decorate(history)
     json = JSON.parse(page.source).first
-    should_have_history(history, json)
+    should_have_history(history, device_id, json)
   end
 
-  def should_have_history(history, json = nil)
+  def should_have_history(history, device_id, json = nil)
     history = HistoryDecorator.decorate(history)
     should_have_valid_json
     json = JSON.parse(page.source) unless json 
     json = Hashie::Mash.new json
-    json.uri.should == history.uri
+    json.uri.should == history.uri(device_id)
     json.id.should == history.id.as_json
     json.device.uri.should == history.device_uri
     json.properties.each_with_index do |property, index|
