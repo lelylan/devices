@@ -76,41 +76,41 @@ feature "ConsumptionsController" do
       end
 
 
-      ## ------------
-      ## Pagination
-      ## ------------
-      #context "when paginating" do
-        #before { History.destroy_all }
-        #before { @created_at = Chronic.parse('1 week ago') }
-        #before { @resource = HistoryDecorator.decorate(Factory(:history, device_uri: @device_uri, created_at: @created_at)) }
-        #before { @resources = FactoryGirl.create_list(:history, Settings.pagination.per + 5, device_uri: @device_uri) }
+      # ------------
+      # Pagination
+      # ------------
+      context "when paginating" do
+        before { Consumption.destroy_all }
+        before { @created_at = Chronic.parse('1 week ago') }
+        before { @resource = ConsumptionDecorator.decorate(Factory(:consumption, device_uri: @device_uri, value: '0.175')) }
+        before { @resources = FactoryGirl.create_list(:consumption, Settings.pagination.per + 5, device_uri: @device_uri) }
 
-        #context "with :start" do
-          #it "should show next resources" do
-            #visit "#{@uri}?start=#{@resource.uri}"
-            #page.status_code.should == 200
-            #should_contain_history @resources.first
-            #page.should_not have_content @resource.created_at.strftime("%Y-%m-%d")
-          #end
-        #end
+        context "with :start" do
+          it "should show next resources" do
+            visit "#{@uri}?start=#{@resource.uri}"
+            page.status_code.should == 200
+            should_contain_consumption @resources.first
+            page.should_not have_content @resource.value
+          end
+        end
 
-        #context "with :per" do
-          #it "should show the default number of resources" do
-            #visit "#{@uri}"
-            #JSON.parse(page.source).should have(Settings.pagination.per).items
-          #end
+        context "with :per" do
+          it "should show the default number of resources" do
+            visit "#{@uri}"
+            JSON.parse(page.source).should have(Settings.pagination.per).items
+          end
 
-          #it "should show 5 resources" do
-            #visit "#{@uri}?per=5"
-            #JSON.parse(page.source).should have(5).items
-          #end
+          it "should show 5 resources" do
+            visit "#{@uri}?per=5"
+            JSON.parse(page.source).should have(5).items
+          end
 
-          #it "should show all resources" do
-            #visit "#{@uri}?per=all"
-            #JSON.parse(page.source).should have(History.count).items
-          #end
-        #end
-      #end
+          it "should show all resources" do
+            visit "#{@uri}?per=all"
+            JSON.parse(page.source).should have(Consumption.count).items
+          end
+        end
+      end
     end
   end
 
