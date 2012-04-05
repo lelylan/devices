@@ -2,20 +2,17 @@ class Consumption
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :uri
   field :created_from
   field :device_uri
   field :type, default: 'instantaneous'
   field :value
   field :unit, default: 'KWH'
-  field :occur_at, type: Time
+  field :occur_at, type: Time, default: lambda {Time.now}
   field :end_at, type: Time
   field :duration, type: Float
-  field :labels, type: Array, default: []
 
-  attr_accessible :device_uri, :type, :value, :unit, :occur_at, :end_at, :duration, :labels
+  attr_accessible :device_uri, :type, :value, :unit, :occur_at, :end_at, :duration
 
-  validates :uri, presence: true, url: true
   validates :created_from, presence: true, url: true
   validates :device_uri, presence: true, url: true
   validates :type, inclusion: { in: %w(instantaneous durational) }

@@ -8,10 +8,11 @@ shared_examples_for "not valid JSON" do |action, method|
   end
 end
 
-#shared_examples_for "empty body" do |action, method|
-  #it "does not update the resource" do
-    #eval(action)
-    #page.status_code.should == 422
-    #should_have_a_not_valid_resource code: "notifications.json.not_valid", error: "Not valid", method: method
-  #end
-#end
+shared_examples_for "not valid params" do |action, method|
+  it "should not create a resource" do
+    @params = {}
+    eval(action)
+    page.status_code.should == 422
+    should_have_a_not_valid_resource method: method
+  end
+end
