@@ -1,6 +1,7 @@
 Devices::Application.routes.draw do
   resources :devices, defaults: {format: 'json'} do
     resources 'histories', only: 'index'
+    resources 'consumptions', only: 'index'
     member do
       put   'functions'   => 'functions#update'
       put    'properties' => 'properties#update'
@@ -11,4 +12,5 @@ Devices::Application.routes.draw do
   end
 
   resources :histories, defaults: {format: 'json'}, only: 'show'
+  resources :consumptions, defaults: {format: 'json'}
 end

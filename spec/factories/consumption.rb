@@ -14,8 +14,8 @@ FactoryGirl.define do
     uri Settings.consumptions.durational.uri
     type 'durational'
     duration 60
-    occur_at Time.now
-    end_at Time.now + 60
+    occur_at Time.now - 60
+    end_at Time.now
   end
 
   factory :consumption_not_owned, parent: :consumption do
