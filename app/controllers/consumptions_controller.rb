@@ -69,6 +69,7 @@ class ConsumptionsController < ApplicationController
 
     def search_params
       parse_time_params
+      @consumptions = @consumptions.where(type: params[:type]) if params[:type]
       @consumptions = @consumptions.where(:occur_at.gte => Chronic.parse(params[:from])) if params[:from]
       @consumptions = @consumptions.where(:occur_at.lte => Chronic.parse(params[:to])) if params[:to]
     end

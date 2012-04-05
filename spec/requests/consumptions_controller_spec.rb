@@ -15,29 +15,6 @@ feature "ConsumptionsController" do
   before { @resource_not_owned = Factory(:consumption_not_owned) }
 
 
-  # ------------------
-  # GET /consumptions
-  # ------------------
-  context ".index" do
-    before { @uri = "/consumptions" }
-    before { @device = Factory(:device) }
-    before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
-    before { @another_resource = ConsumptionDecorator.decorate(Factory(:consumption, device_uri: @device_uri, occur_at: @occur_at)) }
-
-    it_should_behave_like "not authorized resource", "visit(@uri)"
-
-    context "when logged in" do
-      before { basic_auth }
-
-      it "should view all resources" do
-        visit @uri
-        page.status_code.should == 200
-        JSON.parse(page.source).should have(2).item
-      end
-    end
-  end
-
-
   # ------------------------------
   # GET /devices/:id/consumptions
   # ------------------------------
@@ -96,6 +73,27 @@ feature "ConsumptionsController" do
             JSON.parse(page.source).should have(1).item
           end
         end
+
+        context "with :type" do
+          before { @durational = ConsumptionDecorator.decorate(Factory(:consumption_durational, device_uri: @device_uri)) }
+
+          context "when :type is instantaneous" do
+            it "should find an instantaneous consumption" do
+              visit "#{@uri}?type=instantaneous"
+              should_contain_consumption @resource
+              page.should_not have_content 'durational' 
+            end
+          end
+
+          context "when :type is durational" do
+            it "should find a durational consumption" do
+              visit "#{@uri}?type=durational"
+              should_contain_consumption @durational
+              JSON.parse(page.source).should have(1).item
+              page.should_not have_content 'instantaneous' 
+            end
+          end
+        end
       end
 
 
@@ -133,6 +131,29 @@ feature "ConsumptionsController" do
             JSON.parse(page.source).should have(Consumption.count).items
           end
         end
+      end
+    end
+  end
+
+
+  # ------------------
+  # GET /consumptions
+  # ------------------
+  context ".index" do
+    before { @uri = "/consumptions" }
+    before { @device = Factory(:device) }
+    before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
+    before { @another_resource = ConsumptionDecorator.decorate(Factory(:consumption, device_uri: @device_uri, occur_at: @occur_at)) }
+
+    it_should_behave_like "not authorized resource", "visit(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+
+      it "should view all resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).item
       end
     end
   end
