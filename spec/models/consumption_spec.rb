@@ -2,14 +2,11 @@ require 'spec_helper'
 
 describe Consumption do
   # presence
-  it { should validate_presence_of(:uri) }
   it { should validate_presence_of(:created_from) }
   it { should validate_presence_of(:device_uri) }
   it { should validate_presence_of(:value) }
 
   #uri
-  it { should allow_value(Settings.validation.uri.valid).for(:uri) }
-  it { should_not allow_value(Settings.validation.uri.not_valid).for(:uri) }
   it { should allow_value(Settings.validation.uri.valid).for(:created_from) }
   it { should_not allow_value(Settings.validation.uri.not_valid).for(:created_from) }
   it { should allow_value(Settings.validation.uri.valid).for(:device_uri) }
@@ -22,7 +19,6 @@ describe Consumption do
   it { should validate_presence_of(:occur_at) }
 
   # mass assignment
-  it { should_not allow_mass_assignment_of(:uri) }
   it { should_not allow_mass_assignment_of(:created_from) } 
 
 

@@ -15,6 +15,29 @@ feature "ConsumptionsController" do
   before { @resource_not_owned = Factory(:consumption_not_owned) }
 
 
+  # ------------------
+  # GET /consumptions
+  # ------------------
+  context ".index" do
+    before { @uri = "/consumptions" }
+    before { @device = Factory(:device) }
+    before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
+    before { @another_resource = ConsumptionDecorator.decorate(Factory(:consumption, device_uri: @device_uri, occur_at: @occur_at)) }
+
+    it_should_behave_like "not authorized resource", "visit(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+
+      it "should view all resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).item
+      end
+    end
+  end
+
+
   # ------------------------------
   # GET /devices/:id/consumptions
   # ------------------------------
@@ -115,37 +138,137 @@ feature "ConsumptionsController" do
   end
 
 
-  ## -------------------
-  ## GET /histories/:id
-  ## -------------------
-  #context ".show" do
-    #before { @uri = "/histories/#{@resource.id.as_json}" }
+  # -----------------------
+  # GET /consumptions/:id
+  # -----------------------
+  context ".show" do
+    before { @uri = "/consumptions/#{@resource.id.as_json}" }
 
-    #it_should_behave_like "not authorized resource", "visit(@uri)"
+    it_should_behave_like "not authorized resource", "visit(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth }
+    context "when logged in" do
+      before { basic_auth }
 
-      #it "should view owned resource" do
-        #visit @uri
-        #page.status_code.should == 200
-        #should_have_history @resource
-      #end
+      it "should view owned resource" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_consumption @resource
+      end
 
-      #it "should expose the history URI" do
-        #visit @uri
-        #uri = "http://www.example.com/histories/#{@resource.id.as_json}"
-        #@resource.uri.should == uri
-      #end
+      it "should expose the consumption URI" do
+        visit @uri
+        uri = "http://www.example.com/consumptions/#{@resource.id.as_json}"
+        @resource.uri.should == uri
+      end
 
-      #context "with :host" do
-        #it "should change the URI" do
-          #visit "#{@uri}?host=www.lelylan.com"
-          #@resource.uri.should match("http://www.lelylan.com/")
-        #end
-      #end
+      context "with :host" do
+        it "should change the URI" do
+          visit "#{@uri}?host=www.lelylan.com"
+          @resource.uri.should match("http://www.lelylan.com/")
+        end
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "visit @uri", "devices"
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "devices"
+    end
+  end
+
+  
+  # -------------------
+  # POST /consumptions
+  # -------------------
+  context ".create" do
+    before { @uri =  "/consumptions" }
+    before { @device = Factory(:device) }
+    before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
+ 
+    it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
+
+    context "when logged in" do
+      before { basic_auth } 
+      before { @params = { device_uri: @device_uri, value: "10.0" } }
+
+      context "without :type" do
+        it "should create an instantaneous consupmtion" do
+          page.driver.post @uri, @params.to_json
+          @resource = Consumption.last
+          page.status_code.should == 201
+          should_have_consumption @resource
+          page.should have_content "instantaneous"
+        end
+      end
+
+      context "with durational :type" do
+        before { @params.merge!({type: 'durational', occur_at: Time.now-60, end_at: Time.now}) }
+
+        it "should create a durational consuption" do
+          page.driver.post @uri, @params.to_json
+          @resource = Consumption.last
+          page.status_code.should == 201
+          should_have_consumption @resource
+          page.should have_content "durational"
+          page.should have_content "60"
+        end
+      end
+
+      it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", "POST"
+      it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", "POST"
+    end
+  end
+
+
+  # -----------------------
+  # PUT /consumptions/:id
+  # -----------------------
+  context ".update" do
+    before { @uri = "/consumptions/#{@resource.id.as_json}" }
+
+    it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+      before { @params = { value: "0.00" } }
+
+      it "should update a resource" do
+        page.driver.put @uri, @params.to_json
+        @resource.reload
+        page.status_code.should == 200
+        page.should have_content "0.00"
+        page.should_not have_content "125"
+      end
+
+      context "when params are not valid" do
+        it "should not update the resource" do
+          @params[:type] = "not-existing"
+          page.driver.put @uri, @params.to_json
+          page.status_code.should == 422
+          should_have_a_not_valid_resource error: 'is not included in the list', method: 'PUT'
+        end
+      end
+
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "devices"
+      it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", "PUT"
+    end
+  end
+  
+
+  # --------------------------
+  # DELETE /consumptions/:id
+  # --------------------------
+  context ".destroy" do
+    before { @uri = "/consumptions/#{@resource.id.as_json}" }
+ 
+    it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
+
+    context "when logged in" do
+      before { basic_auth } 
+
+      scenario "delete resource" do
+        expect{page.driver.delete(@uri, {}.to_json)}.to change{Consumption.count}.by(-1)
+        page.status_code.should == 200
+        should_have_consumption @resource
+      end
+
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "consumptions"
+    end
+  end
 end

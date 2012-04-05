@@ -3,15 +3,13 @@ Settings.reload!
 
 FactoryGirl.define do
   factory :consumption do
-    uri Settings.consumptions.instantaneous.uri
     device_uri Settings.device.uri
     created_from Settings.user.uri
-    value 125.05
+    value 125.00
     occur_at Time.now
   end
 
   factory :consumption_durational, parent: :consumption do
-    uri Settings.consumptions.durational.uri
     type 'durational'
     duration 60
     occur_at Time.now - 60

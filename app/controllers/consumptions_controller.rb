@@ -1,5 +1,5 @@
 class ConsumptionsController < ApplicationController
-  before_filter :find_consumption, only: 'show'
+  before_filter :find_consumption, only: %w(show update destroy)
   before_filter :find_owned_resources
   before_filter :find_resource
   before_filter :find_consumptions, only: 'index'
@@ -13,6 +13,32 @@ class ConsumptionsController < ApplicationController
 
   def show
   end
+  
+  def create
+    body = JSON.parse(request.body.read)
+    @consumption= Consumption.new(body)
+    @consumption.created_from = current_user.uri
+    if @consumption.save
+      render 'show', status: 201, location: ConsumptionDecorator.decorate(@consumption).uri
+    else
+      render_422 "notifications.resource.not_valid", @consumption.errors
+    end
+  end
+
+  def update
+    body = JSON.parse(request.body.read)
+    if @consumption.update_attributes(body)
+      render 'show'
+    else
+      render_422 'notifications.resource.not_valid', @consumption.errors
+    end
+  end
+
+  def destroy
+    render 'show'
+    @consumption.destroy
+  end
+
 
   private
 

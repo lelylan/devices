@@ -190,9 +190,9 @@ feature "DevicesController" do
 
 
 
-  ## ---------------
-  ## POST /devices
-  ## ---------------
+  # ---------------
+  # POST /devices
+  # ---------------
   context ".create" do
     before { @uri =  "/devices" }
     before { stub_get(Settings.type.uri).to_return(body: fixture('type.json')) }
@@ -208,14 +208,6 @@ feature "DevicesController" do
         @resource = Device.last
         page.status_code.should == 201
         should_have_device @resource
-      end
-
-      context "with no valid params" do
-        it "should not create a resource" do
-          page.driver.post @uri, {}.to_json
-          page.status_code.should == 422
-          should_have_a_not_valid_resource
-        end
       end
 
       context "when Lelylan Type" do
@@ -264,10 +256,10 @@ feature "DevicesController" do
         end
       end
 
+      it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", "POST"
       it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", "POST"
     end
   end
-
 
 
   # ------------------
@@ -284,7 +276,7 @@ feature "DevicesController" do
       before { basic_auth }
       before { @params = { name: "Closet dimmer updated", physical: {uri: Settings.physical.uri + '-updated'} } }
 
-      it "updates a resource" do
+      it "should update a resource" do
         page.driver.put @uri, @params.to_json
         @resource.reload
         page.status_code.should == 200
@@ -293,7 +285,7 @@ feature "DevicesController" do
       end
 
       context "when changing type_uri" do
-        it "ignores type_uri" do
+        it "should ignore type_uri" do
           @params[:type_uri] = Settings.type.another.uri
           page.driver.put @uri, @params.to_json
           page.should_not have_content Settings.type.another.uri
