@@ -134,15 +134,15 @@ describe Device do
   # ----------------
   context "#update_pending" do
     before { DeviceDecorator.any_instance.stub(:uri).and_return(Settings.device.uri) }
+    before { @params = json_fixture('properties.json') }
 
-    context "when update device properties" do
-      before { @params = json_fixture('properties.json') }
+    # -----------------------------
+    # With no physical connection
+    # -----------------------------
+    context "with no physical connection" do
+      before { @device = DeviceDecorator.decorate(Factory(:device_no_physical)) }
 
-      # -----------------------------
-      # With no physical connection
-      # -----------------------------
-      context "with no physical connection" do
-        before { @device = DeviceDecorator.decorate(Factory(:device_no_physical)) }
+      context "when update device properties" do
         before { @device.synchronize_device(@params[:properties], @params) }
 
         it "should not start pending status" do
@@ -150,30 +150,37 @@ describe Device do
           @device.pending.should be_false
         end
       end
+    end
 
-      # --------------------------
-      # With physical connection
-      # --------------------------
-      context "with physical connection" do
-        before { stub_request(:put, Settings.physical.uri) }
-        before { @device = DeviceDecorator.decorate(Factory(:device)) }
+    # --------------------------
+    # With physical connection
+    # --------------------------
+    context "with physical connection" do
+      before { stub_request(:put, Settings.physical.uri) }
+      before { @device = DeviceDecorator.decorate(Factory(:device)) }
 
-        # ----------------
-        # Call from user
-        # ----------------
+      # ----------------
+      # Call from user
+      # ----------------
+      context "when update properties" do
+        before { @device.synchronize_device(@params[:properties], @params) }
+
         it "should start pending status" do
-          @device.synchronize_device(@params[:properties], @params)
           @device.check_pending(@params)
           @device.pending.should be_true
           @device.device_properties[0].pending.should == "on"
           @device.device_properties[1].pending.should == "100.0"
         end
+      end
 
-        # --------------------
-        # Call from physical
-        # --------------------
-        context "when :source is :physical" do
-          before { @params[:source] = 'physical' }
+      # --------------------
+      # Call from physical
+      # --------------------
+      context "when :source is :physical" do
+        before { @params[:source] = 'physical' }
+
+        context "when update properties" do
+          before { @device.synchronize_device(@params[:properties], @params) }
 
           it "should end pending status" do 
             @device.synchronize_device(@params[:properties], @params)
@@ -185,15 +192,18 @@ describe Device do
             a_put(Settings.physical.uri).should_not have_been_made
           end
         end
+      end
 
-        # -------------------------------
-        # Call with pending set to true
-        # -------------------------------
-        context "when :pending is :true" do
-          before { @params[:pending] = 'true' }
+      # -------------------------------
+      # Call with pending set to true
+      # -------------------------------
+      context "when :pending is :true" do
+        before { @params[:pending] = 'true' }
+
+        context "when update properties" do
+          before { @device.synchronize_device(@params[:properties], @params) }
 
           it "should start/update pending status" do
-            @device.synchronize_device(@params[:properties], @params)
             @device.check_pending(@params)
             @device.pending.should be_true
             @device.device_properties[0].pending.should == "on"
@@ -203,4 +213,5 @@ describe Device do
       end
     end
   end
+
 end
