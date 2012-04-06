@@ -1,4 +1,4 @@
-module HistoryViewMethods
+module HistoriesViewMethods
 
   def should_have_only_owned_history(history)
     history = HistoryDecorator.decorate(history)
@@ -36,4 +36,4 @@ module HistoryViewMethods
 
 end
 
-RSpec.configuration.include HistoryViewMethods
+RSpec.configuration.include HistoriesViewMethods

@@ -1,4 +1,4 @@
-module DeviceViewMethods
+module DevicesViewMethods
 
   def should_have_only_owned_device(device)
     device = DeviceDecorator.decorate(device)
@@ -39,4 +39,4 @@ module DeviceViewMethods
 
 end
 
-RSpec.configuration.include DeviceViewMethods
+RSpec.configuration.include DevicesViewMethods
