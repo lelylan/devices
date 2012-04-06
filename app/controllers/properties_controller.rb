@@ -5,9 +5,9 @@ class PropertiesController < ApplicationController
   before_filter :status
 
   def update
-    @device.synchronize_device(@properties)
+    @device.synchronize_device(@properties, params)
     @device.create_history({created_from: current_user.uri})
-    @device.update_pending(params)
+    @device.check_pending(params)
     render '/devices/show', status: @status
   end
 

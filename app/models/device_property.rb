@@ -4,6 +4,7 @@ class DeviceProperty
 
   field :uri
   field :value
+  field :pending
 
   attr_accessible :uri, :value
 

@@ -5,6 +5,7 @@ class Device
   field :created_from
   field :name
   field :type_uri
+  field :pending, type: Boolean, default: false
   field :labels, type: Array, default: []
 
   attr_accessor :physical  
@@ -77,9 +78,12 @@ class Device
   # Update device properties
   # --------------------------
 
-  def synchronize_device(properties)
+  def synchronize_device(properties, params)
     update_properties(properties)
-    synchronize_physical(properties) if device_physical
+    # TODO: refactor to a unique method
+    if device_physical and params[:source] != 'physical'
+      synchronize_physical(properties)
+    end
     return self
   end
 
@@ -105,19 +109,30 @@ class Device
   # -----------------------
   # Create device history
   # -----------------------
-
-  # TODO testing
   def create_history(options)
     device = DeviceDecorator.decorate(self)
     params = {device_uri: device.uri}.merge(options)
     History.create_history(params, device_properties)
   end
 
+
   # -----------------------
   # Create device pending
   # -----------------------
+  def check_pending(params)
+    update_pending   if device_physical and params[:source] != 'physical'
+    close_pending  if device_physical and params[:source] == 'physical'
+    update_pending if device_physical and params[:pending]
+  end
 
-  # TODO testing
-  def update_pending(params)
+  def update_pending
+    self.pending = true
+    device_properties.each { |p| p.pending = p.value }
+    self.save
+  end
+
+  def close_pending
+    self.pending = false
+    self.save
   end
 end
