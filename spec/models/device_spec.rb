@@ -117,10 +117,9 @@ describe Device do
   context "#create_history" do
     before { @device = DeviceDecorator.decorate(Factory(:device_no_physical)) }
     before { DeviceDecorator.any_instance.stub(:uri).and_return(Settings.device.uri) }
-    before { @params = {created_from: Settings.user.another.uri} }
 
     it "should create an history" do
-      expect{ @device.create_history(@params) }.to change{ History.count }.by(1)
+      expect{ @device.create_history(Settings.user.another.uri) }.to change{ History.count }.by(1)
       history = History.last
       history.device_uri.should == @device.uri
       history.created_from.should == Settings.user.another.uri
@@ -145,7 +144,7 @@ describe Device do
       context "when update device properties" do
         before { @device.synchronize_device(@params[:properties], @params) }
 
-        it "should not start pending status" do
+        it "should not start pending" do
           @device.check_pending(@params)
           @device.pending.should be_false
         end
@@ -165,7 +164,7 @@ describe Device do
       context "when update properties" do
         before { @device.synchronize_device(@params[:properties], @params) }
 
-        it "should start pending status" do
+        it "should start pending" do
           @device.check_pending(@params)
           @device.pending.should be_true
           @device.device_properties[0].pending.should == "on"
@@ -186,7 +185,7 @@ describe Device do
         context "when update properties" do
           before { @device.synchronize_device(@params[:properties], @params) }
 
-          it "should end pending status" do 
+          it "should end pending" do 
             @device.synchronize_device(@params[:properties], @params)
             @device.check_pending(@params)
             @device.pending.should be_false
@@ -207,7 +206,7 @@ describe Device do
         context "when update properties" do
           before { @device.synchronize_device(@params[:properties], @params) }
 
-          it "should start/update pending status" do
+          it "should start/update pending" do
             @device.check_pending(@params)
             @device.pending.should be_true
             @device.device_properties[0].pending.should == "on"

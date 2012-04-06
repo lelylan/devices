@@ -80,10 +80,7 @@ class Device
 
   def synchronize_device(properties, params)
     update_properties(properties)
-    # TODO: refactor to a unique method
-    if device_physical and params[:source] != 'physical'
-      synchronize_physical(properties)
-    end
+    synchronize_physical(properties, params)
     return self
   end
 
@@ -98,20 +95,26 @@ class Device
   end
 
   # Update physical device.
-  def synchronize_physical(properties)
-    options = { body: { properties: properties }.to_json, 
-                headers: { 'Content-Type' => 'application/json', 'Accept'=>'application/json' } }
-    HTTParty.put device_physical.uri, options
-    # For now we do not check the result
+  def synchronize_physical(properties, params)
+    if sync_physical? params[:source]
+      options = { body: { properties: properties }.to_json, 
+                  headers: { 'Content-Type' => 'application/json', 'Accept'=>'application/json' } }
+      HTTParty.put device_physical.uri, options
+      # For now we do not check the result
+    end
+  end
+
+  def sync_physical?(source)
+    device_physical and source != 'physical'
   end
   
 
   # -----------------------
   # Create device history
   # -----------------------
-  def create_history(options)
+  def create_history(user_uri)
     device = DeviceDecorator.decorate(self)
-    params = {device_uri: device.uri}.merge(options)
+    params = {device_uri: device.uri, created_from: user_uri }
     History.create_history(params, device_properties)
   end
 

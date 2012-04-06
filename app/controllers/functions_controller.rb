@@ -7,7 +7,7 @@ class FunctionsController < ApplicationController
 
   def update
     @device.synchronize_device(@properties, params)
-    @device.create_history({created_from: current_user.uri})
+    @device.create_history(current_user.uri)
     @device.check_pending(params)
     render '/devices/show', status: @status
   end

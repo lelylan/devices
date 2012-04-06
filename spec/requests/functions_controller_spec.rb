@@ -100,21 +100,23 @@ feature "FunctionsController" do
       end
 
 
-      # ---------
-      # History 
-      # ---------
+      # ---------------------
+      # History and Pending
+      # ---------------------
       it "should create history resource" do
         expect{ page.driver.put @uri, @params.to_json }.to change{ History.count }.by(1)
-        history = History.last
-        history.device_uri.should == DeviceDecorator.decorate(@resource).uri
-        history.created_from.should == Settings.user.uri
-        history.history_properties.should have(2).items
+      end
+
+      it "should start pending" do
+        page.driver.put @uri, @params.to_json
+        @resource.pending.should be_false
+        @resource.reload.pending.should be_true
       end
 
 
-      # --------------------------------
-      # Resource or function not found
-      # --------------------------------
+      # --------------------
+      # Function not found
+      # --------------------
       context "when function uri is not found" do
         before { @uri = "/devices/#{@resource.id.as_json}/functions?uri=#{Settings.functions.another.uri}" }
 

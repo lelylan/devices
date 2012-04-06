@@ -76,12 +76,18 @@ feature "PropertiesController" do
       end
 
 
-      # ---------
-      # History 
-      # ---------
+      # ---------------------
+      # History and Pending
+      # ---------------------
       it "should create history resource" do
         expect{ page.driver.put @uri, @params.to_json }.to change{ History.count }.by(1)
-     end
+      end
+
+      it "should start pending" do
+        page.driver.put @uri, @params.to_json
+        @resource.pending.should be_false
+        @resource.reload.pending.should be_true
+      end
 
       it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "devices"
     end
