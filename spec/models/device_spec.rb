@@ -171,6 +171,10 @@ describe Device do
           @device.device_properties[0].pending.should == "on"
           @device.device_properties[1].pending.should == "100.0"
         end
+
+        it "should not update physical device" do
+          a_put(Settings.physical.uri).should have_been_made.once
+        end
       end
 
       # --------------------
@@ -208,6 +212,10 @@ describe Device do
             @device.pending.should be_true
             @device.device_properties[0].pending.should == "on"
             @device.device_properties[1].pending.should == "100.0"
+          end
+
+          it "should not update physical device" do
+            a_put(Settings.physical.uri).should have_been_made.once
           end
         end
       end
