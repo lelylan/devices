@@ -6,9 +6,8 @@ class FunctionsController < ApplicationController
   before_filter :status
 
   def update
-    @device = @device.synchronize_device(@properties)
-    params  = {device_uri: DeviceDecorator.decorate(@device).uri, created_from: current_user.uri}
-    History.create_history(params, @device.device_properties)
+    @device.synchronize_device(@properties)
+    @device.create_history({created_from: current_user.uri})
     render '/devices/show', status: @status
   end
 
@@ -40,13 +39,13 @@ class FunctionsController < ApplicationController
       @status = @device.device_physical ? 202 : 200
     end
 
+
       # -----------------
       # Helper methods
       # -----------------
       def body_properties
         @body = request.body.read
-        @body = @body.empty? ? nil : JSON.parse(@body)
-        @properties = @body ? @body['properties'] : []
+        @properties = @body.empty? ? [] : JSON.parse(@body)['properties']
       end
 
       def contains_property(uri)

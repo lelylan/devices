@@ -12,6 +12,10 @@ describe Device do
   # general stub
   before  { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
 
+  
+  # ------------------------
+  # Create physical device
+  # ------------------------
   describe "#create_physical_connection" do
     context "when valid" do
       before { @physical = {uri: Settings.physical.uri} }
@@ -41,7 +45,9 @@ describe Device do
   end
 
 
-
+  # --------------------------------
+  # Syncronize with type structure
+  # --------------------------------
   context "#synchronize_type" do
     before  { @device = Factory(:device_no_connections) }
     subject { @device }
@@ -65,8 +71,10 @@ describe Device do
   end
 
 
-
-  context "synchronize_device" do
+  # -------------------------------
+  # Syncronize to physical device
+  # -------------------------------
+  context "#synchronize_device" do
     before { @properties = json_fixture('properties.json')[:properties] }
 
     context "with physical connection" do
@@ -87,7 +95,6 @@ describe Device do
       end
     end
 
-
     context "without physical connection" do
       before  { @device = Factory(:device_no_physical) }
       before  { @device.synchronize_device(@properties) }
@@ -100,6 +107,33 @@ describe Device do
         @device.reload.device_properties[1][:value].should == "100.0"
       end
     end
+  end
+
+
+  # ----------------
+  # Create history
+  # ----------------
+
+  context "#create_history" do
+    before { @device = DeviceDecorator.decorate(Factory(:device_no_physical)) }
+    before { DeviceDecorator.any_instance.stub(:uri).and_return(Settings.device.uri) }
+    before { @params = {created_from: Settings.user.another.uri} }
+
+    it "should create an history" do
+      expect{ @device.create_history(@params) }.to change{ History.count }.by(1)
+      history = History.last
+      history.device_uri.should == @device.uri
+      history.created_from.should == Settings.user.another.uri
+      history.history_properties.should have(2).items
+    end
+  end
+
+  
+  # ----------------
+  # Update pending
+  # ----------------
+
+  context "#create_history" do
   end
 
 end

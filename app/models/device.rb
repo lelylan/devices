@@ -73,9 +73,9 @@ class Device
   end
 
 
-  # ----------------------------------
+  # --------------------------
   # Update device properties
-  # ----------------------------------
+  # --------------------------
 
   def synchronize_device(properties)
     update_properties(properties)
@@ -99,5 +99,25 @@ class Device
                 headers: { 'Content-Type' => 'application/json', 'Accept'=>'application/json' } }
     HTTParty.put device_physical.uri, options
     # For now we do not check the result
+  end
+  
+
+  # -----------------------
+  # Create device history
+  # -----------------------
+
+  # TODO testing
+  def create_history(options)
+    device = DeviceDecorator.decorate(self)
+    params = {device_uri: device.uri}.merge(options)
+    History.create_history(params, device_properties)
+  end
+
+  # -----------------------
+  # Create device pending
+  # -----------------------
+
+  # TODO testing
+  def update_pending(params)
   end
 end
