@@ -10,14 +10,6 @@ module PendingsViewMethods
       property.value.should == pending.device_properties[index].pending
     end
   end
-
-  #def should_not_have_not_owned_pendings
-    #should_have_valid_json
-    #json = JSON.parse(page.source)
-    #json.should have(1).item
-    #Device.all.should have(2).items
-  #end
-
 end
 
 RSpec.configuration.include PendingsViewMethods

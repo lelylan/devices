@@ -79,19 +79,19 @@ class Device
   # --------------------------
 
   def synchronize_device(properties, params)
-    update_properties(properties)
+    update_properties(properties, params)
     synchronize_physical(properties, params)
     return self
   end
 
   # Update the device properties.
-  def update_properties(properties)
+  def update_properties(properties, params)
     properties.each do |property|
       property = HashWithIndifferentAccess.new(property)
       res = device_properties.where(uri: property[:uri]).first
       res.value = property[:value]
     end
-    self.save
+    self.save if params[:pending] != 'true'
   end
 
   # Update physical device.
@@ -123,19 +123,20 @@ class Device
   # Create device pending
   # -----------------------
   def check_pending(params)
-    update_pending   if device_physical and params[:source] != 'physical'
-    close_pending  if device_physical and params[:source] == 'physical'
-    update_pending if device_physical and params[:pending]
+    update_pending(params) if device_physical and (params[:source] != 'physical' or params[:pending] == 'true')
+    close_pending(params)  if device_physical and params[:source] == 'physical' and params[:pending] != 'true'
   end
 
-  def update_pending
+  def update_pending(params)
     self.pending = true
     device_properties.each { |p| p.pending = p.value }
+    device_properties.each { |p| p.reset_value! } if params[:pending]
     self.save
   end
 
-  def close_pending
+  def close_pending(params)
     self.pending = false
+    device_properties.each { |p| p.pending = "" }
     self.save
   end
 end

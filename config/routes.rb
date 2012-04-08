@@ -8,7 +8,7 @@ Devices::Application.routes.draw do
       put    'physical'   => 'physicals#update'
       delete 'physical'   => 'physicals#destroy'
       get    'histories'  => 'histories#index'
-      get    'pending'    => 'pendings#index'
+      get    'pending'    => 'pendings#show'
     end
   end
 
