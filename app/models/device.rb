@@ -120,7 +120,7 @@ class Device
 
 
   # -----------------------
-  # Create device pending
+  # Create pending status
   # -----------------------
   def check_pending(params)
     update_pending(params) if device_physical and (params[:source] != 'physical' or params[:pending] == 'true')
