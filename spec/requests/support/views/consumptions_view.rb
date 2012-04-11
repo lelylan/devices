@@ -1,4 +1,4 @@
-module ConsumptionViewMethods
+module ConsumptionsViewMethods
 
   def should_have_only_owned_consumption(consumption)
     consumption = ConsumptionDecorator.decorate(consumption)
@@ -49,4 +49,4 @@ module ConsumptionViewMethods
 
 end
 
-RSpec.configuration.include ConsumptionViewMethods
+RSpec.configuration.include ConsumptionsViewMethods

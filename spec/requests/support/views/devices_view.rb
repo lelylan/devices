@@ -1,4 +1,4 @@
-module DeviceViewMethods
+module DevicesViewMethods
 
   def should_have_only_owned_device(device)
     device = DeviceDecorator.decorate(device)
@@ -28,6 +28,8 @@ module DeviceViewMethods
     end
     json.physical.uri.should == device.device_physical.uri if device.device_physical
     json.physical.should be_false if !device.device_physical
+    json.pending.uri.should == device.uri + '/pending'
+    json.pending.status.should == device.pending
   end
 
   def should_not_have_not_owned_devices
@@ -39,4 +41,4 @@ module DeviceViewMethods
 
 end
 
-RSpec.configuration.include DeviceViewMethods
+RSpec.configuration.include DevicesViewMethods
