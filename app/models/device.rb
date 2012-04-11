@@ -123,8 +123,15 @@ class Device
   # Create pending status
   # -----------------------
   def check_pending(params)
-    update_pending(params) if device_physical and (params[:source] != 'physical' or params[:pending] == 'true')
+    update_pending(params) if device_physical and params[:pending] == 'true'
+    start_pending(params)  if device_physical and params[:source] != 'physical' and params[:pending] != 'true'
     close_pending(params)  if device_physical and params[:source] == 'physical' and params[:pending] != 'true'
+  end
+
+  def start_pending(params)
+    self.pending = true
+    device_properties.each { |p| p.pending = "" }
+    self.save
   end
 
   def update_pending(params)

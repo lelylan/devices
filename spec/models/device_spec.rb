@@ -167,8 +167,8 @@ describe Device do
         it "should start pending" do
           @device.check_pending(@params)
           @device.pending.should be_true
-          @device.device_properties[0].pending.should == "on"
-          @device.device_properties[1].pending.should == "100.0"
+          @device.device_properties[0].pending.should == ""
+          @device.device_properties[1].pending.should == ""
         end
 
         it "should not update physical device" do
