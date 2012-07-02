@@ -6,7 +6,7 @@ class Consumption
   field :device_uri
   field :type, default: 'instantaneous'
   field :value
-  field :unit, default: 'KWH'
+  field :unit, default: 'kwh'
   field :occur_at, type: Time, default: lambda {Time.now}
   field :end_at, type: Time
   field :duration, type: Float
@@ -17,7 +17,6 @@ class Consumption
   validates :device_uri, presence: true, url: true
   validates :type, inclusion: { in: %w(instantaneous durational) }
   validates :value, presence: true
-  validates :unit, inclusion: { in: %w(KWH) }
   validates :occur_at, presence: true
   validates :end_at, presence: true, if: :durational?
   validates :duration, presence: true, if: :durational?

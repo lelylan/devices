@@ -26,7 +26,7 @@ feature "ConsumptionsController" do
     context "when logged in" do
       before { basic_auth }
 
-      it "should view all resources" do
+      it "should view all owned resources" do
         visit @uri
         page.status_code.should == 200
         should_have_only_owned_consumption @resource
@@ -75,7 +75,7 @@ feature "ConsumptionsController" do
         end
 
         context "with :type" do
-          before { @durational = ConsumptionDecorator.decorate(Factory(:consumption_durational, device_uri: @device_uri)) }
+          before { @durational = Factory(:consumption_durational, device_uri: @device_uri) }
 
           context "when :type is instantaneous" do
             it "should find an instantaneous consumption" do
@@ -92,6 +92,16 @@ feature "ConsumptionsController" do
               JSON.parse(page.source).should have(1).item
               page.should_not have_content 'instantaneous' 
             end
+          end
+        end
+
+        context "with :unit" do
+          before { @result = Factory(:consumption_durational, device_uri: @device_uri, unit: 'unit') }
+
+          it "should find a consumption" do
+            visit "#{@uri}?unit=unit"
+            should_contain_consumption @result
+            page.should_not have_content 'KWH'
           end
         end
       end

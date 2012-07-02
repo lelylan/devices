@@ -5,8 +5,8 @@ describe Consumption do
   it { should validate_presence_of(:created_from) }
   it { should validate_presence_of(:device_uri) }
   it { should validate_presence_of(:value) }
-
-  #uri
+ 
+  # uri
   it { should allow_value(Settings.validation.uri.valid).for(:created_from) }
   it { should_not allow_value(Settings.validation.uri.not_valid).for(:created_from) }
   it { should allow_value(Settings.validation.uri.valid).for(:device_uri) }
@@ -15,8 +15,13 @@ describe Consumption do
   # allowed values
   it { should allow_value('instantaneous').for(:type) }
   it { should allow_value('durational').for(:type) }
-  it { should allow_value('KWH').for(:unit) }
+  it { should_not allow_value('not_allowed').for(:type) }
+
+  # presence
   it { should validate_presence_of(:occur_at) }
+
+  # defaults
+  its(:unit) { should == 'kwh' }
 
   # mass assignment
   it { should_not allow_mass_assignment_of(:created_from) } 

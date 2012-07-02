@@ -26,7 +26,7 @@ feature "HistoriesController" do
     context "when logged in" do
       before { basic_auth }
 
-      it "should view all resources" do
+      it "should view all owned resources" do
         visit @uri
         page.status_code.should == 200
         should_have_only_owned_history @resource
