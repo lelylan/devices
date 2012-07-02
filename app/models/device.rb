@@ -22,12 +22,11 @@ class Device
   before_save :create_physical_connection
 
 
-
   # ----------------------------
   # Physical device assignment
   # ----------------------------
 
-  # Enable bulk assignment of one phisical to a device.
+  # Enable bulk assignment of one physical device to a device.
   # If an Array of physical device is sent an error is raised.
   def create_physical_connection
     if physical.is_a? Hash

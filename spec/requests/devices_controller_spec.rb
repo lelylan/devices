@@ -9,6 +9,7 @@ feature "DevicesController" do
   before { stub_get(Settings.type.another.uri).to_return(body: fixture('type.json') ) }
 
 
+
   # --------------
   # GET /devices
   # --------------
@@ -262,6 +263,7 @@ feature "DevicesController" do
   end
 
 
+
   # ------------------
   # PUT /devices/:id
   # ------------------
@@ -296,6 +298,7 @@ feature "DevicesController" do
       it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", "PUT"
     end
   end
+
 
 
   # ---------------------

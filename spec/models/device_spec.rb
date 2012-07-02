@@ -12,7 +12,7 @@ describe Device do
   # general stub
   before  { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
 
-  
+
   # ------------------------
   # Create physical device
   # ------------------------
