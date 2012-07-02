@@ -1,6 +1,6 @@
-# -----------------
-# Spork guardfile
-# -----------------
+# --------
+# Spork
+# --------
 
 guard 'spork', :rspec_env => { 'RAILS_ENV' => 'test' } do
   watch('config/application.rb')
@@ -13,9 +13,10 @@ guard 'spork', :rspec_env => { 'RAILS_ENV' => 'test' } do
 end
 
 
-# -----------------
-# RSpec guardfile
-# -----------------
+
+# --------
+# RSpec
+# --------
 
 guard 'rspec', cli: '--drb --format Fuubar --color', all_on_start: false, all_after_pass: false, :version => 2 do
   watch(%r{^spec/.+_spec\.rb$})
