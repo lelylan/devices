@@ -14,16 +14,9 @@ class ApplicationController < ActionController::Base
     # Authentication flow
     # ---------------------
 
+    # TODO: Lelylan::People.auth(username: username, password: password, flow: 'basic')
+    # should substitute the authentication_user method
     def authenticate
-      api_request ? basic_auth : session_auth
-    end
-
-    def api_request
-      request.format == "application/json"
-    end
-
-    # Change with Lelylan::People.authenticate
-    def basic_auth
       authenticate_or_request_with_http_basic do |username, password|
         response = authenticate_user(username, password)
         if response.code == 200
