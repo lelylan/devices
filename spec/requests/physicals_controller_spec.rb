@@ -13,9 +13,9 @@ feature "PhysicalsController" do
   before { @params = { uri: Settings.physical.uri } }
 
 
-  ## ----------------------------
-  ## PUT /devices/:id/physical
-  ## ----------------------------
+  # ----------------------------
+  # PUT /devices/:id/physical
+  # ----------------------------
   context ".update" do
 
     it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
@@ -44,6 +44,11 @@ feature "PhysicalsController" do
           page.status_code.should == 200
           should_have_device @resource
           page.should have_content @params[:uri]
+        end
+        
+        it "should have empty physical device" do
+          page.driver.get "/devices/#{@resource.id.as_json}"
+          page.should have_content '"physical":{}'
         end
       end
 

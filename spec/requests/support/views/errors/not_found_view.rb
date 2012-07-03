@@ -14,7 +14,7 @@ module ViewNotFoundMethods
   def not_found_default
     {
       method: 'GET',
-      code: 'notifications.resource.not_found',
+      code: 'notifications.resource.not_found'
     }
   end
 end

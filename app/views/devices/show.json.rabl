@@ -15,7 +15,7 @@ node(:physical) do |device|
   if device.device_physical
     { uri: device.device_physical.uri }
   else
-    false
+    {}
   end
 end
 

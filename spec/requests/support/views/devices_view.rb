@@ -27,7 +27,7 @@ module DevicesViewMethods
       property.value.should == device.device_properties[index].value
     end
     json.physical.uri.should == device.device_physical.uri if device.device_physical
-    json.physical.should be_false if !device.device_physical
+    json.physical.should be_empty if !device.device_physical
     json.pending.uri.should == device.uri + '/pending'
     json.pending.status.should == device.pending
   end

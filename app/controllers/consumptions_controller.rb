@@ -1,3 +1,9 @@
+# TODO: some logics in here are wrong. We can take all consumptions related to a single
+# device we own, but when taking all consumptions, we do not have all the ones we own 
+# (through the owned devices), but we have only the consumptions we created. This is
+# totally wrong and it does not work. In this new vision rimember to remove the sugar URI
+# and to add the device uri as searchable param.
+
 class ConsumptionsController < ApplicationController
   before_filter :find_consumption, only: %w(show update destroy)
   before_filter :find_owned_resources
