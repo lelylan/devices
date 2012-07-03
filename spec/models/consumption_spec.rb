@@ -33,8 +33,8 @@ describe Consumption do
       before { @correct = FactoryGirl.create(:consumption_durational) }
 
       context "with all timing values" do
-        before { @consumption = FactoryGirl.build(:consumption_durational) }
-        before { @consumption.save! }
+        before { @consumption = FactoryGirl.create(:consumption_durational) }
+
         it "should not change timings" do
           @consumption.occur_at.should == @correct.occur_at
           @consumption.end_at.should == @correct.end_at
@@ -43,24 +43,24 @@ describe Consumption do
       end
 
       context "with #duration missing" do
-        before { @consumption = FactoryGirl.build(:consumption_durational, duration: nil) }
-        before { @consumption.save! }
+        before { @consumption = FactoryGirl.create(:consumption_durational, duration: nil) }
+
         it "should calculate duration field" do
           @consumption.duration.should == @correct.duration
         end
       end
 
       context "with #end_at missing" do
-        before { @consumption = FactoryGirl.build(:consumption_durational, end_at: nil) }
-        before { @consumption.save! }
+        before { @consumption = FactoryGirl.create(:consumption_durational, end_at: nil) }
+
         it "should calculate end_at field" do
           @consumption.end_at.should == @correct.end_at
         end
       end
 
       context "with #occur_at missing" do
-        before { @consumption = FactoryGirl.build(:consumption_durational, occur_at: nil) }
-        before { @consumption.save! }
+        before { @consumption = FactoryGirl.create(:consumption_durational, occur_at: nil) }
+
         it "should calculate occur_at field" do
           @consumption.occur_at.should == @correct.occur_at
         end
@@ -68,6 +68,7 @@ describe Consumption do
 
       context "with two missing timing values" do
         before { @consumption = FactoryGirl.build(:consumption_durational, occur_at: nil, duration: nil) }
+
         it "should raise error" do
           expect { @consumption.save! }.to raise_error
         end
@@ -77,6 +78,7 @@ describe Consumption do
 
     context "with instantaneous consumption" do
       before  { @consumption = FactoryGirl.create(:consumption) }
+
       it "should not not populate durational params" do
         @consumption.end_at.should be_nil
         @consumption.duration.should be_nil
