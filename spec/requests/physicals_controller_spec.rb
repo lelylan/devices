@@ -45,7 +45,7 @@ feature "PhysicalsController" do
           should_have_device @resource
           page.should have_content @params[:uri]
         end
-        
+
         it "should have empty physical device" do
           page.driver.get "/devices/#{@resource.id.as_json}"
           page.should have_content '"physical":{}'

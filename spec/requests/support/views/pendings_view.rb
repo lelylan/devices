@@ -5,6 +5,7 @@ module PendingsViewMethods
     json = JSON.parse(page.source) unless json 
     json = Hashie::Mash.new json
     json.uri.should == pending.uri
+    json.status.should == pending.pending
     json.properties.each_with_index do |property, index|
       property.uri.should == pending.device_properties[index].uri
       property.value.should == pending.device_properties[index].pending
