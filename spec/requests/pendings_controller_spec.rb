@@ -14,9 +14,9 @@ feature "PendingsController" do
   # GET /devices/:id/pending
   # --------------------------
   context ".show" do
-    before { @resource = DeviceDecorator.decorate(FactoryGirl(:device)) }
+    before { @resource = DeviceDecorator.decorate(FactoryGirl.create(:device)) }
     before { @uri = "/devices/#{@resource.id.as_json}/pending" }
-    before { @resource_not_owned = FactoryGirl(:device_not_owned) }
+    before { @resource_not_owned = FactoryGirl.create(:device_not_owned) }
 
     before { @update_uri = "/devices/#{@resource.id.as_json}/properties" }
     before { @properties = json_fixture('properties.json')[:properties] }

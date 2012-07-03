@@ -19,7 +19,7 @@ describe Device do
   describe "#create_physical_connection" do
     context "when valid" do
       before { @physical = {uri: Settings.physical.uri} }
-      subject { FactoryGirl(:device_no_physical, physical: @physical).device_physical }
+      subject { FactoryGirl.create(:device_no_physical, physical: @physical).device_physical }
       it { should_not be_nil }
     end
 
@@ -28,7 +28,7 @@ describe Device do
         before { @physical = {} }
         it "should get a not valid notification" do
           lambda{ 
-            FactoryGirl(:device_no_physical, physical: @physical)
+            FactoryGirl.create(:device_no_physical, physical: @physical)
           }.should raise_error(Mongoid::Errors::Validations)
         end
       end
@@ -37,7 +37,7 @@ describe Device do
         before { @physical = [] }
         it "should get a not valid notification" do
           lambda{ 
-            FactoryGirl(:device_no_physical, physical: @physical) 
+            FactoryGirl.create(:device_no_physical, physical: @physical) 
           }.should raise_error(Mongoid::Errors::InvalidType)
         end
       end
@@ -49,7 +49,7 @@ describe Device do
   # Syncronize with type structure
   # --------------------------------
   context "#synchronize_type" do
-    before  { @device = FactoryGirl(:device_no_connections) }
+    before  { @device = FactoryGirl.create(:device_no_connections) }
     subject { @device }
 
     its(:device_properties) { should have(2).properties }
@@ -79,7 +79,7 @@ describe Device do
 
     context "with physical connection" do
       before  { stub_request(:put, Settings.physical.uri).with(body: {properties: @properties}) }
-      before  { @device = FactoryGirl(:device) }
+      before  { @device = FactoryGirl.create(:device) }
       before  { @device.synchronize_device(@properties, {}) }
 
       it "should change device property status" do
@@ -96,7 +96,7 @@ describe Device do
     end
 
     context "without physical connection" do
-      before  { @device = FactoryGirl(:device_no_physical) }
+      before  { @device = FactoryGirl.create(:device_no_physical) }
       before  { @device.synchronize_device(@properties, {}) }
 
       it "should change device property status" do
@@ -113,7 +113,7 @@ describe Device do
     end
 
     context "with source: 'physical'" do
-      before  { @device = FactoryGirl(:device_no_physical) }
+      before  { @device = FactoryGirl.create(:device_no_physical) }
       before  { @device.synchronize_device(@properties, {source: 'physical'}) }
 
       it "should not update the physical device" do
@@ -128,7 +128,7 @@ describe Device do
   # ----------------
 
   context "#create_history" do
-    before { @device = DeviceDecorator.decorate(FactoryGirl(:device_no_physical)) }
+    before { @device = DeviceDecorator.decorate(FactoryGirl.create(:device_no_physical)) }
     before { DeviceDecorator.any_instance.stub(:uri).and_return(Settings.device.uri) }
 
     it "should create an history" do
@@ -152,7 +152,7 @@ describe Device do
     # With no physical connection
     # -----------------------------
     context "with no physical connection" do
-      before { @device = DeviceDecorator.decorate(FactoryGirl(:device_no_physical)) }
+      before { @device = DeviceDecorator.decorate(FactoryGirl.create(:device_no_physical)) }
 
       context "when update device properties" do
         before { @device.synchronize_device(@params[:properties], @params) }
@@ -168,7 +168,7 @@ describe Device do
     # --------------------------
     context "with physical connection" do
       before { stub_request(:put, Settings.physical.uri) }
-      before { @device = DeviceDecorator.decorate(FactoryGirl(:device)) }
+      before { @device = DeviceDecorator.decorate(FactoryGirl.create(:device)) }
 
       # -----------------
       # Start from user

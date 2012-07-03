@@ -8,11 +8,11 @@ feature "HistoriesController" do
   before { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
   before { stub_get(Settings.type.another.uri).to_return(body: fixture('type.json') ) }
 
-  before { @device = FactoryGirl(:device) }
+  before { @device = FactoryGirl.create(:device) }
   before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
   before { @created_at = Chronic.parse('1 week ago') }
-  before { @resource = HistoryDecorator.decorate(FactoryGirl(:history, device_uri: @device_uri, created_at: @created_at)) }
-  before { @resource_not_owned = FactoryGirl(:history_not_owned) }
+  before { @resource = HistoryDecorator.decorate(FactoryGirl.create(:history, device_uri: @device_uri, created_at: @created_at)) }
+  before { @resource_not_owned = FactoryGirl.create(:history_not_owned) }
 
 
   # ----------------------------
@@ -38,7 +38,7 @@ feature "HistoriesController" do
       # ---------
       context "when searching" do
         before { @created_at = Chronic.parse('1 week ago') }
-        before { @result = FactoryGirl(:history, device_uri: @device_uri) }
+        before { @result = FactoryGirl.create(:history, device_uri: @device_uri) }
 
         context "with :from" do
           it "should find an history" do
@@ -83,8 +83,8 @@ feature "HistoriesController" do
       context "when paginating" do
         before { History.destroy_all }
         before { @created_at = Chronic.parse('1 week ago') }
-        before { @resource = HistoryDecorator.decorate(FactoryGirl(:history, device_uri: @device_uri, created_at: @created_at)) }
-        before { @resources = FactoryGirlGirl.create_list(:history, Settings.pagination.per + 5, device_uri: @device_uri) }
+        before { @resource = HistoryDecorator.decorate(FactoryGirl.create(:history, device_uri: @device_uri, created_at: @created_at)) }
+        before { @resources = FactoryGirl.create_list(:history, Settings.pagination.per + 5, device_uri: @device_uri) }
 
         context "with :start" do
           it "should show next resources" do

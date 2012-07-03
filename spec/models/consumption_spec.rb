@@ -30,7 +30,7 @@ describe Consumption do
 
   context "#normalize_timings" do
     context "with durational consumption" do
-      before { @correct = FactoryGirl(:consumption_durational) }
+      before { @correct = FactoryGirl.create(:consumption_durational) }
 
       context "with all timing values" do
         before { @consumption = FactoryGirl.build(:consumption_durational) }
@@ -76,7 +76,7 @@ describe Consumption do
 
 
     context "with instantaneous consumption" do
-      before  { @consumption = FactoryGirl(:consumption) }
+      before  { @consumption = FactoryGirl.create(:consumption) }
       it "should not not populate durational params" do
         @consumption.end_at.should be_nil
         @consumption.duration.should be_nil

@@ -1,7 +1,7 @@
 Settings.add_source!("#{Rails.root}/config/settings/test.yml")
 Settings.reload!
 
-FactoryGirlGirl.define do
+FactoryGirl.define do
 
   # Device
   factory :device do

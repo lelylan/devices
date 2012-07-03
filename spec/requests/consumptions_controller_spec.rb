@@ -8,11 +8,11 @@ feature "ConsumptionsController" do
   before { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
   before { stub_get(Settings.type.another.uri).to_return(body: fixture('type.json') ) }
 
-  before { @device = FactoryGirl(:device) }
+  before { @device = FactoryGirl.create(:device) }
   before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
   before { @occur_at = Chronic.parse('1 week ago') }
-  before { @resource = ConsumptionDecorator.decorate(FactoryGirl(:consumption, device_uri: @device_uri, occur_at: @occur_at)) }
-  before { @resource_not_owned = FactoryGirl(:consumption_not_owned) }
+  before { @resource = ConsumptionDecorator.decorate(FactoryGirl.create(:consumption, device_uri: @device_uri, occur_at: @occur_at)) }
+  before { @resource_not_owned = FactoryGirl.create(:consumption_not_owned) }
 
 
   # ------------------------------
@@ -37,7 +37,7 @@ feature "ConsumptionsController" do
       # Search
       # ---------
       context "when searching" do
-        before { @result = FactoryGirl(:consumption, device_uri: @device_uri) }
+        before { @result = FactoryGirl.create(:consumption, device_uri: @device_uri) }
 
         context "with :from" do
           it "should find a consumption" do
@@ -75,7 +75,7 @@ feature "ConsumptionsController" do
         end
 
         context "with :type" do
-          before { @durational = FactoryGirl(:consumption_durational, device_uri: @device_uri) }
+          before { @durational = FactoryGirl.create(:consumption_durational, device_uri: @device_uri) }
 
           context "when :type is instantaneous" do
             it "should find an instantaneous consumption" do
@@ -96,7 +96,7 @@ feature "ConsumptionsController" do
         end
 
         context "with :unit" do
-          before { @result = FactoryGirl(:consumption_durational, device_uri: @device_uri, unit: 'unit') }
+          before { @result = FactoryGirl.create(:consumption_durational, device_uri: @device_uri, unit: 'unit') }
 
           it "should find a consumption" do
             visit "#{@uri}?unit=unit"
@@ -113,8 +113,8 @@ feature "ConsumptionsController" do
       context "when paginating" do
         before { Consumption.destroy_all }
         before { @created_at = Chronic.parse('1 week ago') }
-        before { @resource = ConsumptionDecorator.decorate(FactoryGirl(:consumption, device_uri: @device_uri, value: '0.175')) }
-        before { @resources = FactoryGirlGirl.create_list(:consumption, Settings.pagination.per + 5, device_uri: @device_uri) }
+        before { @resource = ConsumptionDecorator.decorate(FactoryGirl.create(:consumption, device_uri: @device_uri, value: '0.175')) }
+        before { @resources = FactoryGirl.create_list(:consumption, Settings.pagination.per + 5, device_uri: @device_uri) }
 
         context "with :start" do
           it "should show next resources" do
@@ -151,9 +151,9 @@ feature "ConsumptionsController" do
   # ------------------
   context ".index" do
     before { @uri = "/consumptions" }
-    before { @device = FactoryGirl(:device) }
+    before { @device = FactoryGirl.create(:device) }
     before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
-    before { @another_resource = ConsumptionDecorator.decorate(FactoryGirl(:consumption, device_uri: @device_uri, occur_at: @occur_at)) }
+    before { @another_resource = ConsumptionDecorator.decorate(FactoryGirl.create(:consumption, device_uri: @device_uri, occur_at: @occur_at)) }
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
 
@@ -209,7 +209,7 @@ feature "ConsumptionsController" do
   # -------------------
   context ".create" do
     before { @uri =  "/consumptions" }
-    before { @device = FactoryGirl(:device) }
+    before { @device = FactoryGirl.create(:device) }
     before { @device_uri = "#{host}/devices/#{@device.id.as_json}" }
  
     it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
