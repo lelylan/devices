@@ -9,8 +9,8 @@ feature "FunctionsController" do
   # PUT /devices/:id/functions?uri=:uri
   # -------------------------------------
   context ".update" do
-    before { @resource = Factory(:device) }
-    before { @resource_not_owned = Factory(:device_not_owned) }
+    before { @resource = FactoryGirl(:device) }
+    before { @resource_not_owned = FactoryGirl(:device_not_owned) }
     before { @uri = "/devices/#{@resource.id.as_json}/functions?uri=#{Settings.functions.set_intensity.uri}" }
 
     before { @properties = json_fixture('properties.json')[:properties] }
@@ -89,7 +89,7 @@ feature "FunctionsController" do
       end
 
       context "with no physical device" do
-        before { @resource = Factory(:device_no_physical) }
+        before { @resource = FactoryGirl(:device_no_physical) }
         before { @uri = "/devices/#{@resource.id.as_json}/functions?uri=#{Settings.functions.set_intensity.uri}" }
 
         it "should not update physical device" do

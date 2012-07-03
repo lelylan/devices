@@ -1,7 +1,7 @@
 Settings.add_source!("#{Rails.root}/config/settings/test.yml")
 Settings.reload!
 
-FactoryGirl.define do
+FactoryGirlGirl.define do
 
   # Device
   factory :device do
@@ -9,9 +9,9 @@ FactoryGirl.define do
     created_from Settings.user.uri
     type_uri Settings.type.uri
     device_properties {[
-      Factory.build(:device_status),
-      Factory.build(:device_intensity) ]}
-    device_physical { Factory.build(:device_physical) }
+      FactoryGirl.build(:device_status),
+      FactoryGirl.build(:device_intensity) ]}
+    device_physical { FactoryGirl.build(:device_physical) }
 
     before(:create) { |device| device.class.skip_callback(:create, :before, :synchronize_type) }
   end

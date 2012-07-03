@@ -1,13 +1,13 @@
 Settings.add_source!("#{Rails.root}/config/settings/test.yml")
 Settings.reload!
 
-FactoryGirl.define do
+FactoryGirlGirl.define do
   factory :history do
     device_uri Settings.device.uri
     created_from Settings.user.uri
     history_properties {[
-      Factory.build(:history_property_intensity),
-      Factory.build(:history_property_status)
+      FactoryGirl.build(:history_property_intensity),
+      FactoryGirl.build(:history_property_status)
     ]}
   end
 

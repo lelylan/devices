@@ -15,8 +15,8 @@ feature "DevicesController" do
   # --------------
   context ".index" do
     before { @uri = "/devices" }
-    before { @resource = Factory(:device) }
-    before { @resource_not_owned = Factory(:device_not_owned) }
+    before { @resource = FactoryGirl(:device) }
+    before { @resource_not_owned = FactoryGirl(:device_not_owned) }
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
 
@@ -36,7 +36,7 @@ feature "DevicesController" do
       context "when searching" do
         context "name" do
           before { @name = "My name is device" }
-          before { @result = Factory(:device, name: @name) }
+          before { @result = FactoryGirl(:device, name: @name) }
 
           it "should find a device" do
             visit "#{@uri}?name=name+is"
@@ -47,7 +47,7 @@ feature "DevicesController" do
 
         context "type_uri" do
           before { @type_uri = Settings.type.another.uri }
-          before { @result = Factory(:device, type_uri: @type_uri)}
+          before { @result = FactoryGirl(:device, type_uri: @type_uri)}
 
           it "should find a device" do
             visit "#{@uri}?type_uri=#{@type_uri}"
@@ -58,7 +58,7 @@ feature "DevicesController" do
 
         context "property_uri" do
           before { @property_uri = Settings.properties.another.uri }
-          before { @result = Factory(:device) }
+          before { @result = FactoryGirl(:device) }
           before { @result.device_properties.first.update_attributes(uri: @property_uri) }
 
           it "should filter the searched value" do
@@ -70,7 +70,7 @@ feature "DevicesController" do
 
         context "property_value" do
           before { @property_value = Settings.properties.another.value }
-          before { @result = Factory(:device) }
+          before { @result = FactoryGirl(:device) }
           before { @result.device_properties.first.update_attributes(value: @property_value) }
 
           it "should filter the searched value" do
@@ -83,7 +83,7 @@ feature "DevicesController" do
         # Property uri and property value belong to the same embedded property
         # In this case the search does match with a property
         context "property_uri and property_value" do
-          before { @result = Factory(:device) }
+          before { @result = FactoryGirl(:device) }
           before { @property_uri = Settings.properties.another.uri }
           before { @property_value = Settings.properties.another.value }
           before { @result.device_properties.first.update_attributes(uri: @property_uri) }
@@ -102,7 +102,7 @@ feature "DevicesController" do
         context "property_uri and property_value for different properties" do
           before { @property_uri = Settings.properties.another.uri }
           before { @property_value = Settings.properties.another.value }
-          before { @result = Factory(:device) }
+          before { @result = FactoryGirl(:device) }
           before { @result.device_properties.first.update_attributes(uri: @property_uri) }
           before { @result.device_properties.first.update_attributes(value: @property_value) }
 
@@ -119,8 +119,8 @@ feature "DevicesController" do
       # ------------
       context "when paginating" do
         before { Device.destroy_all }
-        before { @resource = DeviceDecorator.decorate(Factory(:device)) }
-        before { @resources = FactoryGirl.create_list(:device, Settings.pagination.per + 5, name: 'Extra dimmer') }
+        before { @resource = DeviceDecorator.decorate(FactoryGirl(:device)) }
+        before { @resources = FactoryGirlGirl.create_list(:device, Settings.pagination.per + 5, name: 'Extra dimmer') }
 
         context "with :start" do
           it "should show next page" do
@@ -157,9 +157,9 @@ feature "DevicesController" do
   # GET /devices/:id
   # ------------------
   context ".show" do
-    before { @resource = DeviceDecorator.decorate(Factory(:device)) }
+    before { @resource = DeviceDecorator.decorate(FactoryGirl(:device)) }
     before { @uri = "/devices/#{@resource.id.as_json}" }
-    before { @resource_not_owned = Factory(:device_not_owned) }
+    before { @resource_not_owned = FactoryGirl(:device_not_owned) }
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
 
@@ -268,9 +268,9 @@ feature "DevicesController" do
   # PUT /devices/:id
   # ------------------
   context ".update" do
-    before { @resource = Factory(:device) }
+    before { @resource = FactoryGirl(:device) }
     before { @uri = "/devices/#{@resource.id.as_json}" }
-    before { @resource_not_owned = Factory(:device_not_owned) }
+    before { @resource_not_owned = FactoryGirl(:device_not_owned) }
 
     it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
 
@@ -305,9 +305,9 @@ feature "DevicesController" do
   # DELETE /devices/:id
   # ---------------------
   context ".destroy" do
-    before { @resource = Factory(:device) }
+    before { @resource = FactoryGirl(:device) }
     before { @uri =  "/devices/#{@resource.id.as_json}" }
-    before { @resource_not_owned = Factory(:device_not_owned) }
+    before { @resource_not_owned = FactoryGirl(:device_not_owned) }
 
     it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
 
