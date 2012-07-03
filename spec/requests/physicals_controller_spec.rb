@@ -7,8 +7,8 @@ feature "PhysicalsController" do
   before { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
   before { stub_get(Settings.type.another.uri).to_return(body: fixture('type.json') ) }
 
-  before { @resource = Factory(:device) }
-  before { @resource_not_owned = Factory(:device_not_owned) }
+  before { @resource = FactoryGirl.create(:device) }
+  before { @resource_not_owned = FactoryGirl.create(:device_not_owned) }
   before { @uri = "/devices/#{@resource.id.as_json}/physical" }
   before { @params = { uri: Settings.physical.uri } }
 
@@ -34,7 +34,7 @@ feature "PhysicalsController" do
       end
 
       context "whit not existing physical connection" do
-        before { @resource = Factory(:device_no_physical) }
+        before { @resource = FactoryGirl.create(:device_no_physical) }
         before { @uri =  "/devices/#{@resource.id.as_json}/physical" }
         before { @params = { uri: Settings.physical.another.uri } }
 

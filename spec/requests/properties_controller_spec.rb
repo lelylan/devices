@@ -9,8 +9,8 @@ feature "PropertiesController" do
   # PUT /devices/:id/properties
   # -------------------------------------
   context ".update" do
-    before { @resource = Factory(:device) }
-    before { @resource_not_owned = Factory(:device_not_owned) }
+    before { @resource = FactoryGirl.create(:device) }
+    before { @resource_not_owned = FactoryGirl.create(:device_not_owned) }
     before { @uri = "/devices/#{@resource.id.as_json}/properties" }
 
     before { @properties = json_fixture('properties.json')[:properties] }
@@ -39,11 +39,11 @@ feature "PropertiesController" do
         end
 
         context "when nothing is sent" do
-          it "should not change" do
+          it "should not change properties" do
             page.driver.put @uri, nil
             @resource.reload
             @resource.device_properties[0][:value].should == "off"
-            @resource.device_properties[1][:value].should == ""
+            @resource.device_properties[1][:value].should == "0.0"
             page.status_code.should == 202
             should_have_valid_json
           end
@@ -65,7 +65,7 @@ feature "PropertiesController" do
       end
 
       context "with no physical device" do
-        before { @resource = Factory(:device_no_physical) }
+        before { @resource = FactoryGirl.create(:device_no_physical) }
         before { @uri = "/devices/#{@resource.id.as_json}/properties" }
 
         it "should not update physical device" do

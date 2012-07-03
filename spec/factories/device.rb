@@ -39,12 +39,12 @@ FactoryGirl.define do
 
   factory :device_status, class: :device_property do
     uri Settings.properties.status.uri
-    value 'off-me-please'
+    value 'off'
   end
 
   factory :device_intensity, class: :device_property do
     uri Settings.properties.intensity.uri
-    value '0.0-00-00-0.0'
+    value '0.0'
   end
   
   factory :device_physical do

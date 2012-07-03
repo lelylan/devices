@@ -50,9 +50,11 @@ describe Device do
   # --------------------------------
   context "#synchronize_type" do
     before  { @device = FactoryGirl.create(:device_no_connections) }
-    subject { @device }
+    before  { @device.synchronize_type }
 
-    its(:device_properties) { should have(2).properties }
+    it "should have 2 properties" do
+      @device.device_properties.should have(2).items
+    end
 
     context "Lelylan::Type.type" do
       before { @type = Lelylan::Type.type(Settings.type.uri) }
@@ -170,9 +172,9 @@ describe Device do
       before { stub_request(:put, Settings.physical.uri) }
       before { @device = DeviceDecorator.decorate(FactoryGirl.create(:device)) }
 
-      # -----------------
-      # Start from user
-      # -----------------
+      # -----------------------------
+      # Create pending (from user)
+      # -----------------------------
       context "when pending: 'start'" do
         before { @params[:pending] = 'start' }
 
@@ -195,12 +197,12 @@ describe Device do
         end
       end
 
-      # ----------------------
-      # Update from physical
-      # ----------------------
+      # --------------------------------
+      # Update pending (from physical)
+      # --------------------------------
       context "when pending: 'update'" do
         before { @params[:pending] = 'update' }
-        before { @params[:properties][1][:value] = 75.0 }
+        before { @params[:properties][1][:value] = '75.0' }
 
         context "when update properties" do
           before { @device.synchronize_device(@params[:properties], @params) }
@@ -210,20 +212,20 @@ describe Device do
           end
 
           it "should not update property values" do
-            @device.device_properties[0].pending.should == "on"
-            @device.device_properties[1].pending.should == "100.0"
+            @device.device_properties[0].value.should == "off"
+            @device.device_properties[1].value.should == "0.0"
           end
 
           it "should update pending values" do
-            @device.device_properties[0].value.should == "on"
-            @device.device_properties[1].value.should == "75.0"
+            @device.device_properties[0].pending.should == "on"
+            @device.device_properties[1].pending.should == "75.0"
           end
         end
       end
 
-      # ---------------------
-      # Close from physical
-      # ---------------------
+      # -------------------------------
+      # Close pending (from physical)
+      # -------------------------------
       context "when pending: 'close'" do
         before { @params[:pending] = 'close' }
 
@@ -241,40 +243,10 @@ describe Device do
 
           it "should update pending values" do
             @device.device_properties[0].value.should == "on"
-            @device.device_properties[1].value.should == "75.0"
+            @device.device_properties[1].value.should == "100.0"
           end
         end
       end
-
-
-      # ---------------------------------------------
-      # Call with :pending true and :source physical
-      # ----------------------------------------------
-      context "when :pending is true and :source is physical" do
-        before { @params[:pending] = 'true' }
-        before { @params[:source]  = 'physical' }
-
-        context "when update properties" do
-          before { @device.synchronize_device(@params[:properties], @params) }
-
-          it "should start/update pending" do
-            @device.check_pending(@params)
-            @device.pending.should be_true
-            @device.device_properties[0].pending.should == "on"
-            @device.device_properties[1].pending.should == "100.0"
-          end
-
-          it "should not update device properties" do
-            @device.check_pending(@params)
-            @device.device_properties[0].value.should == "off"
-            @device.device_properties[1].value.should == ""
-          end
-
-          it "should not update physical device" do
-            a_put(Settings.physical.uri).should_not have_been_made
-          end
-        end
-      end      
     end
   end
 

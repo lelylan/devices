@@ -201,7 +201,7 @@ feature "DevicesController" do
     it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
 
     context "when logged in" do
-      before { basic_auth } 
+      before { basic_auth }
       before { @params = { name: 'New closet dimmer', type_uri: Settings.type.uri, physical: {uri: Settings.physical.uri} } }
 
       it "should create a resource" do
@@ -212,6 +212,9 @@ feature "DevicesController" do
       end
 
       context "when Lelylan Type" do
+        # Reload the before_create function (removed in the device factory to have the desired properties)
+        before { Device.before_create :synchronize_type }
+
         context "returns unauthorized access" do
           before { @params[:type_uri] = @params[:type_uri] + "-401" }
           before { stub_get(@params[:type_uri]).to_return(status: 401, body: fixture('errors/401.json')) }
