@@ -3,8 +3,8 @@ class DeviceProperty
   include Mongoid::Timestamps
 
   field :uri
-  field :value
-  field :pending, default: ""
+  field :value          # property value
+  field :pending        # pending property value
 
   attr_accessible :uri, :value
 

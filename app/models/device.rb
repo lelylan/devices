@@ -90,12 +90,18 @@ class Device
       res = device_properties.where(uri: property[:uri]).first
       res.value = property[:value]
     end
-    self.save if params[:pending] != 'true'
+
+    # self.save is made into #check_pending 
+    # when pending is 'start' you must take the older values and set them to pending
+    # when pending is 'update' you must not update the property values
+    # when pending is 'close' you must not update the property values, but only close the pending
+    check_pending(params)
   end
 
   # Update physical device.
+  # TODO change with a proper library call
   def synchronize_physical(properties, params)
-    if sync_physical? params[:source]
+    if device_physical and params[:source] != 'physical'
       options = { body: { properties: properties }.to_json, 
                   headers: { 'Content-Type' => 'application/json', 'Accept'=>'application/json' } }
       HTTParty.put device_physical.uri, options
@@ -103,10 +109,6 @@ class Device
     end
   end
 
-  def sync_physical?(source)
-    device_physical and source != 'physical'
-  end
-  
 
   # -----------------------
   # Create device history
@@ -122,27 +124,29 @@ class Device
   # Create pending status
   # -----------------------
   def check_pending(params)
-    start_pending(params)  if device_physical and params[:source] != 'physical' and params[:pending] != 'true'
-    close_pending(params)  if device_physical and params[:source] == 'physical' and params[:pending] != 'true'
-    update_pending(params) if device_physical and params[:pending] == 'true'
+    params[:pending] = 'start' if params[:pending].nil?
+
+    start_pending(params)  if device_physical and params[:pending] == 'start'
+    update_pending(params) if device_physical and params[:pending] == 'update'
+    close_pending(params)  if device_physical and params[:pending] == 'close'
+
+    self.save
   end
 
   def start_pending(params)
     self.pending = true
-    device_properties.each { |p| p.pending = "" }
-    self.save
-  end
-
-  def close_pending(params)
-    self.pending = false
-    device_properties.each { |p| p.pending = "" }
-    self.save
+    device_properties.each { |p| p.pending = p.value_was }
   end
   
   def update_pending(params)
     self.pending = true
     device_properties.each { |p| p.pending = p.value }
-    device_properties.each { |p| p.reset_value! } if params[:pending]
-    self.save
+    device_properties.each { |p| p.reset_value! }
   end
+
+  def close_pending(params)
+    self.pending = false
+    device_properties.each { |p| p.pending = p.value }
+  end
+
 end

@@ -106,6 +106,19 @@ describe Device do
       it "should change device property intensity" do
         @device.reload.device_properties[1][:value].should == "100.0"
       end
+      
+      it "should not update the physical device" do
+        a_put(Settings.physical.uri, false).with(body: {properties: @properties}).should_not have_been_made
+      end
+    end
+
+    context "with source: 'physical'" do
+      before  { @device = Factory(:device_no_physical) }
+      before  { @device.synchronize_device(@properties, {source: 'physical'}) }
+
+      it "should not update the physical device" do
+        a_put(Settings.physical.uri, false).with(body: {properties: @properties}).should_not have_been_made
+      end
     end
   end
 
@@ -144,8 +157,7 @@ describe Device do
       context "when update device properties" do
         before { @device.synchronize_device(@params[:properties], @params) }
 
-        it "should not start pending" do
-          @device.check_pending(@params)
+        it "should not be pending" do
           @device.pending.should be_false
         end
       end
@@ -158,69 +170,78 @@ describe Device do
       before { stub_request(:put, Settings.physical.uri) }
       before { @device = DeviceDecorator.decorate(Factory(:device)) }
 
-      # ----------------
-      # Call from user
-      # ----------------
-      context "when update properties" do
-        before { @device.synchronize_device(@params[:properties], @params) }
-
-        it "should start pending" do
-          @device.check_pending(@params)
-          @device.pending.should be_true
-          @device.device_properties[0].pending.should == ""
-          @device.device_properties[1].pending.should == ""
-        end
-
-        it "should not update physical device" do
-          a_put(Settings.physical.uri).should have_been_made.once
-        end
-      end
-
-      # --------------------
-      # Call from physical
-      # --------------------
-      context "when :source is :physical" do
-        before { @params[:source] = 'physical' }
+      # -----------------
+      # Start from user
+      # -----------------
+      context "when pending: 'start'" do
+        before { @params[:pending] = 'start' }
 
         context "when update properties" do
           before { @device.synchronize_device(@params[:properties], @params) }
 
-          it "should end pending" do 
-            @device.synchronize_device(@params[:properties], @params)
-            @device.check_pending(@params)
-            @device.pending.should be_false
-          end
-
-          it "should not update physical device" do
-            a_put(Settings.physical.uri).should_not have_been_made
-          end
-        end
-      end
-
-      # -------------------------------
-      # Call with pending set to true
-      # -------------------------------
-      context "when :pending is :true" do
-        before { @params[:pending] = 'true' }
-
-        context "when update properties" do
-          before { @device.synchronize_device(@params[:properties], @params) }
-
-          it "should start/update pending" do
-            @device.check_pending(@params)
+          it "should be pending" do
             @device.pending.should be_true
+          end
+
+          it "should update device properties" do
+            @device.device_properties[0].value.should == "on"
+            @device.device_properties[1].value.should == "100.0"
+          end
+
+          it "should have old property values as pending values" do
+            @device.device_properties[0].pending.should == "off"
+            @device.device_properties[1].pending.should == "0.0"
+          end
+        end
+      end
+
+      # ----------------------
+      # Update from physical
+      # ----------------------
+      context "when pending: 'update'" do
+        before { @params[:pending] = 'update' }
+        before { @params[:properties][1][:value] = 75.0 }
+
+        context "when update properties" do
+          before { @device.synchronize_device(@params[:properties], @params) }
+
+          it "should be pending" do
+            @device.pending.should be_true
+          end
+
+          it "should not update property values" do
             @device.device_properties[0].pending.should == "on"
             @device.device_properties[1].pending.should == "100.0"
           end
 
-          it "should not update device properties" do
-            @device.check_pending(@params)
-            @device.device_properties[0].value.should == "off"
-            @device.device_properties[1].value.should == ""
+          it "should update pending values" do
+            @device.device_properties[0].value.should == "on"
+            @device.device_properties[1].value.should == "75.0"
+          end
+        end
+      end
+
+      # ---------------------
+      # Close from physical
+      # ---------------------
+      context "when pending: 'close'" do
+        before { @params[:pending] = 'close' }
+
+        context "when update properties" do
+          before { @device.synchronize_device(@params[:properties], @params) }
+
+          it "should not be pending" do
+            @device.pending.should_not be_true
           end
 
-          it "should not update physical device" do
-            a_put(Settings.physical.uri).should have_been_made.once
+          it "should update property values" do
+            @device.device_properties[0].pending.should == "on"
+            @device.device_properties[1].pending.should == "100.0"
+          end
+
+          it "should update pending values" do
+            @device.device_properties[0].value.should == "on"
+            @device.device_properties[1].value.should == "75.0"
           end
         end
       end

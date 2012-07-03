@@ -7,7 +7,6 @@ class PropertiesController < ApplicationController
   def update
     @device.synchronize_device(@properties, params)
     @device.create_history(current_user.uri)
-    @device.check_pending(params)
     render '/devices/show', status: @status
   end
 

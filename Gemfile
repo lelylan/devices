@@ -22,7 +22,7 @@ group :development, :test do
   gem 'shoulda'
   gem 'capybara'
   gem 'capybara-json'
-  gem 'factory_girl_rails'
+  gem 'factory_girl_rails', "~> 3.0"
   gem 'database_cleaner'
   gem 'fuubar'
   gem 'guard-rspec'

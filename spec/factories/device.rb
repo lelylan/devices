@@ -12,6 +12,8 @@ FactoryGirl.define do
       Factory.build(:device_status),
       Factory.build(:device_intensity) ]}
     device_physical { Factory.build(:device_physical) }
+
+    before(:create) { |device| device.class.skip_callback(:create, :before, :synchronize_type) }
   end
 
   # Device with no connections
@@ -37,12 +39,12 @@ FactoryGirl.define do
 
   factory :device_status, class: :device_property do
     uri Settings.properties.status.uri
-    value 'off'
+    value 'off-me-please'
   end
 
   factory :device_intensity, class: :device_property do
     uri Settings.properties.intensity.uri
-    value '0.0'
+    value '0.0-00-00-0.0'
   end
   
   factory :device_physical do

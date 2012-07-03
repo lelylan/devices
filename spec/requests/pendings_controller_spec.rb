@@ -28,10 +28,10 @@ feature "PendingsController" do
       before { basic_auth }
 
       context "when properties change" do
-        context "with no params" do
-          before { page.driver.put @update_uri, @params.to_json }
+        context "with pending: 'start'" do
+          before { page.driver.put "#{@update_uri}?pending=start", @params.to_json }
 
-          it "should start pending" do
+          it "should be pending" do
             visit @uri
             page.status_code.should == 200
             should_have_pending @resource.reload
@@ -39,18 +39,8 @@ feature "PendingsController" do
           end
         end
 
-        context "with :source physical" do
-          before { page.driver.put "#{@update_uri}?source=physical", @params.to_json }
-
-          it "should end pending" do
-            visit @uri
-            page.status_code.should == 200
-            page.should have_content 'false'
-          end
-        end
-
-        context "with :pending true" do
-          before { page.driver.put "#{@update_uri}?pending=true", @params.to_json }
+        context "with pending: 'update'" do
+          before { page.driver.put "#{@update_uri}?pending=update", @params.to_json }
 
           it "should start/update pending" do
             visit @uri
@@ -59,15 +49,15 @@ feature "PendingsController" do
           end
         end
 
-        context "with :source physical and :pending true" do
-          before { page.driver.put "#{@update_uri}?source=physical&pending=true", @params.to_json }
+        context "with pending: 'close'" do
+          before { page.driver.put "#{@update_uri}?pending=close", @params.to_json }
 
-          it "should start pending" do
+          it "should not be pending" do
             visit @uri
             page.status_code.should == 200
-            page.should have_content 'true'
+            page.should have_content 'false'
           end
-        end        
+        end
       end
 
       it "should expose the device URI" do
