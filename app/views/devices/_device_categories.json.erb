@@ -1,4 +1,0 @@
-
-<% connections.each_with_index do |connection, index| %>
-    { "name": "<%=raw connection.name%>", "uri": "<%=connection.uri%>" }<% if (connections.length - 1 > index) %>,<%end%>
-<% end %>

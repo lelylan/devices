@@ -1,9 +1,0 @@
-  {
-    "id": "<%=history.id.as_json%>",
-    "uri": "<%=history.uri%>",
-    "device": { "uri": "<%=history.device_uri%>" },
-    "created_at": "<%=history.created_at%>",
-    "updated_at": "<%=history.updated_at%>",
-    "properties": [ <%=render :partial => "history_properties",
-                              :locals => { connections: history.history_properties } %>    ]
-  }

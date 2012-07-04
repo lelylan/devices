@@ -1,10 +1,6 @@
 en:
   notifications:
-<<<<<<< HEAD
     resource:
-=======
-    document:
->>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
       not_found: "Resource not found"
       not_valid: "Not valid attributes"
       not_updatable: "This resource can not be updated (default status)"
@@ -23,7 +19,6 @@ en:
       not_valid_per_page: "Not a valid per_page"
     access:
       denied: "Access denied. HTTP Basic authentication failed"
-<<<<<<< HEAD
     type:
       unauthorized: "Unauthorized access for the requested type resource"
       not_found: "The type resource was not found. Please check the type URI."
@@ -35,5 +30,3 @@ en:
     function:
       not_found: "Function not found"
  
-=======
->>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750

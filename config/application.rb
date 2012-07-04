@@ -1,6 +1,5 @@
 require File.expand_path('../boot', __FILE__)
 
-<<<<<<< HEAD
 #require 'rails/all'
 require "action_controller/railtie"
 require "action_mailer/railtie"
@@ -11,15 +10,6 @@ if defined?(Bundler)
   # If you want your assets lazily compiled in production, use this line
   # Bundler.require(:default, :assets, Rails.env)
 end
-=======
-require "action_controller/railtie"
-require "action_mailer/railtie"
-#require 'rails/all'
-
-# If you have a Gemfile, require the gems listed there, including any gems
-# you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env) if defined?(Bundler)
->>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 module Devices
   class Application < Rails::Application
@@ -28,11 +18,7 @@ module Devices
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-<<<<<<< HEAD
     # config.autoload_paths += %W(#{config.root}/extras)
-=======
-    config.autoload_paths += %W(#{config.root}/app/extensions)
->>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -49,7 +35,6 @@ module Devices
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-<<<<<<< HEAD
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
 
@@ -72,19 +57,5 @@ module Devices
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-=======
-    # JavaScript files you want as :defaults (application.js is always included).
-    # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
-
-    # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
-
-    # Disable authenticity token 
-    # TODO: learn more and disable only for api requests
-    config.action_controller.allow_forgery_protection = false
-
-    # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password]
->>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
   end
 end

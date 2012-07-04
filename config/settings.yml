@@ -1,6 +1,2 @@
 pagination:
-<<<<<<< HEAD
-=======
-  page: 1
->>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
   per: 25

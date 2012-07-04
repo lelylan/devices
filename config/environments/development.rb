@@ -2,13 +2,8 @@ Devices::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # In the development environment your application's code is reloaded on
-<<<<<<< HEAD
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-=======
-  # every request.  This slows down response time but is perfect for development
-  # since you don't have to restart the webserver when you make code changes.
->>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
   config.cache_classes = false
 
   # Log error messages when you accidentally call methods on nil.
@@ -16,10 +11,6 @@ Devices::Application.configure do
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
-<<<<<<< HEAD
-=======
-  config.action_view.debug_rjs             = true
->>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
@@ -30,7 +21,6 @@ Devices::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
-<<<<<<< HEAD
 
   # Raise exception on mass assignment protection for Active Record models
   #config.active_record.mass_assignment_sanitizer = :strict
@@ -45,7 +35,3 @@ Devices::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 end
-=======
-end
-
->>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
