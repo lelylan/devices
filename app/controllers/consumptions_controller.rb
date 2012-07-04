@@ -1,4 +1,5 @@
 class ConsumptionsController < ApplicationController
+<<<<<<< HEAD
   before_filter :find_consumption, only: %w(show update destroy)
   before_filter :find_owned_resources
   before_filter :find_resource
@@ -9,10 +10,21 @@ class ConsumptionsController < ApplicationController
 
   def index
     @consumptions = @consumptions.limit(params[:per])
+=======
+  before_filter :parse_json_body, only: %w(create update)
+  before_filter :find_owned_resources
+  before_filter :find_device, only: 'index'
+  before_filter :find_resource, only: %w(show destroy)  
+  before_filter :filter_params, only: 'index'
+
+  def index
+    @consumptions = @consumptions.page(params[:page]).per(params[:per])
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
   end
 
   def show
   end
+<<<<<<< HEAD
   
   def create
     body = JSON.parse(request.body.read)
@@ -37,11 +49,31 @@ class ConsumptionsController < ApplicationController
   def destroy
     render 'show'
     @consumption.destroy
+=======
+
+  def create
+    @consumption = Consumption.base(json_body, request, current_user)
+    if @consumption.save
+      render 'show', status: 201, location: @consumption.uri
+    else
+      render_422 'notifications.document.not_valid', @consumption.errors
+    end
+  end
+
+  # The #update is not defined because you could risk to change
+  # the type and other info, making some messes. Even more, it 
+  # should be a value sent from the device, and it update it.
+
+  def destroy
+    @consumption.destroy
+    render 'show', status: 200
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
   end
 
 
   private
 
+<<<<<<< HEAD
     def find_consumption
       @consumption = Consumption.find(params[:id])
       params[:device_id] = Addressable::URI.parse(@consumption.device_uri).basename
@@ -79,4 +111,26 @@ class ConsumptionsController < ApplicationController
       raise Lelylan::Errors::Time.new({key: 'from', value: params[:from]}) if (params[:from] and Chronic.parse(params[:from]) == nil)
       raise Lelylan::Errors::Time.new({key: 'to', value: params[:to]}) if (params[:to] and Chronic.parse(params[:to]) == nil)
     end
+=======
+    def find_owned_resources
+      @consumptions = Consumption.where(created_from: current_user.uri)
+    end
+
+    def find_device
+      if params[:device_id]
+        @device = Device.find(params[:device_id])
+        @consumptions = @consumptions.where(device_uri: @device.uri)
+      end
+    end
+
+    def find_resource
+      @consumption = @consumptions.find(params[:id])
+    end
+
+    def filter_params
+      @consumptions = @consumptions.where(type: params[:type]) if params[:type]
+      @consumptions = @consumptions.where(:occur_at.gte => Chronic.parse(params[:from])) if params[:from]
+      @consumptions = @consumptions.where(:occur_at.lte => Chronic.parse(params[:to])) if params[:to]
+    end
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 end

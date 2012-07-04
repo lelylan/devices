@@ -1,6 +1,7 @@
 class Consumption
   include Mongoid::Document
   include Mongoid::Timestamps
+<<<<<<< HEAD
 
   field :created_from
   field :device_uri
@@ -8,15 +9,34 @@ class Consumption
   field :value
   field :unit, default: 'kwh'
   field :occur_at, type: Time, default: lambda {Time.now}
+=======
+  include Lelylan::Document::Base
+
+  field :uri
+  field :created_from
+  field :device_uri
+  field :type, default: 'instantaneous'
+  field :value, type: Float
+  field :unit, default: 'kwh'
+  field :occur_at, type: Time
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
   field :end_at, type: Time
   field :duration, type: Float
 
   attr_accessible :device_uri, :type, :value, :unit, :occur_at, :end_at, :duration
 
+<<<<<<< HEAD
+=======
+  validates :uri, presence: true, url: true
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
   validates :created_from, presence: true, url: true
   validates :device_uri, presence: true, url: true
   validates :type, inclusion: { in: %w(instantaneous durational) }
   validates :value, presence: true
+<<<<<<< HEAD
+=======
+  validates :unit, inclusion: { in: %w(kwh) }
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
   validates :occur_at, presence: true
   validates :end_at, presence: true, if: :durational?
   validates :duration, presence: true, if: :durational?

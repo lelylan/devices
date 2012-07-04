@@ -2,6 +2,7 @@ Devices::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # The test environment is used exclusively to run your application's
+<<<<<<< HEAD
   # test suite. You never need to work with it otherwise. Remember that
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs. Don't rely on the data there!
@@ -12,6 +13,14 @@ Devices::Application.configure do
   config.static_cache_control = "public, max-age=3600"
 
   # Log error messages when you accidentally call methods on nil
+=======
+  # test suite.  You never need to work with it otherwise.  Remember that
+  # your test database is "scratch space" for the test suite and is wiped
+  # and recreated between test runs.  Don't rely on the data there!
+  config.cache_classes = true
+
+  # Log error messages when you accidentally call methods on nil.
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
   config.whiny_nils = true
 
   # Show full error reports and disable caching
@@ -29,8 +38,15 @@ Devices::Application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+<<<<<<< HEAD
   # Raise exception on mass assignment protection for Active Record models
   #config.active_record.mass_assignment_sanitizer = :strict
+=======
+  # Use SQL instead of Active Record's schema dumper when creating the test database.
+  # This is necessary if your schema can't be completely dumped by the schema dumper,
+  # like if you have constraints or database-specific column types
+  # config.active_record.schema_format = :sql
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr

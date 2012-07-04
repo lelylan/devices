@@ -1,0 +1,14 @@
+  {
+    "id": "<%=consumption.id.as_json%>",
+    "uri": "<%=consumption.uri%>",
+    "created_from": { "uri": "<%=consumption.created_from%>" },
+    "device": { "uri": "<%=consumption.device_uri%>" },
+    "value": "<%=consumption.value%>",
+    "unit": "<%=consumption.unit%>",
+    "occur_at": "<%=consumption.occur_at%>",
+    <%- if consumption.durational? %>
+    "end_at": "<%=consumption.end_at%>",
+    "duration": "<%=consumption.duration%>",
+    <%- end %>
+    "type": "<%=consumption.type%>"
+  }

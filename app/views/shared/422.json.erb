@@ -1,0 +1,14 @@
+{
+  "meta": 
+  { 
+    "status": "422",
+    "request": "<%=raw request.url%>",
+    "body": <%=raw json_body.to_json%>
+  },
+  "error": 
+  {
+    "code": "<%=raw @error_code%>",
+    "message": "<%=raw @message%>",
+    "info": "<%=raw @info%>"
+  }
+}

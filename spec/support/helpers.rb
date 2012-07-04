@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 def mock_headers 
   {'Accept'=>'application/json', 'Content-Type' => 'application/json'}
 end
@@ -70,3 +71,8 @@ def authenticated(path)
   return path
 end
 
+=======
+def new_device_properties
+  HashWithIndifferentAccess.new(JSON.parse(Settings.unite_node_json))[:properties]
+end
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750

@@ -1,0 +1,8 @@
+
+<% connections.each_with_index do |connection, index| %>
+    { 
+      "uri": "<%=connection.uri%>",
+      "pending": "<%=connection.pending_status%>", 
+      "values": { "expected": "<%=connection.value%>", "old": "<%=connection.old_value%>" } 
+    }<% if (connections.length - 1 > index) %>,<%end%>
+<% end %>

@@ -1,10 +1,17 @@
 = Device API
 
+<<<<<<< HEAD
 The Device Service defines a set of API to create, monitor and control devices 
 in your home. A device is everything you interact with everyday of your life. 
 In the simplest form every device is characterized by a type through which the 
 device inherits its properties and functions. 
 Learn more about[http://dev.lelylan.com/rest/devices/]
+=======
+The Device Service defines a set of API to create, monitor and control devices. A device is everything you 
+interact with everyday of your life. In the simplest form every device is characterized by a type (e.g dimmer, 
+light or alarm) through which the device inherits its properties (e.g status and intensity for a dimmer) and 
+functions (e.g. turn on, turn off and set intensity for a dimmer).
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 
 == Requirements
@@ -16,15 +23,25 @@ Mongodb ~> {1.6.4}[http://www.mongodb.org/].
 
 == Installation
 
+<<<<<<< HEAD
   git clone git://github.com/lelylan/device.git   # clone repository
   bundle install                                  # install all gems
   mongod                                          # run mongodb
   rails server                                    # run rails app                               
+=======
+  git clone git://github.com/lelylan/type.git
+  bundle install
+  rails server
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 
 == Usage
 
+<<<<<<< HEAD
 Read documentation at http://dev.lelylan.com/rest/devices
+=======
+Read documentation at http://dev.lelylan.com/device
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 
 == Contribute
@@ -41,17 +58,35 @@ Getting set up should require minimal effort
 * Fork and clone the repository.
 * Run gem install bundler to get the latest for the gemset.
 * Run bundle install for dependencies.
+<<<<<<< HEAD
+=======
+* Run bundle exec spec rspec to execute all specs.
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 The project provides a guard script as well for easy automated testing.  
 
   bundle exec guard
 
+<<<<<<< HEAD
 When running press ENTER to run all tests.
+=======
+When running press CTRL + \ to run all tests.
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 === Spec guidelines
 
 The following doc[https://docs.google.com/document/d/1gi00-wwPaLk5VvoAJhBVNh9Htw4Rwmj-Ut88T4M2MwI/edit?hl=en#]
+<<<<<<< HEAD
 demonstrates the desired way to write a spec in this project. 
+=======
+demonstrates the desired way to write a spec in this project. To maintain the spec consistent, follow 
+these rules.
+
+* Use describe blocks for method names.
+* Use context blocks for conditions.
+* 1 assertion per example block.
+* When describing methods, prefix with '#' for instance methods, '.' for class methods.
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 === Coding guidelines
 
@@ -62,31 +97,53 @@ demonstrates the desired way to write a spec in this project.
 
 == Feedback
 
+<<<<<<< HEAD
 Use the {issue tracker}[http://github.com/lelylan/device/issues] for any bug you find and write us 
 a {mail}[mailto:touch@lelylan.com] for any feature idea that can improve the project. Feedback 
+=======
+Use the {issue tracker}[http://github.com/lelylan/device/issues] for any bug you find and write me 
+a {mail}[mailto:andrea.reginato@gmail.com] for any feature idea that can improve the project. Feedback 
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 is always welcome. Always.
 
 
 == Links 
 
 * {GIT Repository}[git://github.com/lelylan/device.git]
+<<<<<<< HEAD
 * {Lelylan Dev Center}[http://dev.lelylan.com]
 * {Lelylan Device API's}[http://dev.lelylan.com/rest/devices]
+=======
+* {Lelylan Web Site}[http://lelylan.com]
+* {Lelylan Device API's}[http://dev.lelylan.com/device]
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 
 == Authors
 
+<<<<<<< HEAD
 {Andrea Reginato}[twitter.com/andreareginato]
+=======
+{Andrea Reginato}[flavors.me/andreareginato]
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 
 == Thanks to
 
+<<<<<<< HEAD
 All passionate about the Connected home and Internet of Things.
+=======
+All passionate about Home Automation and Internet of Things.
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 
 == Contributors
 
+<<<<<<< HEAD
 Special thanks to the following people for submitting patches.
+=======
+See CONTRIBUTORS
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
 
 
 == Changelog
@@ -96,4 +153,8 @@ See CHANGELOG
 
 == Copyright
 
+<<<<<<< HEAD
 Copyright (c) 2013 {Lelylan}[twitter.com/lelylan]. See LICENSE for details.
+=======
+Copyright (c) 2011 {Andrea Reginato}[flavors.me/andreareginato]. See LICENSE for details.
+>>>>>>> a94ab928ffed209bca7c3d87982a12be9974a750
