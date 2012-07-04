@@ -70,7 +70,7 @@ is always welcome. Always.
 
 = Links 
 
-* {GIT Repository}[git://github.com/lelylan/device.git]
+* {GIT Repository}[https://github.com/Lelylan/device]
 * {Lelylan Dev Center}[http://dev.lelylan.com]
 * {Lelylan Device API's}[http://dev.lelylan.com/rest/devices]
 
@@ -97,4 +97,4 @@ See CHANGELOG
 
 = Copyright
 
-Copyright (c) 2013 {Lelylan}[twitter.com/lelylan]. See LICENSE for details.
+Copyright (c) 2013 {Lelylan}[http://lelylan.com]. See LICENSE for details.
