@@ -9,15 +9,8 @@ describe HistoryProperty do
 
   it { should_not allow_mass_assignment_of :property_id }
 
-  context 'when creates history properties' do
-
-    let(:status)     { FactoryGirl.build :history_property }
-    let(:properties) {[ { uri: a_uri(status), value: 'on' } ]}
-    let(:history)    { FactoryGirl.create :history, properties: properties }
-    let(:resource)   { history.properties.first }
-
-      it 'creates two properties' do
-        resource.property_id.should == status.id
-      end
+  it_behaves_like 'a resource connection', 'properties', 'history' do
+    let(:connection_resource) { FactoryGirl.build :history_status }
+    let(:connection_params)   { [{ uri: a_uri(connection_resource), value: 'on' }] }
   end
 end
