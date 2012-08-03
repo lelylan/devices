@@ -35,12 +35,10 @@ class Device
 
   def synchronize_type_property(type_property)
     property = properties.where(id: type_property.id).first
-    property ? { property_id: property.id, value: property.value} : { property_id: type_property.id, value: type_property.default}
+    res = property ? { property_id: property.id, value: property.value} : { property_id: type_property.id, value: type_property.default}
+    return res
   end
 end
-
-
-
 
   ## --------------------------
   ## Update device properties

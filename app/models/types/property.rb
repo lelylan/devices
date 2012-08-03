@@ -4,6 +4,6 @@ class Property
 
   field :resource_owner_id
   field :name
-  field :default, type: Boolean
+  field :default
   field :values,  type: Array
 end

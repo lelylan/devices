@@ -9,7 +9,7 @@ FactoryGirl.define do
   factory :intensity, parent: :property do
     resource_owner_id Settings.resource_owner_id
     name    'Intensity'
-    default 0
+    default '0'
     values  ['0', '50', '100']
   end
 end
