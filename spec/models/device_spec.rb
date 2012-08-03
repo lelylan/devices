@@ -1,24 +1,25 @@
-#require 'spec_helper'
+require 'spec_helper'
 
-#describe Device do
+describe Device do
 
-  #it { should validate_presence_of :resource_owner_id }
-  #it { should validate_presence_of :name }
-  #it { should validate_presence_of :type }
+  it { should validate_presence_of :resource_owner_id }
+  it { should validate_presence_of :name }
+  it { should validate_presence_of :type }
 
-  #its(:pending) { should == false }
+  its(:pending) { should == false }
 
-  #it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:type) } }
-  #it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:type) } }
+  it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:type) } }
+  it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:type) } }
 
-  #it { should_not allow_mass_assignment_of :resource_owner_id }
-  #it { should_not allow_mass_assignment_of :type_id }
+  it { should_not allow_mass_assignment_of :resource_owner_id }
+  it { should_not allow_mass_assignment_of :type_id }
 
-  #it_behaves_like 'a boolean' do
-    #let(:field)    { 'pending' }
-    #let(:resource) { FactoryGirl.create :device }
-  #end
-#end
+  it_behaves_like 'a boolean' do
+    let(:field)       { 'pending' }
+    let(:accepts_nil) { 'false' }
+    let(:resource)    { FactoryGirl.create :device }
+  end
+end
 
 
   ## ------------------------
