@@ -1,16 +1,24 @@
 #require 'spec_helper'
 
 #describe Device do
-  ## presence
-  #it { should validate_presence_of(:created_from) }
-  #it { should validate_presence_of(:name) }
-  #it { should validate_presence_of(:type_uri) }
 
-  ## mass assignment
-  #it { should_not allow_mass_assignment_of(:created_from) }
+  #it { should validate_presence_of :resource_owner_id }
+  #it { should validate_presence_of :name }
+  #it { should validate_presence_of :type }
 
-  ## general stub
-  #before  { stub_get(Settings.type.uri).to_return(body: fixture('type.json') ) }
+  #its(:pending) { should == false }
+
+  #it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:type) } }
+  #it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:type) } }
+
+  #it { should_not allow_mass_assignment_of :resource_owner_id }
+  #it { should_not allow_mass_assignment_of :type_id }
+
+  #it_behaves_like 'a boolean' do
+    #let(:field)    { 'pending' }
+    #let(:resource) { FactoryGirl.create :device }
+  #end
+#end
 
 
   ## ------------------------

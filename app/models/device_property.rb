@@ -1,14 +1,24 @@
-#class DeviceProperty
-  #include Mongoid::Document
-  #include Mongoid::Timestamps
+class DeviceProperty
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include Resourceable
 
-  #field :uri
-  #field :value          # property value
-  #field :pending        # pending property value
+  field :property_id, type: Moped::BSON::ObjectId
+  field :value
+  field :pending_value
 
-  #attr_accessible :uri, :value
+  attr_accessor  :uri
+  attr_protected :property_id
 
-  #validates :uri, url: true
+  embedded_in :device
 
-  #embedded_in :device
-#end
+  validates :uri, presence: true, uri: true, on: :create
+
+  before_create :set_property_id
+
+  private
+
+  def set_property_id
+    self.property_id = Moped::BSON::ObjectId find_id(uri)
+  end
+end

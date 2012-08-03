@@ -34,7 +34,8 @@ shared_examples_for 'a resource connection' do |description|
 
     context 'with empty connections' do
 
-      let(:resource) { FactoryGirl.create factory, connection => [] }
+      let(:resource) { FactoryGirl.create factory }
+      before         { resource.update_attributes connection => [] }
 
       it 'removes previous connections' do
         resource.send(connection).should have(0).items

@@ -5,8 +5,8 @@ describe History do
   it { should validate_presence_of :resource_owner_id }
   it { should validate_presence_of :device }
 
-  it { Settings.uris.valid.each     {|uri| should allow_value(uri).for(:device)} }
-  it { Settings.uris.not_valid.each {|uri| should_not allow_value(uri).for(:device)} }
+  it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:device) } }
+  it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:device) } }
 
   it { should_not allow_mass_assignment_of :resource_owner_id }
   it { should_not allow_mass_assignment_of :device_id }

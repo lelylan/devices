@@ -1,76 +1,45 @@
-#class Device
-  #include Mongoid::Document
-  #include Mongoid::Timestamps
+class Device
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include Resourceable
 
-  #field :created_from
-  #field :name
-  #field :type_uri
-  #field :pending, type: Boolean, default: false
-  #field :labels, type: Array, default: []
+  field :resource_owner_id, type: Moped::BSON::ObjectId
+  field :name
+  field :type_id, type: Moped::BSON::ObjectId
+  field :pending, type: Boolean, default: false
 
-  #attr_accessor :physical  
-  #attr_accessible :name, :type_uri, :physical, :labels
+  attr_accessor  :type
+  attr_protected :resource_owner_id, :type_id
 
-  #embeds_many :device_properties  # properties inherited from type
-  #embeds_one :device_physical     # physical device
+  embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
+  embeds_one  :physical,   class_name: 'DevicePhysical', cascade_callbacks: true
 
-  #validates :created_from, presence: true, url: true
-  #validates :name, presence: true
-  #validates :type_uri, presence: true, url: true
+  validates :resource_owner_id, presence: true
+  validates :name, presence: true
+  validates :type, presence: true, uri: true, on: :create
 
-  #before_create :synchronize_type
-  #before_save :create_physical_connection
+  before_create :synchronize_type
 
+  def synchronize_type
+    type_id = find_id type
+    type = Type.find type_id
+    synchronize_type_properties(type.property_ids)
+  end
 
-  ## ----------------------------
-  ## Physical device assignment
-  ## ----------------------------
+  private
 
-  ## Enable bulk assignment of one physical device to a device.
-  ## If an Array of physical device is sent an error is raised.
-  #def create_physical_connection
-    #if physical.is_a? Hash
-      #device_physical = build_device_physical(physical)
-      #validate_device_physical(device_physical)
-    #elsif not physical.nil?
-      #raise Mongoid::Errors::InvalidType.new(::Hash, physical)
-    #end
-  #end
+  def synchronize_type_properties(type_property_ids)
+    type_properties = Property.in(id: type_property_ids)
+    self.properties = type_properties.map { |p| synchronize_type_property p }
+  end
 
-  ## Raise an error if the physical device connection is not valid
-  #def validate_device_physical(device_physical)
-    #unless device_physical.valid?
-      #raise Mongoid::Errors::Validations.new(device_physical)    
-    #end
-  #end
+  def synchronize_type_property(type_property)
+    property = properties.where(id: type_property.id).first
+    property ? { property_id: property.id, value: property.value} : { property_id: type_property.id, value: type_property.default}
+  end
+end
 
 
-  ## ----------------------
-  ## Type synchronization
-  ## ----------------------
-
-  ## Inherit properties and functions from the selected type
-  #def synchronize_type
-    #type = Lelylan::Type.type(type_uri)
-    #synchronize_properties(type.properties)
-  #end
-
-  ## Sync properties
-  #def synchronize_properties(properties)
-    #device_properties.destroy_all
-    #properties.each do |property|
-      #create_device_property(property)
-    #end
-  #end
-
-  ## Create a device property
-  #def create_device_property(property)
-    #device_properties.build(
-      #uri: property.uri,
-      #name: property.name,
-      #value: property[:default] || '' # Hashiw::Rash bug does not allow the usage of default as key
-    #)
-  #end
 
 
   ## --------------------------
