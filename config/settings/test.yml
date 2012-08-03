@@ -1,5 +1,5 @@
-resource_owner_id: '0000aaa0a000a00000000000'
-device_id:         '0000aaa0a000a00000000000'
+resource_id: '0000aaa0a000a00000000000'
+another_resource_id: '0000aaa0a000a00000000001'
 uris:
   valid: ['http://example.com', 'http://www.examle.com']
   not_valid: ['example', 'example.com', 'www.example.com']

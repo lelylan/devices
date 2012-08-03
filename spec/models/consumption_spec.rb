@@ -16,15 +16,15 @@ describe Consumption do
   it { ['instantaneous', 'durational'].each { |type| should allow_value(type).for(:type) } }
   it { ['not-valid'].each { |type| should_not allow_value(type).for(:type) } }
 
-  it { should_not allow_mass_assignment_of(:resource_owner_id) }
-  it { should_not allow_mass_assignment_of(:device_id) }
+  it { should_not allow_mass_assignment_of :resource_owner_id }
+  it { should_not allow_mass_assignment_of :device_id }
 
   describe '#device_id' do
 
     let(:consumption) { FactoryGirl.create :consumption }
 
     it 'sets the device_id field' do
-      consumption.device_id.should == Moped::BSON::ObjectId(Settings.device_id)
+      consumption.device_id.should == Moped::BSON::ObjectId(Settings.resource_id)
     end
   end
 
