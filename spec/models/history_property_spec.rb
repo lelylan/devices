@@ -13,5 +13,6 @@ describe HistoryProperty do
   it_behaves_like 'a resource connection', 'between history and property' do
     let(:connection_resource) { FactoryGirl.create :status }
     let(:connection_params)   { [ { uri: a_uri(connection_resource), value: 'on' } ] }
+    let(:changing_attribute)  { 'value'}
   end
 end

@@ -22,19 +22,52 @@ describe Device do
 
   describe '#synchronize_type' do
 
-    let(:device) { FactoryGirl.create :device }
+    context 'when creates a resource' do
 
-    it 'sets 2 properties' do
-      device.properties.should have(2).items
+      let(:resource) { FactoryGirl.create :device, :with_no_properties }
+
+      it 'connects two properties' do
+        resource.properties.should have(2).items
+      end
+
+      it 'connects the status property' do
+        resource.properties.first.value.should == 'off'
+      end
+
+      it 'connects the intensity property' do
+        pp resource.properties
+        resource.properties.last.value.should == '0'
+      end
     end
 
-    it 'sets default value for status' do
-      device.properties.first.value.should == 'off'
-    end
+    #context 'when updates a resource' do
 
-    it 'sets default value for intensity' do
-      device.properties.last.value.should == '0'
-    end
+      #let(:device) { FactoryGirl.create :device }
+
+      #context 'with no type' do
+
+        #before { pp resource.properties }
+        #let!(:resource)   { Device.find device.id; }
+        #let!(:status)     { Property.find(resource.properties.first.property_id) }
+        #let!(:properties) { [ { id: status.id, value: 'on'} ] }
+
+        #before { resource.properties_attributes = properties }
+
+        #it 'updates property values' do
+          #resource.properties.first.value.should == 'on'
+        #end
+
+        #it 'has previous connections' do
+          #resource.properties.should have(2).items
+        #end
+      #end
+
+      #context 'with an updated type' do
+      #end
+
+      #context 'with a new type' do
+      #end
+    #end
   end
 end
 

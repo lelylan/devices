@@ -18,25 +18,25 @@ class Device
   validates :name, presence: true
   validates :type, presence: true, uri: true, on: :create
 
-  before_create :synchronize_type
+  accepts_nested_attributes_for :properties
 
-  def synchronize_type
-    type_id = find_id type
+  before_create :set_type_uri, :synchronize_type_properties
+
+  def set_type_uri
+    self.type_id = find_id type
+  end
+
+  def synchronize_type_properties
     type = Type.find type_id
-    synchronize_type_properties(type.property_ids)
+    properties = Property.in(id: type.property_ids)
+    device_properties = properties.map { |p| synchronize_type_property p }
   end
 
   private
 
-  def synchronize_type_properties(type_property_ids)
-    type_properties = Property.in(id: type_property_ids)
-    self.properties = type_properties.map { |p| synchronize_type_property p }
-  end
-
-  def synchronize_type_property(type_property)
-    property = properties.where(id: type_property.id).first
-    res = property ? { property_id: property.id, value: property.value} : { property_id: type_property.id, value: type_property.default}
-    return res
+  def synchronize_type_property(property)
+    device_property = properties.where(property_id: property.id).first
+    device_property ? { property_id: property.id, value: device_property.value} : { property_id: property.id, value: property.default }
   end
 end
 

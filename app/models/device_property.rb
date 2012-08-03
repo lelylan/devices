@@ -5,7 +5,8 @@ class DeviceProperty
 
   field :property_id, type: Moped::BSON::ObjectId
   field :value
-  field :pending_value
+  field :pending_value, default: ''
+  field :_id, type: String, default: ->{ property_id }
 
   attr_accessor  :uri
   attr_protected :property_id

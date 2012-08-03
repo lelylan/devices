@@ -22,13 +22,13 @@ shared_examples_for 'a resource connection' do |description|
     context 'with pre-existing connections' do
 
       let(:resource) { FactoryGirl.create factory }
-      let!(:old) { resource.send(connection).first }
+      let!(:old)     { resource.send(connection).first }
 
-      before { resource.update_attributes connection => connection_params }
+      before     { resource.update_attributes connection => connection_params }
       let!(:new) { resource.send(connection).first }
 
       it 'replaces previous connections' do
-        new.id.should_not == old.id
+        new[changing_attribute].should_not === old[changing_attribute]
       end
     end
 
