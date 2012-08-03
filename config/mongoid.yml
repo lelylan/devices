@@ -12,6 +12,12 @@ development:
         - localhost:27017
       options:
         consistency: :strong
+    types:
+      database: types_development
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
   options:
 test:
   sessions:
@@ -23,6 +29,12 @@ test:
         consistency: :strong
     people:
       database: people_test
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
+    types:
+      database: types_test
       hosts:
         - localhost:27017
       options:
