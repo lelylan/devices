@@ -1,4 +1,7 @@
-shared_examples_for 'a resource connection' do |connection, factory|
+shared_examples_for 'a resource connection' do |description|
+
+  let(:factory)    { description.split(' ')[1] }
+  let(:connection) { description.split(' ')[3].pluralize }
 
   context 'when creates resource connection' do
 
@@ -11,7 +14,7 @@ shared_examples_for 'a resource connection' do |connection, factory|
         resource.send(connection).should have(1).items
       end
 
-      it 'creates connection id' do
+      it 'creates the connection id' do
         connection_id.should == connection_resource.id
       end
     end

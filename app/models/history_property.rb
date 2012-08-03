@@ -12,6 +12,7 @@ class HistoryProperty
   embedded_in :history
 
   validates :uri, presence: true, uri: true, on: :create
+  validates :value, presence: true
 
   before_create :set_property_id
 
