@@ -1,87 +1,93 @@
 require 'spec_helper'
 
 describe Consumption do
-  # presence
-  it { should validate_presence_of(:created_from) }
-  it { should validate_presence_of(:device_uri) }
-  it { should validate_presence_of(:value) }
- 
-  # uri
-  it { should allow_value(Settings.validation.uri.valid).for(:created_from) }
-  it { should_not allow_value(Settings.validation.uri.not_valid).for(:created_from) }
-  it { should allow_value(Settings.validation.uri.valid).for(:device_uri) }
-  it { should_not allow_value(Settings.validation.uri.not_valid).for(:device_uri) }
 
-  # allowed values
-  it { should allow_value('instantaneous').for(:type) }
-  it { should allow_value('durational').for(:type) }
-  it { should_not allow_value('not_allowed').for(:type) }
+  it { should validate_presence_of :resource_owner_id }
+  it { should validate_presence_of :device }
+  it { should validate_presence_of :value }
 
-  # presence
-  it { should validate_presence_of(:occur_at) }
+  its(:type)     { should == 'instantaneous' }
+  its(:unit)     { should == 'kwh' }
+  its(:occur_at) { should_not be_nil }
 
-  # defaults
-  its(:unit) { should == 'kwh' }
+  it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:device) } }
+  it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:device) } }
 
-  # mass assignment
-  it { should_not allow_mass_assignment_of(:created_from) } 
+  it { ['instantaneous', 'durational'].each { |type| should allow_value(type).for(:type) } }
+  it { ['not-valid'].each { |type| should_not allow_value(type).for(:type) } }
 
+  it { should_not allow_mass_assignment_of(:resource_owner_id) }
+  it { should_not allow_mass_assignment_of(:device_id) }
 
+  describe '#device_id' do
 
-  context "#normalize_timings" do
-    context "with durational consumption" do
-      before { @correct = FactoryGirl.create(:consumption_durational) }
+    let(:consumption) { FactoryGirl.create :consumption }
 
-      context "with all timing values" do
-        before { @consumption = FactoryGirl.create(:consumption_durational) }
+    it 'sets the device_id field' do
+      consumption.device_id.should == Moped::BSON::ObjectId(Settings.device_id)
+    end
+  end
 
-        it "should not change timings" do
-          @consumption.occur_at.should == @correct.occur_at
-          @consumption.end_at.should == @correct.end_at
-          @consumption.duration.should == @correct.duration
+  describe '#normalize_timings' do
+
+    context 'with durational consumption' do
+
+      let(:valid) { FactoryGirl.create :consumption, :durational }
+
+      context 'with all timing values' do
+        let(:consumption) { FactoryGirl.create :consumption, :durational }
+
+        it 'does not change timing fields' do
+          consumption.occur_at.should == valid.occur_at
+          consumption.end_at.should   == valid.end_at
+          consumption.duration.should == valid.duration
         end
       end
 
-      context "with #duration missing" do
-        before { @consumption = FactoryGirl.create(:consumption_durational, duration: nil) }
+      context 'when misses the duration field' do
 
-        it "should calculate duration field" do
-          @consumption.duration.should == @correct.duration
+        let(:consumption) { FactoryGirl.create :consumption, :durational, duration: nil }
+
+        it 'calculates the duration field' do
+          consumption.duration.should == valid.duration
         end
       end
 
-      context "with #end_at missing" do
-        before { @consumption = FactoryGirl.create(:consumption_durational, end_at: nil) }
+      context 'when misses the end_at field' do
 
-        it "should calculate end_at field" do
-          @consumption.end_at.should == @correct.end_at
+        let(:consumption) { FactoryGirl.create :consumption, :durational, end_at: nil }
+
+        it 'calculates the end_at field' do
+          consumption.end_at.should has_the_same_time_as valid.end_at
         end
       end
 
-      context "with #occur_at missing" do
-        before { @consumption = FactoryGirl.create(:consumption_durational, occur_at: nil) }
+      context 'when misses the occur_at field' do
 
-        it "should calculate occur_at field" do
-          @consumption.occur_at.should == @correct.occur_at
+        let(:consumption) { FactoryGirl.create :consumption, :durational, occur_at: nil }
+
+        it 'calculates the occur_at field' do
+          consumption.occur_at.should has_the_same_time_as valid.occur_at
         end
       end
 
-      context "with two missing timing values" do
-        before { @consumption = FactoryGirl.build(:consumption_durational, occur_at: nil, duration: nil) }
+      context 'when misses two timing fields' do
 
-        it "should raise error" do
-          expect { @consumption.save! }.to raise_error
+        let(:consumption) { FactoryGirl.create :consumption, :durational, occur_at: nil, duration: nil }
+
+        it 'raises an error' do
+          expect { consumption }.to raise_error Mongoid::Errors::Validations
         end
       end
     end
 
+    context 'with instantaneous consumption' do
 
-    context "with instantaneous consumption" do
-      before  { @consumption = FactoryGirl.create(:consumption) }
+      let(:consumption) { FactoryGirl.create :consumption }
 
-      it "should not not populate durational params" do
-        @consumption.end_at.should be_nil
-        @consumption.duration.should be_nil
+      it 'does not normalize durational fields' do
+        consumption.end_at.should   be_nil
+        consumption.duration.should be_nil
       end
     end
   end

@@ -47,7 +47,6 @@ def stub_delete(path, auth=true)
 end
 
 
-
 # Fixtures
 def fixture_path
   File.expand_path("../../fixtures", __FILE__)
@@ -61,12 +60,8 @@ def json_fixture(file)
   HashWithIndifferentAccess.new JSON.parse fixture(file).read
 end
 
-# Basic Authenticatin definition
-def authenticated(path)
-  protocol = "https://"
-  path = path.gsub(protocol, '')
-  path = "#{Lelylan::Type.username}:#{Lelylan::Type.password}@#{path}"
-  path = "#{protocol}#{path}"
-  return path
-end
 
+# URI generators
+def a_uri(resource)
+  "http://www.example.com/#{resource.class.to_s.pluralize.downcase}/#{resource.id}"
+end

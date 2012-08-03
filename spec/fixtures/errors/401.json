@@ -1,9 +1,0 @@
-{
-    "status": "401",
-    "method": "GET",
-    "request": "http://www.example.com/devices",
-    "error": {
-        "code": "notifications.access.denied",
-        "description": "Access denied. HTTP Basic authentication failed"
-    }
-}

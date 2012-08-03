@@ -1,6 +1,0 @@
-{
-  "properties" : [ 
-    { "uri": "https://type.lelylan.com/properties/status", "value": "on" },
-    { "uri": "https://type.lelylan.com/properties/intensity", "value": "100.0" }
-  ]
-}

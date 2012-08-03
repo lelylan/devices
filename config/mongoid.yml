@@ -1,20 +1,30 @@
 development:
-  host: localhost
-  database: devices_development
-
+  sessions:
+    default:
+      database: devices_development
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
+    people:
+      database: people_development
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
+  options:
 test:
-  host: localhost
-  database: devices_test
-
-# set these environment variables on your prod server
-production:
-  host: <%= ENV['MONGOID_HOST'] %>
-  port: <%= ENV['MONGOID_PORT'] %>
-  username: <%= ENV['MONGOID_USERNAME'] %>
-  password: <%= ENV['MONGOID_PASSWORD'] %>
-  database: <%= ENV['MONGOID_DATABASE'] %>
-  # slaves:
-  #   - host: slave1.local
-  #     port: 27018
-  #   - host: slave2.local
-  #     port: 27019
+  sessions:
+    default:
+      database: devices_test
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
+    people:
+      database: people_test
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
+  options:

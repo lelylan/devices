@@ -1,2 +1,3 @@
 pagination:
   per: 25
+  max_per: 100
