@@ -10,5 +10,5 @@ class DeviceProperty
 
   embedded_in :device
 
-  validates :uri, presence: true, uri: true, on: :create
+  validates :property_id, presence: true
 end

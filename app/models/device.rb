@@ -20,7 +20,7 @@ class Device
 
   accepts_nested_attributes_for :properties
 
-  before_create :set_type_uri
+  before_create :set_type_uri, :synchronize_type
 
   def set_type_uri
     self.type_id = find_id type
@@ -34,8 +34,17 @@ class Device
 
   def type_properties
     type = Type.find(type_id)
+    (add_properties(type) + remove_properties(type)).flatten
+  end
+
+  def add_properties(type)
     properties = Property.in(id: new_properties(type))
     properties.map{ |p| { property_id: p.id, value: p.default } }
+  end
+
+  def remove_properties(type)
+    properties = old_properties(type)
+    properties.map{ |p| { property_id: p, _destroy: '1' } }
   end
 
   def new_properties(type)
