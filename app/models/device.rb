@@ -25,6 +25,26 @@ class Device
   def set_type_uri
     self.type_id = find_id type
   end
+
+  def synchronize_type
+    self.properties_attributes = type_properties
+  end
+
+  private
+
+  def type_properties
+    type = Type.find(type_id)
+    properties = Property.in(id: new_properties(type))
+    properties.map{ |p| { property_id: p.id, value: p.default } }
+  end
+
+  def new_properties(type)
+    [ type.property_ids - properties.map(&:id) ].flatten
+  end
+  
+  def old_properties(type)
+    [ properties.map(&:id) - type.property_ids ].flatten
+  end
 end
 
   ## --------------------------
