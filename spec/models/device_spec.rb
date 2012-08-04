@@ -22,9 +22,9 @@ describe Device do
 
   describe '#synchronize_type' do
 
-    context 'when creates a resource' do
+    let(:resource)   { FactoryGirl.create :device }
 
-      let(:resource)   { FactoryGirl.create :device }
+    context 'when creates a resource' do
 
       it 'connects two properties' do
         resource.properties.should have(2).items
@@ -51,8 +51,6 @@ describe Device do
 
     context 'when updates a resource connection' do
 
-      let(:resource)   { FactoryGirl.create :device }
-
       context 'when updates the status' do
         let(:properties) { [ { id: resource.properties.first.id, value: 'on'} ] }
 
@@ -66,8 +64,25 @@ describe Device do
           resource.properties.should have(2).items
         end
       end
+
+      context 'when updates a not existing connection' do
+        let(:properties) { [ { id: Settings.resource_id, value: 'on'} ] }
+        let(:update)     { resource.properties_attributes = properties }
+
+        it 'raises a not found error' do
+          expect { update }.to raise_error Mongoid::Errors::DocumentNotFound
+        end
+      end
     end
 
+    context 'when type changes' do
+
+      context 'when adds a property' do
+      end
+
+      context 'when remove a property' do
+      end
+    end
   end
 end
 

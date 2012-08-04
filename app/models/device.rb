@@ -26,6 +26,8 @@ class Device
     self.type_id = find_id type
   end
 
+  # This is the method to cache with autoexpiring key composed by 
+  # device created_at and type updated_at combination.
   def synchronize_type
     self.properties_attributes = type_properties
   end
