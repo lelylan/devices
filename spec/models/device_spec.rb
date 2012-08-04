@@ -77,10 +77,44 @@ describe Device do
 
     context 'when type changes' do
 
-      context 'when adds a property' do
+      let(:type) { Type.find resource.type_id }
+
+      let(:properties) { [ { id: resource.properties.first.id, value: 'on'} ] }
+      before           { resource.properties_attributes = properties }
+
+      context 'with a new property' do
+
+        let(:property)     { FactoryGirl.create :property, default: 'undefined' }
+        let(:property_ids) { type.property_ids << property.id }
+
+        before { type.update_attributes property_ids: property_ids }
+        before { resource.synchronize_type }
+
+        it 'adds the new property to the device' do
+          resource.properties.should have(3).items
+        end
+
+        it 'sets the default value' do
+          resource.properties.last.value.should == 'undefined'
+        end
+
+        it 'does not remove previous changes' do
+          resource.properties.first.value.should == 'on'
+        end
       end
 
-      context 'when remove a property' do
+      context 'with a removed property' do
+
+        before { type.update_attributes property_ids: [ type.property_ids.first ] }
+        before { resource.synchronize_type }
+
+        it 'adds removes the intensity property from the device' do
+          resource.properties.should have(1).items
+        end
+
+        it 'does not remove previous changes' do
+          resource.properties.first.value.should == 'on'
+        end
       end
     end
   end

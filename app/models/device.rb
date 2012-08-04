@@ -18,7 +18,7 @@ class Device
   validates :name, presence: true
   validates :type, presence: true, uri: true, on: :create
 
-  accepts_nested_attributes_for :properties
+  accepts_nested_attributes_for :properties, allow_destroy: true
 
   before_create :set_type_uri, :synchronize_type
 
@@ -46,7 +46,7 @@ class Device
 
   def remove_properties(type)
     properties = old_properties(type)
-    properties.map{ |p| { property_id: p, _destroy: '1' } }
+    properties.map{ |p| { id: p, _destroy: "1" } }
   end
 
   def new_properties(type)
