@@ -3,6 +3,10 @@ FactoryGirl.define do
     name 'Dimmer'
   end
 
+  factory :type_with_no_properties do
+    name 'Dimmer'
+  end
+
   trait :with_properties do
     before(:create) do |resource|
       status = FactoryGirl.create :status

@@ -2,41 +2,54 @@ require 'spec_helper'
 
 describe Device do
 
-  it { should validate_presence_of :resource_owner_id }
-  it { should validate_presence_of :name }
-  it { should validate_presence_of :type }
+  #it { should validate_presence_of :resource_owner_id }
+  #it { should validate_presence_of :name }
+  #it { should validate_presence_of :type }
 
-  its(:pending) { should == false }
+  #its(:pending) { should == false }
 
-  it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:type) } }
-  it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:type) } }
+  #it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:type) } }
+  #it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:type) } }
 
-  it { should_not allow_mass_assignment_of :resource_owner_id }
-  it { should_not allow_mass_assignment_of :type_id }
+  #it { should_not allow_mass_assignment_of :resource_owner_id }
+  #it { should_not allow_mass_assignment_of :type_id }
 
-  it_behaves_like 'a boolean' do
-    let(:field)       { 'pending' }
-    let(:accepts_nil) { 'false' }
-    let(:resource)    { FactoryGirl.create :device }
-  end
+  #it_behaves_like 'a boolean' do
+    #let(:field)       { 'pending' }
+    #let(:accepts_nil) { 'false' }
+    #let(:resource)    { FactoryGirl.create :device }
+  #end
 
   describe '#synchronize_type' do
 
     context 'when creates a resource' do
 
-      let(:resource) { FactoryGirl.create :device, :with_no_properties }
+      let(:resource)   { FactoryGirl.create :device }
+      let(:type)       { Type.find(resource.type_id) }
+      let(:properties) { Property.in(id: type.property_ids) }
+      let(:params)     { properties.map { |p| { property_id: p.id, value: p.default } } }
+      before           { resource.properties_attributes = params }
 
       it 'connects two properties' do
         resource.properties.should have(2).items
       end
 
-      it 'connects the status property' do
-        resource.properties.first.value.should == 'off'
+      context 'with status' do
+
+        subject { resource.properties.first }
+
+        its(:value)       { should == 'off' }
+        its(:property_id) { should_not be_nil }
+        its(:id)          { should == resource.properties.first.property_id }
       end
 
-      it 'connects the intensity property' do
-        pp resource.properties
-        resource.properties.last.value.should == '0'
+      context 'with intensity' do
+
+        subject { resource.properties.last }
+
+        its(:value)       { should == '0' }
+        its(:property_id) { should_not be_nil }
+        its(:id)          { should == resource.properties.last.property_id }
       end
     end
 
@@ -49,7 +62,7 @@ describe Device do
         #before { pp resource.properties }
         #let!(:resource)   { Device.find device.id; }
         #let!(:status)     { Property.find(resource.properties.first.property_id) }
-        #let!(:properties) { [ { id: status.id, value: 'on'} ] }
+        #let!(:properties) { [ { uri: a_uri(status), value: 'on'} ] }
 
         #before { resource.properties_attributes = properties }
 
