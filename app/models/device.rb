@@ -20,20 +20,20 @@ class Device
 
   accepts_nested_attributes_for :properties, allow_destroy: true
 
-  before_create :set_type_uri, :synchronize_type
+  before_create :set_type_uri, :synchronize_type_properties
 
   def set_type_uri
     self.type_id = find_id type
   end
 
   # Cache with auto-expiring key composed by device created_at and type updated_at.
-  def synchronize_type
-    self.properties_attributes = synchronized_properties
+  def synchronize_type_properties
+    self.properties_attributes = synchronized_type_properties
   end
 
   private
 
-  def synchronized_properties
+  def synchronized_type_properties
     type = Type.find(type_id)
     (add_properties(type) + remove_properties(type)).flatten
   end

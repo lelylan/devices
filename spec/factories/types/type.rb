@@ -11,7 +11,7 @@ FactoryGirl.define do
     before(:create) do |resource|
       status = FactoryGirl.create :status
       intensity = FactoryGirl.create :intensity
-      resource.update_attributes(property_ids: [status.id, intensity.id])
+      resource.update_attributes property_ids: [status.id, intensity.id]
     end
   end
 end

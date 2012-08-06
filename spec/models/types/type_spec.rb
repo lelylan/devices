@@ -5,7 +5,7 @@ describe Type do
   let(:user)     { FactoryGirl.create :user }
   let(:resource) { FactoryGirl.create :type, resource_owner_id: user.id }
 
-  it 'connects to people database' do
+  it 'connects to type database' do
     Type.database_name.should == 'types_test'
   end
 

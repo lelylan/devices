@@ -20,7 +20,17 @@ describe Device do
     let(:resource)    { FactoryGirl.create :device }
   end
 
-  describe '#synchronize_type' do
+  describe '#type_id' do
+
+    let(:resource) { FactoryGirl.create :device }
+    let(:type)     { Type.find resource.type_id }
+
+    it 'sets the type_id field' do
+      resource.type_id.should == type.id
+    end
+  end
+
+  describe '#synchronize_type_properties' do
 
     let(:resource) { FactoryGirl.create :device }
 
@@ -56,15 +66,15 @@ describe Device do
 
         before  { resource.properties_attributes = properties }
 
-        it 'changes value' do
+        it 'changes its value' do
           resource.properties.first.value.should == 'on'
         end
 
-        it 'changes pending value' do
+        it 'changes its physical value' do
           resource.properties.first.physical.should == 'off'
         end
 
-        it 'does not connect new properties' do
+        it 'does not create new properties' do
           resource.properties.should have(2).items
         end
       end
@@ -92,7 +102,7 @@ describe Device do
         let(:property_ids) { type.property_ids << property.id }
 
         before { type.update_attributes property_ids: property_ids }
-        before { resource.synchronize_type }
+        before { resource.synchronize_type_properties }
 
         it 'adds the new property to the device' do
           resource.properties.should have(3).items
@@ -110,7 +120,7 @@ describe Device do
       context 'with one property less' do
 
         before { type.update_attributes property_ids: [ type.property_ids.first ] }
-        before { resource.synchronize_type }
+        before { resource.synchronize_type_properties }
 
         it 'removes the intensity property from the device' do
           resource.properties.should have(1).items
@@ -122,194 +132,37 @@ describe Device do
       end
     end
   end
+  
+  describe '#synchronize_function_properties' do
+
+    let(:resource) { FactoryGirl.create :device }
+    let(:function) { FactoryGirl.create :function }
+
+    context 'with pre-completed function' do
+
+      it 'updates properties' do
+      end
+
+      context 'when override properties' do
+
+        it 'updates properties with overriden values' do
+        end
+      end
+    end
+
+    context 'with not pre-completed function' do
+
+      context 'with all needed property values' do
+
+        it 'updates properties' do
+        end
+      end
+
+      context 'when not all needed property values' do
+
+        it 'raises an error' do
+        end
+      end
+    end
+  end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-## -------------------------------
-## Syncronize to physical device
-## -------------------------------
-#context '#synchronize_device' do
-#before { @properties = json_fixture('properties.json')[:properties] }
-
-#context 'with physical connection' do
-#before  { stub_request(:put, Settings.physical.uri).with(body: {properties: @properties}) }
-#before  { @device = FactoryGirl.create(:device) }
-#before  { @device.synchronize_device(@properties, {}) }
-
-#it 'should change device property status' do
-#@device.reload.device_properties[0][:value].should == 'on'
-#end
-
-#it 'should change device property intensity' do
-#@device.reload.device_properties[1][:value].should == '100.0'
-#end
-
-#it 'should update the physical device' do
-#a_put(Settings.physical.uri, false).with(body: {properties: @properties}).should have_been_made.once
-#end
-#end
-
-#context 'without physical connection' do
-#before  { @device = FactoryGirl.create(:device_no_physical) }
-#before  { @device.synchronize_device(@properties, {}) }
-
-#it 'should change device property status' do
-#@device.reload.device_properties[0][:value].should == 'on'
-#end
-
-#it 'should change device property intensity' do
-#@device.reload.device_properties[1][:value].should == '100.0'
-#end
-
-#it 'should not update the physical device' do
-#a_put(Settings.physical.uri, false).with(body: {properties: @properties}).should_not have_been_made
-#end
-#end
-
-#context 'with source: 'physical'' do
-#before  { @device = FactoryGirl.create(:device_no_physical) }
-#before  { @device.synchronize_device(@properties, {source: 'physical'}) }
-
-#it 'should not update the physical device' do
-#a_put(Settings.physical.uri, false).with(body: {properties: @properties}).should_not have_been_made
-#end
-#end
-#end
-
-
-## ----------------
-## Create history
-## ----------------
-
-#context '#create_history' do
-#before { @device = DeviceDecorator.decorate(FactoryGirl.create(:device_no_physical)) }
-#before { DeviceDecorator.any_instance.stub(:uri).and_return(Settings.device.uri) }
-
-#it 'should create an history' do
-#expect{ @device.create_history(Settings.user.another.uri) }.to change{ History.count }.by(1)
-#history = History.last
-#history.device_uri.should == @device.uri
-#history.created_from.should == Settings.user.another.uri
-#history.history_properties.should have(2).items
-#end
-#end
-
-
-## ----------------
-## Update pending
-## ----------------
-#context '#update_pending' do
-#before { DeviceDecorator.any_instance.stub(:uri).and_return(Settings.device.uri) }
-#before { @params = json_fixture('properties.json') }
-
-## -----------------------------
-## With no physical connection
-## -----------------------------
-#context 'with no physical connection' do
-#before { @device = DeviceDecorator.decorate(FactoryGirl.create(:device_no_physical)) }
-
-#context 'when update device properties' do
-#before { @device.synchronize_device(@params[:properties], @params) }
-
-#it 'should not be pending' do
-#@device.pending.should be_false
-#end
-#end
-#end
-
-## --------------------------
-## With physical connection
-## --------------------------
-#context 'with physical connection' do
-#before { stub_request(:put, Settings.physical.uri) }
-#before { @device = DeviceDecorator.decorate(FactoryGirl.create(:device)) }
-
-## -----------------------------
-## Create pending (from user)
-## -----------------------------
-#context 'when pending: 'start'' do
-#before { @params[:pending] = 'start' }
-
-#context 'when update properties' do
-#before { @device.synchronize_device(@params[:properties], @params) }
-
-#it 'should be pending' do
-#@device.pending.should be_true
-#end
-
-#it 'should update device properties' do
-#@device.device_properties[0].value.should == 'on'
-#@device.device_properties[1].value.should == '100.0'
-#end
-
-#it 'should have old property values as pending values' do
-#@device.device_properties[0].pending.should == 'off'
-#@device.device_properties[1].pending.should == '0.0'
-#end
-#end
-#end
-
-## --------------------------------
-## Update pending (from physical)
-## --------------------------------
-#context 'when pending: 'update'' do
-#before { @params[:pending] = 'update' }
-#before { @params[:properties][1][:value] = '75.0' }
-
-#context 'when update properties' do
-#before { @device.synchronize_device(@params[:properties], @params) }
-
-#it 'should be pending' do
-#@device.pending.should be_true
-#end
-
-#it 'should not update property values' do
-#@device.device_properties[0].value.should == 'off'
-#@device.device_properties[1].value.should == '0.0'
-#end
-
-#it 'should update pending values' do
-#@device.device_properties[0].pending.should == 'on'
-#@device.device_properties[1].pending.should == '75.0'
-#end
-#end
-#end
-
-## -------------------------------
-## Close pending (from physical)
-## -------------------------------
-#context 'when pending: 'close'' do
-#before { @params[:pending] = 'close' }
-
-#context 'when update properties' do
-#before { @device.synchronize_device(@params[:properties], @params) }
-
-#it 'should not be pending' do
-#@device.pending.should_not be_true
-#end
-
-#it 'should update property values' do
-#@device.device_properties[0].pending.should == 'on'
-#@device.device_properties[1].pending.should == '100.0'
-#end
-
-#it 'should update pending values' do
-#@device.device_properties[0].value.should == 'on'
-#@device.device_properties[1].value.should == '100.0'
-#end
-#end
-#end
-#end
-#end
-
-#end
