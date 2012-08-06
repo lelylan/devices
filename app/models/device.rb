@@ -26,8 +26,8 @@ class Device
     self.type_id = find_id type
   end
 
-  # Cache with auto-expiring key composed by device created_at and type updated_at.
   def synchronize_type_properties
+    # Cache with auto-expiring key composed by device created_at and type updated_at.
     self.properties_attributes = synchronized_type_properties
   end
 
@@ -68,10 +68,18 @@ class Device
 
   # gets the function properties not present in the properties hash
   def function_properties(function, properties)
+    properties = find_function_properties(function, properties)
+    properties.map { |p| { id: p.property_id, value: p.value || '' } }
+  end
+
+  def find_function_properties(function, properties)
+    override_ids = properties.map {|p| p[:id]}
+    find_function(function).properties.nin(property_id: override_ids)
+  end
+
+  def find_function(function)
     function_id = find_id function
     function    = Function.find function_id
-    result      = function.properties.nin(property_id: properties.map {|p| p[:id]})
-    result.map { |p| { id: p.property_id, value: p.value || '' } }
   end
 
   def override_properties(properties)
