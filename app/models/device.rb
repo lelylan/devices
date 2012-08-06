@@ -20,21 +20,25 @@ class Device
 
   accepts_nested_attributes_for :properties, allow_destroy: true
 
-  before_create :set_type_uri, :synchronize_type
+  before_create :set_type_uri, :synchronize_properties
 
   def set_type_uri
     self.type_id = find_id type
   end
 
-  # This is the method to cache with autoexpiring key composed by 
-  # device created_at and type updated_at combination.
-  def synchronize_type
-    self.properties_attributes = type_properties
+  # This is the method to cache with autoexpiring key composed by device created_at and type 
+  # updated_at combination. This is the only access point to check the properties integrity.
+  def synchronize_properties
+    self.properties_attributes = synchronized_properties
+  end
+
+  def synchronize_pending(pending, source, properties)
+    self.pending = synchronized_pending(pending, source, properties) if device_physical
   end
 
   private
 
-  def type_properties
+  def synchronized_properties
     type = Type.find(type_id)
     (add_properties(type) + remove_properties(type)).flatten
   end
@@ -46,92 +50,26 @@ class Device
 
   def remove_properties(type)
     properties = old_properties(type)
-    properties.map{ |p| { id: p, _destroy: "1" } }
+    properties.map{ |p| { id: p, _destroy: '1' } }
   end
 
   def new_properties(type)
     [ type.property_ids - properties.map(&:id) ].flatten
   end
-  
+
   def old_properties(type)
     [ properties.map(&:id) - type.property_ids ].flatten
   end
+
+  def synchronized_pending(pending, source, properties)
+    case pending
+    when 'close'  then update_pending_properties(properties); false
+    when 'update' then update_pending_properties(properties); true
+    else               update_pending_properties(properties); true
+    end
+  end
+
+  def update_pending_properties(properties)
+    self.properties_attributes = properties.map { |p| {  id: p.id, pending_value: p.value } }
+  end
 end
-
-  ## --------------------------
-  ## Update device properties
-  ## --------------------------
-
-  #def synchronize_device(properties, params)
-    #update_properties(properties, params)
-    #synchronize_physical(properties, params)
-    #return self
-  #end
-
-  ## Update the device properties.
-  #def update_properties(properties, params)
-    #properties.each do |property|
-      #property = HashWithIndifferentAccess.new(property)
-      #res = device_properties.where(uri: property[:uri]).first
-      #res.value = property[:value]
-    #end
-
-    ## self.save is made into #check_pending 
-    ## when pending is 'start' you must take the older values and set them to pending
-    ## when pending is 'update' you must not update the property values
-    ## when pending is 'close' you must not update the property values, but only close the pending
-    #check_pending(params)
-  #end
-
-  ## Update physical device.
-  ## TODO change with a proper library call
-  #def synchronize_physical(properties, params)
-    #if device_physical and params[:source] != 'physical'
-      #options = { body: { properties: properties }.to_json, 
-                  #headers: { 'Content-Type' => 'application/json', 'Accept'=>'application/json' } }
-      #HTTParty.put device_physical.uri, options
-      ## For now we do not check the result
-    #end
-  #end
-
-
-  ## -----------------------
-  ## Create device history
-  ## -----------------------
-  #def create_history(user_uri)
-    #device = DeviceDecorator.decorate(self)
-    #params = {device_uri: device.uri, created_from: user_uri }
-    #History.create_history(params, device_properties)
-  #end
-
-
-  ## -----------------------
-  ## Create pending status
-  ## -----------------------
-  #def check_pending(params)
-    #params[:pending] = 'start' if params[:pending].nil?
-
-    #start_pending(params)  if device_physical and params[:pending] == 'start'
-    #update_pending(params) if device_physical and params[:pending] == 'update'
-    #close_pending(params)  if device_physical and params[:pending] == 'close'
-
-    #self.save
-  #end
-
-  #def start_pending(params)
-    #self.pending = true
-    #device_properties.each { |p| p.pending = p.value_was }
-  #end
-  
-  #def update_pending(params)
-    #self.pending = true
-    #device_properties.each { |p| p.pending = p.value }
-    #device_properties.each { |p| p.reset_value! }
-  #end
-
-  #def close_pending(params)
-    #self.pending = false
-    #device_properties.each { |p| p.pending = p.value }
-  #end
-
-#end

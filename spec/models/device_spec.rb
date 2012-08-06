@@ -20,9 +20,9 @@ describe Device do
     let(:resource)    { FactoryGirl.create :device }
   end
 
-  describe '#synchronize_type' do
+  describe '#synchronize_properties' do
 
-    let(:resource)   { FactoryGirl.create :device }
+    let(:resource) { FactoryGirl.create :device }
 
     context 'when creates a resource' do
 
@@ -49,9 +49,9 @@ describe Device do
       end
     end
 
-    context 'when updates a resource connection' do
+    context 'when updates the resource properties' do
 
-      context 'when updates the status' do
+      context 'when updates the status value' do
         let(:properties) { [ { id: resource.properties.first.id, value: 'on'} ] }
 
         before  { resource.properties_attributes = properties }
@@ -65,7 +65,7 @@ describe Device do
         end
       end
 
-      context 'when updates a not existing connection' do
+      context 'when updates a not existing property value' do
         let(:properties) { [ { id: Settings.resource_id, value: 'on'} ] }
         let(:update)     { resource.properties_attributes = properties }
 
@@ -75,7 +75,7 @@ describe Device do
       end
     end
 
-    context 'when type changes' do
+    context 'when updates the resource type' do
 
       let(:type) { Type.find resource.type_id }
 
@@ -88,7 +88,7 @@ describe Device do
         let(:property_ids) { type.property_ids << property.id }
 
         before { type.update_attributes property_ids: property_ids }
-        before { resource.synchronize_type }
+        before { resource.synchronize_properties }
 
         it 'adds the new property to the device' do
           resource.properties.should have(3).items
@@ -103,12 +103,12 @@ describe Device do
         end
       end
 
-      context 'with a removed property' do
+      context 'with one property less' do
 
         before { type.update_attributes property_ids: [ type.property_ids.first ] }
-        before { resource.synchronize_type }
+        before { resource.synchronize_properties }
 
-        it 'adds removes the intensity property from the device' do
+        it 'removes the intensity property from the device' do
           resource.properties.should have(1).items
         end
 
