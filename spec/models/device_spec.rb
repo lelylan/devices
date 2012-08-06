@@ -132,37 +132,76 @@ describe Device do
       end
     end
   end
-  
+
   describe '#synchronize_function_properties' do
 
-    let(:resource) { FactoryGirl.create :device }
-    let(:function) { FactoryGirl.create :function }
+    let(:resource)  { FactoryGirl.create :device }
+    let(:type)      { Type.find resource.type_id }
+    let(:status)    { Property.find resource.properties.first.id }
+    let(:intensity) { Property.find resource.properties.last.id }
 
-    context 'with pre-completed function' do
+    context 'with pre-completed function (turn on)' do
 
-      it 'updates properties' do
+      let(:properties)   { [ { uri: a_uri(status), value: 'on' } ] }
+      let(:function)     { FactoryGirl.create :function, properties: properties }
+      let(:function_uri) { a_uri function }
+
+      context 'when does not override function property value' do
+
+        before { resource.synchronize_function_properties function_uri }
+
+        it 'updates the status value' do
+          resource.properties.first.value.should == 'on'
+        end
       end
 
-      context 'when override properties' do
+      context 'when overrides function property value' do
 
-        it 'updates properties with overriden values' do
+        let(:override) { [ id: status.id, value: 'override' ]  }
+
+        before { resource.synchronize_function_properties function_uri, override }
+
+        it 'overrides the status value' do
+          resource.properties.first.value.should == 'override'
         end
       end
     end
 
     context 'with not pre-completed function' do
 
-      context 'with all needed property values' do
+      let(:properties)   { [ { uri: a_uri(status), value: 'on' }, { uri: a_uri(intensity) } ] }
+      let(:function)     { FactoryGirl.create :function, properties: properties }
+      let(:function_uri) { a_uri function }
 
-        it 'updates properties' do
+      context 'when sends missing function property values' do
+
+        let(:override) { [ {id: intensity.id, value: '20' } ] }
+
+        before { resource.synchronize_function_properties function_uri, override }
+
+        it 'updates the status value' do
+          resource.properties.first.value.should == 'on'
+        end
+
+        it 'updates the intensity value' do
+          resource.properties.last.value.should == '20'
         end
       end
 
-      context 'when not all needed property values' do
+      context 'when does not send missing function property values' do
 
-        it 'raises an error' do
+        before { resource.synchronize_function_properties function_uri }
+
+        it 'updates the status value' do
+          resource.properties.first.value.should == 'on'
+        end
+
+        it 'does not update the intensity value' do
+          resource.properties.last.value.should == ''
         end
       end
     end
+
+    # Check also uri. use the function model and check if it is valid.
   end
 end

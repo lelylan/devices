@@ -31,7 +31,13 @@ class Device
     self.properties_attributes = synchronized_type_properties
   end
 
+  def synchronize_function_properties(function, properties = [])
+    self.properties_attributes = synchronized_function_properties function, properties
+  end
+
   private
+
+  # synchronize_type_properties private methods
 
   def synchronized_type_properties
     type = Type.find(type_id)
@@ -54,5 +60,21 @@ class Device
 
   def old_properties(type)
     [ properties.map(&:id) - type.property_ids ].flatten
+  end
+
+  def synchronized_function_properties(function, properties)
+    (function_properties(function, properties) + override_properties(properties)).flatten
+  end
+
+  # gets the function properties not present in the properties hash
+  def function_properties(function, properties)
+    function_id = find_id function
+    function    = Function.find function_id
+    result      = function.properties.nin(property_id: properties.map {|p| p[:id]})
+    result.map { |p| { id: p.property_id, value: p.value || '' } }
+  end
+
+  def override_properties(properties)
+    properties.map { |p| { id: p[:id], value: p[:value] || '' } }
   end
 end
