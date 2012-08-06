@@ -3,10 +3,10 @@ class DeviceProperty
   include Mongoid::Timestamps
   include Resourceable
 
-  field :property_id, type: Moped::BSON::ObjectId
-  field :value
-  field :pending_value, default: ''
   field :_id, default: ->{ property_id }
+  field :property_id, type: Moped::BSON::ObjectId
+  field :value,       default: ''
+  field :physical,    default: ''
 
   embedded_in :device
 

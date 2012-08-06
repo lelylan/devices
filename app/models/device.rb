@@ -20,20 +20,15 @@ class Device
 
   accepts_nested_attributes_for :properties, allow_destroy: true
 
-  before_create :set_type_uri, :synchronize_properties
+  before_create :set_type_uri, :synchronize_type
 
   def set_type_uri
     self.type_id = find_id type
   end
 
-  # This is the method to cache with autoexpiring key composed by device created_at and type 
-  # updated_at combination. This is the only access point to check the properties integrity.
-  def synchronize_properties
+  # Cache with auto-expiring key composed by device created_at and type updated_at.
+  def synchronize_type
     self.properties_attributes = synchronized_properties
-  end
-
-  def synchronize_pending(pending, source, properties)
-    self.pending = synchronized_pending(pending, source, properties) if device_physical
   end
 
   private
@@ -59,17 +54,5 @@ class Device
 
   def old_properties(type)
     [ properties.map(&:id) - type.property_ids ].flatten
-  end
-
-  def synchronized_pending(pending, source, properties)
-    case pending
-    when 'close'  then update_pending_properties(properties); false
-    when 'update' then update_pending_properties(properties); true
-    else               update_pending_properties(properties); true
-    end
-  end
-
-  def update_pending_properties(properties)
-    self.properties_attributes = properties.map { |p| {  id: p.id, pending_value: p.value } }
   end
 end

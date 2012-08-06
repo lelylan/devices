@@ -20,7 +20,7 @@ describe Device do
     let(:resource)    { FactoryGirl.create :device }
   end
 
-  describe '#synchronize_properties' do
+  describe '#synchronize_type' do
 
     let(:resource) { FactoryGirl.create :device }
 
@@ -52,12 +52,16 @@ describe Device do
     context 'when updates the resource properties' do
 
       context 'when updates the status value' do
-        let(:properties) { [ { id: resource.properties.first.id, value: 'on'} ] }
+        let(:properties) { [ { id: resource.properties.first.id, value: 'on', physical: 'off' } ] }
 
         before  { resource.properties_attributes = properties }
 
         it 'changes value' do
           resource.properties.first.value.should == 'on'
+        end
+
+        it 'changes pending value' do
+          resource.properties.first.physical.should == 'off'
         end
 
         it 'does not connect new properties' do
@@ -88,7 +92,7 @@ describe Device do
         let(:property_ids) { type.property_ids << property.id }
 
         before { type.update_attributes property_ids: property_ids }
-        before { resource.synchronize_properties }
+        before { resource.synchronize_type }
 
         it 'adds the new property to the device' do
           resource.properties.should have(3).items
@@ -106,7 +110,7 @@ describe Device do
       context 'with one property less' do
 
         before { type.update_attributes property_ids: [ type.property_ids.first ] }
-        before { resource.synchronize_properties }
+        before { resource.synchronize_type }
 
         it 'removes the intensity property from the device' do
           resource.properties.should have(1).items
@@ -119,6 +123,17 @@ describe Device do
     end
   end
 end
+
+
+
+
+
+
+
+
+
+
+
 
 ## -------------------------------
 ## Syncronize to physical device
