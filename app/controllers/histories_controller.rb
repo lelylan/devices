@@ -1,6 +1,5 @@
 class HistoriesController < ApplicationController
   doorkeeper_for :index, :show, scopes: [:read, :write]
-  doorkeeper_for :create, :update, :destroy, scopes: [:write]
 
   before_filter :find_owned_resources
   before_filter :find_resource, only: %w(show)

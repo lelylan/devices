@@ -42,7 +42,7 @@ shared_examples_for 'an updatable resource' do
     page.driver.put uri, params.to_json
     resource.reload
     page.status_code.should == 200
-    page.should have_content 'Updated'
+    page.should have_content 'updated'
     has_resource resource
   end
 end
