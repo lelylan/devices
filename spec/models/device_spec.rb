@@ -211,4 +211,31 @@ describe Device do
       end
     end
   end
+
+  describe '#device_properties' do
+
+    let(:resource)   { FactoryGirl.create :device }
+    let(:type)       { Type.find resource.type_id }
+    let(:status)     { Property.find resource.properties.first.id }
+    let(:intensity)  { Property.find resource.properties.last.id }
+    let(:properties) { [ { uri: a_uri(status), value: 'on' }, { uri: a_uri(intensity), physical: '20' } ] }
+
+    context 'with status' do
+
+      let(:parsed) { resource.device_properties(properties).first }
+
+      it { parsed[:id].should       == status.id.to_s }
+      it { parsed[:value].should    == 'on' }
+      it { parsed[:physical].should == '' }
+    end
+
+    context 'with intensity' do
+
+      let(:parsed) { resource.device_properties(properties).last }
+
+      it { parsed[:id].should       == intensity.id.to_s }
+      it { parsed[:value].should    == '' }
+      it { parsed[:physical].should == '20' }
+    end
+  end
 end

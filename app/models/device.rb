@@ -35,6 +35,10 @@ class Device
     self.properties_attributes = synchronized_function_properties function, properties
   end
 
+  def device_properties(properties)
+    properties.map {|p| { id: find_id(p[:uri]), value: p[:value] || '', physical: p[:physical] || '' } }
+  end
+
   private
 
   # synchronize_type_properties private methods
