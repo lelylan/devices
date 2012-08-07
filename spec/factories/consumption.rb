@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :consumption do
-    resource_owner_id Settings.resource_owner_id
-    device    "https://api.lelylan.com/devices/#{Settings.device_id.to_s}"
+    resource_owner_id Settings.resource_id
+    device    "https://api.lelylan.com/devices/#{Settings.resource_id}"
     value     125
     occur_at  Time.now
   end
