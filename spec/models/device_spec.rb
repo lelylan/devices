@@ -202,6 +202,13 @@ describe Device do
       end
     end
 
-    # Check also uri. use the function model and check if it is valid.
+    context 'with not valid function uri' do
+
+      let(:execute) { resource.synchronize_function_properties 'not-valid' }
+
+      it 'sould raise an error' do
+        expect { execute }.to raise_error Mongoid::Errors::DocumentNotFound
+      end
+    end
   end
 end
