@@ -3,7 +3,7 @@ shared_examples_for 'a paginable resource' do
   let(:decorator)  { "#{controller.classify}Decorator".constantize }
 
   let!(:resource)  { decorator.decorate(FactoryGirl.create(factory, resource_owner_id: user.id)) }
-  let!(:resources) { FactoryGirl.create_list(factory, Settings.pagination.per + 5, name: 'Extra resource', resource_owner_id: user.id) }
+  let!(:resources) { FactoryGirl.create_list(factory, Settings.pagination.per + 5, resource_owner_id: user.id) }
 
   describe '?start=:uri' do
 
@@ -11,7 +11,7 @@ shared_examples_for 'a paginable resource' do
       page.driver.get uri, start: resource.uri
       page.status_code.should == 200
       contains_resource resources.first
-      page.should_not have_content resource.name
+      page.should_not have_content resource.id.to_s
     end
   end
 
