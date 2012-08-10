@@ -72,7 +72,7 @@ feature 'ConsumptionsController' do
 
     let!(:resource) { FactoryGirl.create :consumption, resource_owner_id: user.id }
     let(:uri)       { "/consumptions/#{resource.id}" }
-    let(:params)    { { value: 'Updated' } }
+    let(:params)    { { value: 'updated' } }
 
     it_behaves_like 'an updatable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'

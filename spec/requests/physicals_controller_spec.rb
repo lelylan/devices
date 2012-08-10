@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-feature 'DevicesController' do
+feature 'PhysicalsController' do
 
   let!(:application)  { FactoryGirl.create :application }
   let!(:user)         { FactoryGirl.create :user }
