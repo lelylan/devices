@@ -79,10 +79,12 @@ class Device
   end
 
   def override_properties(properties)
+    properties ||= []
     properties.map { |p| { id: p[:id], value: p[:value] || '' } }
   end
 
   def find_function_properties(function, properties)
+    properties ||= []
     override_ids = properties.map {|p| p[:id]}
     find_function(function).properties.nin(property_id: override_ids)
   end
