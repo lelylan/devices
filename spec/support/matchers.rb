@@ -6,7 +6,7 @@ RSpec::Matchers.define :authorize do |expected|
   end
 end
 
-RSpec::Matchers.define :has_the_same_time_as do |expected|
+RSpec::Matchers.define :have_the_same_time_as do |expected|
   match do |actual|
     expected.to_i == actual.to_i
   end

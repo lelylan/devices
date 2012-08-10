@@ -5,8 +5,9 @@ node(:id)     { |history| history.id }
 node(:device) { |history| { uri: history.device_uri } }
 
 node(:properties) do |history|
-  history.history_properties.map do |property|
-    { uri: property.uri, value: property.value }
+  history.properties.map do |property|
+    property = HistoryPropertyDecorator.decorate(property)
+    { uri: property.uri, value: property.value, physical: property.physical }
   end
 end
 

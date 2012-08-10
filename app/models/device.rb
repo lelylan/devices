@@ -36,7 +36,8 @@ class Device
   end
 
   def device_properties(properties)
-    properties.map {|p| { id: find_id(p[:uri]), value: p[:value] || '', physical: p[:physical] || '' } }
+    properties ||= []
+    properties.map {|p| { id: Moped::BSON::ObjectId(find_id p[:uri]), value: p[:value] || '', physical: p[:physical] || '' } }
   end
 
   private
@@ -78,10 +79,12 @@ class Device
   end
 
   def override_properties(properties)
+    properties ||= []
     properties.map { |p| { id: p[:id], value: p[:value] || '' } }
   end
 
   def find_function_properties(function, properties)
+    properties ||= []
     override_ids = properties.map {|p| p[:id]}
     find_function(function).properties.nin(property_id: override_ids)
   end

@@ -4,7 +4,8 @@ class HistoryProperty
   include Resourceable
 
   field :property_id
-  field :value
+  field :value,    default: ''
+  field :physical, default: ''
 
   attr_accessor  :uri
   attr_protected :property_id

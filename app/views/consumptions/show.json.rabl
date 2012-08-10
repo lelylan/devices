@@ -8,10 +8,10 @@ node(:value)    { |c| c.value }
 node(:unit)     { |c| c.unit }
 node(:occur_at) { |c| c.occur_at }
 
-node(:end_at, :if => lambda { |c| c.durational? }) do |c|
+node(:end_at, if: lambda { |c| c.durational? }) do |c|
   c.end_at
 end
 
-node(:duration, :if => lambda { |c| c.durational? }) do |c|
+node(:duration, if: lambda { |c| c.durational? }) do |c|
   c.duration
 end

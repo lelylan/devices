@@ -58,7 +58,7 @@ describe Consumption do
         let(:consumption) { FactoryGirl.create :consumption, :durational, end_at: nil }
 
         it 'calculates the end_at field' do
-          consumption.end_at.should has_the_same_time_as valid.end_at
+          consumption.end_at.should have_the_same_time_as valid.end_at
         end
       end
 
@@ -67,7 +67,7 @@ describe Consumption do
         let(:consumption) { FactoryGirl.create :consumption, :durational, occur_at: nil }
 
         it 'calculates the occur_at field' do
-          consumption.occur_at.should has_the_same_time_as valid.occur_at
+          consumption.occur_at.should have_the_same_time_as valid.occur_at
         end
       end
 
