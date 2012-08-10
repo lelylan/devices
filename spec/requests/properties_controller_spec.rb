@@ -21,6 +21,10 @@ feature 'PropertiesController' do
 
     let(:uri) { "/devices/#{resource.id}/properties" }
 
+    it 'should create an history resource' do
+      expect { page.driver.put(uri) }.to change { History.count }.by(1)
+    end
+
     it_behaves_like 'an updatable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'

@@ -4,6 +4,7 @@ class PropertiesController < ApplicationController
   before_filter :find_owned_resources
   before_filter :find_resource
   before_filter :syncrhronize
+  after_filter  :create_history
 
   def update
     @device.properties_attributes = @properties
@@ -24,5 +25,12 @@ class PropertiesController < ApplicationController
   def syncrhronize
     @device.synchronize_type_properties
     @properties = @device.device_properties params[:properties]
+  end
+
+  def create_history
+    @device = DeviceDecorator.decorate @device
+    History.create device: @device.uri, properties: @properties do |history|
+      history.resource_owner_id = current_user.id
+    end
   end
 end

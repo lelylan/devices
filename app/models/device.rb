@@ -35,7 +35,8 @@ class Device
     self.properties_attributes = synchronized_function_properties function, properties
   end
 
-  def device_properties(properties = [])
+  def device_properties(properties)
+    properties ||= []
     properties.map {|p| { id: Moped::BSON::ObjectId(find_id p[:uri]), value: p[:value] || '', physical: p[:physical] || '' } }
   end
 
