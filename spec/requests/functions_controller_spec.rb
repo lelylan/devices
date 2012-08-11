@@ -32,7 +32,7 @@ feature 'FunctionsController' do
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
 
-    it 'should create an history resource' do
+    it 'creates an history resource' do
       expect { update }.to change { History.count }.by(1)
     end
 
@@ -54,6 +54,10 @@ feature 'FunctionsController' do
       it 'raises a not found property' do
         page.driver.put(uri, params.to_json)
         has_not_found_resource uri: params[:properties].map {|p| p[:uri]}
+      end
+
+      it 'does not create an history resource' do
+        expect { update }.to_not change { History.count }.by(1)
       end
     end
 

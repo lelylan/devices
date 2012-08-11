@@ -4,13 +4,13 @@ class PropertiesController < ApplicationController
   before_filter :find_owned_resources
   before_filter :find_resource
   before_filter :syncrhronize
-  after_filter  :create_history
 
   def update
     begin
       @device.properties_attributes = @properties
       @device.pending = params[:pending] if params[:pending]
       @device.save
+      create_history
       render '/devices/show'
     rescue Mongoid::Errors::DocumentNotFound => e
       render_404 'notifications.resource.not_found', params[:properties].map {|p| p[:uri]}

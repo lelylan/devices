@@ -50,6 +50,10 @@ feature 'PropertiesController' do
         page.driver.put(uri, params.to_json)
         has_not_found_resource uri: params[:properties].map {|p| p[:uri]}
       end
+
+      it 'does not create an history resource' do
+        expect { update }.to_not change { History.count }.by(1)
+      end
     end
 
     # TODO add a system to validate the structure of sent data
