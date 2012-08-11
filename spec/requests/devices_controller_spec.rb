@@ -14,15 +14,13 @@ feature 'DevicesController' do
 
   describe 'GET /devices' do
 
-    let!(:resource)  { FactoryGirl.create :device, resource_owner_id: user.id }
-    let(:uri)        { '/devices' }
+    let!(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
+    let(:uri)       { '/devices' }
 
     it_behaves_like 'a listable resource'
     it_behaves_like 'a paginable resource'
-    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
-
-    # TODO add tests on search type
-    # TODO add tests on search properties
+    it_behaves_like 'a searchable resource', { name: 'My name is resource', type: a_uri(FactoryGirl.create :type) }
+    it_behaves_like 'a searchable resource on properties'
   end
 
   context 'GET /devices/:id' do

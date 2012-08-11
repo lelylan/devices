@@ -48,6 +48,7 @@ class ConsumptionsController < ApplicationController
   end
 
   def search_params
+    @consumptions = @consumptions.where('device_id' => find_id(params[:device])) if params[:device]
     @consumptions = @consumptions.where(type: params[:type]) if params[:type]
     @consumptions = @consumptions.where(unit: params[:unit]) if params[:unit]
     @consumptions = @consumptions.where(:occur_at.gte => Chronic.parse(params[:from])) if params[:from]
