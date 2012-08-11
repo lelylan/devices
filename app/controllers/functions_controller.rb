@@ -7,9 +7,13 @@ class FunctionsController < ApplicationController
   after_filter  :create_history
 
   def update
-    @device.synchronize_function_properties params[:uri], @properties
-    @device.save
-    render '/devices/show'
+    begin
+      @device.synchronize_function_properties params[:uri], @properties
+      @device.save
+      render '/devices/show'
+    rescue Mongoid::Errors::DocumentNotFound => e
+      render_404 'notifications.resource.not_found', params[:properties].map {|p| p[:uri]}
+    end
   end
 
   private 
