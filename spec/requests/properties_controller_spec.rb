@@ -35,6 +35,12 @@ feature 'PropertiesController' do
       expect { update }.to change { resource.reload.pending }.from(false).to(true)
     end
 
+    it 'updates #updated_at' do
+      old = Time.now - 60
+      resource.update_attributes(updated_at: old)
+      expect { update }.to change { resource.reload.updated_at.to_i }.from(old.to_i).to(Time.now.to_i)
+    end
+
     context 'with a not existing property' do
 
       let(:another) { FactoryGirl.create :property }
