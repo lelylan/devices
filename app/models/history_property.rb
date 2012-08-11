@@ -3,7 +3,7 @@ class HistoryProperty
   include Mongoid::Timestamps
   include Resourceable
 
-  field :property_id
+  field :property_id, type: Moped::BSON::ObjectId
   field :value,    default: ''
   field :physical, default: ''
 

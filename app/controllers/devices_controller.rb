@@ -3,9 +3,10 @@ class DevicesController < ApplicationController
   doorkeeper_for :create, :update, :destroy, scopes: [:write]
 
   before_filter :find_owned_resources
-  before_filter :find_resource, only: %w(show update destroy)
-  before_filter :search_params, only: %w(index)
-  before_filter :pagination,    only: %w(index)
+  before_filter :find_resource,     only: %w(show update destroy)
+  before_filter :search_params,     only: %w(index)
+  before_filter :search_properties, only: %w(index)
+  before_filter :pagination,        only: %w(index)
 
   def index
     @devices = @devices.limit(params[:per])
@@ -50,14 +51,16 @@ class DevicesController < ApplicationController
   def search_params
     @devices = @devices.where('name'    => /.*#{params[:name]}.*/i) if params[:name]
     @devices = @devices.where('type_id' => find_id(params[:type]))  if params[:type]
+  end
 
+  def search_properties
     if params[:property] and params[:value]
       @devices = @devices.where('properties' => { '$elemMatch' => { id: find_id(params[:property]), value: params[:value] } })
     else
       @devices = @devices.where('properties.id'   => params[:property_uri])   if params[:property_uri]
       @devices = @devices.where('properties.value' => params[:property_value]) if params[:property_value]
     end
-  end 
+  end
 
   def pagination
     params[:per] = (params[:per] || Settings.pagination.per).to_i
