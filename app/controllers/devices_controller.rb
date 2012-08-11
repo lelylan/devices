@@ -53,13 +53,10 @@ class DevicesController < ApplicationController
     @devices = @devices.where('type_id' => find_id(params[:type]))  if params[:type]
   end
 
-  def search_properties
-    if params[:property] and params[:value]
-      @devices = @devices.where('properties' => { '$elemMatch' => { id: find_id(params[:property]), value: params[:value] } })
-    else
-      @devices = @devices.where('properties.id'   => params[:property_uri])   if params[:property_uri]
-      @devices = @devices.where('properties.value' => params[:property_value]) if params[:property_value]
-    end
+  def search_properties(match = {})
+    match.merge!({ property_id: Moped::BSON::ObjectId(find_id(params[:property])) }) if params[:property]
+    match.merge!({ value: params[:value] }) if params[:value]
+    @devices = @devices.where('properties' => { '$elemMatch' => match })
   end
 
   def pagination
