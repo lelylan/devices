@@ -26,8 +26,8 @@ class HistoriesController < ApplicationController
 
   def search_params
     @histories = @histories.where('device_id' => find_id(params[:device])) if params[:device]
-    @histories = @histories.where(:created_at.gte => Chronic.parse(params[:from])) if params[:from]
-    @histories = @histories.where(:created_at.lte => Chronic.parse(params[:to])) if params[:to]
+    @histories = @histories.where(:created_at.gte => params[:from]) if params[:from]
+    @histories = @histories.where(:created_at.lte => params[:to]) if params[:to]
   end
 
   def search_properties(match = {})
