@@ -7,9 +7,13 @@ class PropertiesController < ApplicationController
   after_filter  :create_history
 
   def update
-    @device.properties_attributes = @properties
-    @device.save
-    render '/devices/show'
+    begin
+      @device.properties_attributes = @properties
+      @device.save
+      render '/devices/show'
+    rescue Mongoid::Errors::DocumentNotFound => e
+      render_404 'notifications.resource.not_found', params[:properties].map {|p| p[:uri]}
+    end
   end
 
   private 
