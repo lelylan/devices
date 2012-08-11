@@ -14,10 +14,12 @@ feature 'PropertiesController' do
 
   context 'PUT /devices/:id/properties' do
 
-    let(:resource)  { FactoryGirl.create :device, resource_owner_id: user.id }
-    let(:status)    { Property.find resource.properties.first.id }
-    let(:intensity) { Property.find resource.properties.last.id }
-    let(:params)    { { properties: [ { uri: a_uri(status), value: 'updated' }, { uri: a_uri(intensity), value: '20' } ] } }
+    let(:resource)   { FactoryGirl.create :device, resource_owner_id: user.id }
+    let(:status)     { Property.find resource.properties.first.id }
+    let(:intensity)  { Property.find resource.properties.last.id }
+    let(:properties) { [ { uri: a_uri(status), value: 'updated' }, { uri: a_uri(intensity), value: '20' } ] }
+    let(:params)     { { pending: true, properties: properties } }
+    let(:update)     { page.driver.put uri, params.to_json }
 
     let(:uri) { "/devices/#{resource.id}/properties" }
 
@@ -26,7 +28,11 @@ feature 'PropertiesController' do
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
 
     it 'creates an history resource' do
-      expect { page.driver.put(uri) }.to change { History.count }.by(1)
+      expect { update }.to change { History.count }.by(1)
+    end
+
+    it 'creates an history resource' do
+      expect { update }.to change { resource.reload.pending }.from(false).to(true)
     end
 
     context 'with a not existing property' do

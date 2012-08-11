@@ -9,6 +9,7 @@ class FunctionsController < ApplicationController
   def update
     begin
       @device.synchronize_function_properties params[:uri], @properties
+      @device.pending = params[:pending] if params[:pending]
       @device.save
       render '/devices/show'
     rescue Mongoid::Errors::DocumentNotFound => e
@@ -33,7 +34,7 @@ class FunctionsController < ApplicationController
 
   def create_history
     @device = DeviceDecorator.decorate @device
-    History.create device: @device.uri, properties: @properties do |history|
+    History.create device: @device.uri, properties: params[:properties] do |history|
       history.resource_owner_id = current_user.id
     end
   end

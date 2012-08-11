@@ -22,7 +22,9 @@ feature 'FunctionsController' do
     let(:function)     { FactoryGirl.create :function, properties: properties }
     let(:function_uri) { a_uri function }
 
-    let(:params)    { { properties: [{ uri: a_uri(intensity), value: 'updated' } ] } }
+    let(:properties) { [ { uri: a_uri(intensity), value: 'updated' } ] }
+    let(:params) { { pending: true, properties: properties } }
+    let(:update) { page.driver.put uri, params.to_json }
 
     let(:uri) { "/devices/#{resource.id}/functions?uri=#{function_uri}" }
 
@@ -31,7 +33,11 @@ feature 'FunctionsController' do
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
 
     it 'should create an history resource' do
-      expect { page.driver.put(uri) }.to change { History.count }.by(1)
+      expect { update }.to change { History.count }.by(1)
+    end
+
+    it 'creates an history resource' do
+      expect { update }.to change { resource.reload.pending }.from(false).to(true)
     end
 
     context 'with a not existing property' do
