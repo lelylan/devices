@@ -1,3 +1,8 @@
 pagination:
   per: 25
   max_per: 100
+services:
+  devices: 'https://devices.lelylan.com'
+  types: 'https://types.lelylan.com'
+  people: 'https://people.lelylan.com'
+  locations: 'https://locations.lelylan.com'

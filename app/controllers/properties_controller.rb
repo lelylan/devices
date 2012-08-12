@@ -4,12 +4,18 @@ class PropertiesController < ApplicationController
   before_filter :find_owned_resources
   before_filter :find_resource
   before_filter :syncrhronize
-  after_filter  :create_history
 
   def update
-    @device.properties_attributes = @properties
-    @device.save
-    render '/devices/show'
+    begin
+      @device.properties_attributes = @properties
+      @device.pending = params[:pending] if params[:pending]
+      @device.save
+      create_history
+      render '/devices/show'
+    rescue Mongoid::Errors::DocumentNotFound => e
+      params[:properties] ||= []
+      render_404 'notifications.resource.not_found', params[:properties].map {|p| p[:uri]}
+    end
   end
 
   private 
@@ -29,7 +35,7 @@ class PropertiesController < ApplicationController
 
   def create_history
     @device = DeviceDecorator.decorate @device
-    History.create device: @device.uri, properties: @properties do |history|
+    History.create device: @device.uri, properties: params[:properties] do |history|
       history.resource_owner_id = current_user.id
     end
   end

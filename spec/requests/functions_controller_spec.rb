@@ -22,17 +22,44 @@ feature 'FunctionsController' do
     let(:function)     { FactoryGirl.create :function, properties: properties }
     let(:function_uri) { a_uri function }
 
-    let(:params)    { { properties: [{ uri: a_uri(intensity), value: 'updated' } ] } }
+    let(:properties) { [ { uri: a_uri(intensity), value: 'updated' } ] }
+    let(:params) { { pending: true, properties: properties } }
+    let(:update) { page.driver.put uri, params.to_json }
 
     let(:uri) { "/devices/#{resource.id}/functions?uri=#{function_uri}" }
-
-    it 'should create an history resource' do
-      expect { page.driver.put(uri) }.to change { History.count }.by(1)
-    end
 
     it_behaves_like 'an updatable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
+
+    it 'creates an history resource' do
+      expect { update }.to change { History.count }.by(1)
+    end
+
+    it 'creates an history resource' do
+      expect { update }.to change { resource.reload.pending }.from(false).to(true)
+    end
+
+    it 'updates #updated_at' do
+      old = Time.now - 60
+      resource.update_attributes(updated_at: old)
+      expect { update }.to change { resource.reload.updated_at.to_i }.from(old.to_i).to(Time.now.to_i)
+    end
+
+    context 'with a not existing property' do
+
+      let(:another) { FactoryGirl.create :property }
+      let(:params)  { { properties: [ { uri: a_uri(another), value: 'not-valid' } ] } }
+
+      it 'raises a not found property' do
+        page.driver.put(uri, params.to_json)
+        has_not_found_resource uri: params[:properties].map {|p| p[:uri]}
+      end
+
+      it 'does not create an history resource' do
+        expect { update }.to_not change { History.count }.by(1)
+      end
+    end
 
     # TODO add a system to validate the structure of sent data
   end

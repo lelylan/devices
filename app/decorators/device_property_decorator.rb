@@ -2,7 +2,7 @@ class DevicePropertyDecorator < ApplicationDecorator
   decorates :DeviceProperty
 
   def property_host
-    host = h.params[:host] || 'http://types.lelylan.com'
+    host = h.params[:host] || Settings.services.types
   end
 
   def uri

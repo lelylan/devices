@@ -62,6 +62,6 @@ end
 
 
 # URI generators
-def a_uri(resource)
-  "http://www.example.com/#{resource.class.to_s.pluralize.downcase}/#{resource.id}"
+def a_uri(resource, field = 'id')
+  "http://www.example.com/#{resource.class.to_s.pluralize.downcase}/#{resource.send(field)}"
 end
