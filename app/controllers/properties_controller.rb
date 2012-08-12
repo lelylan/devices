@@ -13,6 +13,7 @@ class PropertiesController < ApplicationController
       create_history
       render '/devices/show'
     rescue Mongoid::Errors::DocumentNotFound => e
+      params[:properties] ||= []
       render_404 'notifications.resource.not_found', params[:properties].map {|p| p[:uri]}
     end
   end

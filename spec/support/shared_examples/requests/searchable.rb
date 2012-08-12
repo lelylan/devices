@@ -53,3 +53,33 @@ shared_examples_for 'a searchable resource on properties' do
     end
   end
 end
+
+shared_examples_for 'a searchable resource on timing' do |field|
+
+  let(:value)   { Time.now - 3600 }
+  let!(:result) { FactoryGirl.create factory, resource_owner_id: user.id }
+
+  context '?from={Time.now-60}' do
+
+    before     { resource.update_attributes(field => value) }
+    let(:from) { Time.now - 60 }
+
+    it 'returns the searched resource' do
+      page.driver.get uri, from: from
+      contains_resource result
+      page.should_not have_content resource.id.to_s
+    end
+  end
+
+  context '?to={Time.now-60}' do
+
+    before   { result.update_attributes(field => value) }
+    let(:to) { Time.now - 60 }
+
+    it 'returns the searched resource' do
+      page.driver.get uri, to: to
+      contains_resource result
+      page.should_not have_content resource.id.to_s
+    end
+  end
+end

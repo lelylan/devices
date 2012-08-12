@@ -49,10 +49,10 @@ class ConsumptionsController < ApplicationController
 
   def search_params
     @consumptions = @consumptions.where('device_id' => find_id(params[:device])) if params[:device]
-    @consumptions = @consumptions.where(type: params[:type]) if params[:type]
-    @consumptions = @consumptions.where(unit: params[:unit]) if params[:unit]
-    @consumptions = @consumptions.where(:occur_at.gte => params[:from]) if params[:from]
-    @consumptions = @consumptions.where(:occur_at.lte => params[:to])   if params[:to]
+    @consumptions = @consumptions.where(type: params[:type])   if params[:type]
+    @consumptions = @consumptions.where(unit: params[:unit])   if params[:unit]
+    @consumptions = @consumptions.gte(occur_at: params[:from]) if params[:from]
+    @consumptions = @consumptions.lte(occur_at: params[:to])   if params[:to]
   end
 
   def pagination

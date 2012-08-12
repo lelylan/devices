@@ -20,8 +20,7 @@ feature 'ConsumptionsController' do
     it_behaves_like 'a listable resource'
     it_behaves_like 'a paginable resource'
     it_behaves_like 'a searchable resource', { type: 'instantaneous', unit: 'lives', device: a_uri(FactoryGirl.create :device) }
-
-    # TODO add tests based on time search (a shared example where you pass the start and end field names is fine as it is a common feature)
+    it_behaves_like 'a searchable resource on timing', 'occur_at'
   end
 
   context 'GET /consumptions/:id' do
