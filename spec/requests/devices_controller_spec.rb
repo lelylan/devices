@@ -19,7 +19,7 @@ feature 'DevicesController' do
 
     it_behaves_like 'a listable resource'
     it_behaves_like 'a paginable resource'
-    it_behaves_like 'a searchable resource', { name: 'My name is resource', type: a_uri(FactoryGirl.create :type) }
+    it_behaves_like 'a searchable resource', { name: 'My name is resource', pending: 'true', type: a_uri(FactoryGirl.create :type) }
     it_behaves_like 'a searchable resource on properties'
   end
 

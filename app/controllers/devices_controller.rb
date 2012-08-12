@@ -49,8 +49,9 @@ class DevicesController < ApplicationController
   end
 
   def search_params
-    @devices = @devices.where('name'    => /.*#{params[:name]}.*/i) if params[:name]
-    @devices = @devices.where('type_id' => find_id(params[:type]))  if params[:type]
+    @devices = @devices.where('name' => /.*#{params[:name]}.*/i)  if params[:name]
+    @devices = @devices.where(type_id: find_id(params[:type]))    if params[:type]
+    @devices = @devices.where(pending: find_id(params[:pending])) if params[:pending]
   end
 
   def search_properties(match = {})
