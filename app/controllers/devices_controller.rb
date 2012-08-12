@@ -56,6 +56,7 @@ class DevicesController < ApplicationController
   def search_properties(match = {})
     match.merge!({ property_id: Moped::BSON::ObjectId(find_id(params[:property])) }) if params[:property]
     match.merge!({ value: params[:value] }) if params[:value]
+    match.merge!({ physical: params[:physical] }) if params[:physical]
     @devices = @devices.where('properties' => { '$elemMatch' => match })
   end
 
