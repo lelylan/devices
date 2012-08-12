@@ -17,9 +17,8 @@ Clone the repository.
 
 ## Resources
 
-[Lelylan API](http://dev.lelylan.com)
-
-[Lelylan Devices API](http://dev.lelylan.com/rest/devices/)
+* [Lelylan API](http://dev.lelylan.com)
+* [Lelylan Devices API](http://dev.lelylan.com/rest/devices/)
 
 
 ## Contributing
