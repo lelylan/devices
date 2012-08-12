@@ -5,7 +5,7 @@ Devices API for Lelylan. [Learn more](http://dev.lelylan.com/rest/devices/)
 
 ## Requirements
 
-Mongoid is tested against MRI 1.9.3.
+Devices API is tested against MRI 1.9.3.
 
 
 ## Installation
@@ -70,9 +70,9 @@ Special thanks to the following people for submitting patches.
 
 ## Changelog
 
-See CHANGELOG
+See [CHANGELOG](CHANGELOG.md)
 
 
 ## Copyright
 
-Copyright (c) 2013 [Lelylan](http://lelylan.com). See LICENSE for details.
+Copyright (c) 2013 [Lelylan](http://lelylan.com). See [LICENSE](LICENSE.md) for details.
