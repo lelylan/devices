@@ -70,9 +70,9 @@ Special thanks to the following people for submitting patches.
 
 ## Changelog
 
-See [CHANGELOG](CHANGELOG.md)
+See [CHANGELOG](dev/CHANGELOG.md)
 
 
 ## Copyright
 
-Copyright (c) 2013 [Lelylan](http://lelylan.com). See [LICENSE](LICENSE.md) for details.
+Copyright (c) 2013 [Lelylan](http://lelylan.com). See [LICENSE](dev/LICENSE.md) for details.
