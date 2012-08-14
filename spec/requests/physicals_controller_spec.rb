@@ -16,7 +16,7 @@ feature 'PhysicalsController' do
 
     let!(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
     let(:uri)       { "/devices/#{resource.id}/physical" }
-    let(:params)    { { uri: "https://mqtt.lelylan.com/physicals/updated" } }
+    let(:params)    { { physical: { uri: "https://mqtt.lelylan.com/physicals/updated" } } }
 
     it_behaves_like 'an updatable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'

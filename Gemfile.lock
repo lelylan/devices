@@ -76,8 +76,6 @@ GEM
     draper (0.15.0)
       actionpack (~> 3.2)
       activesupport (~> 3.2)
-    email_validator (1.3.0)
-      activemodel
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -241,7 +239,6 @@ DEPENDENCIES
   debugger
   doorkeeper!
   draper (~> 0.15.0)
-  email_validator
   factory_girl_rails
   fuubar
   growl

@@ -1,6 +1,6 @@
 shared_examples_for 'a listable resource' do
 
-  let!(:not_owned) { FactoryGirl.create :function }
+  let!(:not_owned) { FactoryGirl.create factory }
 
   it 'shows all owned resources' do
     page.driver.get uri
