@@ -224,7 +224,7 @@ describe Device do
 
       let(:parsed) { resource.device_properties(properties).first }
 
-      it { parsed[:id].should       == status.id }
+      it { parsed[:id].should       == status.id.to_s }
       it { parsed[:value].should    == 'on' }
       it { parsed[:physical].should == '' }
     end
@@ -233,7 +233,7 @@ describe Device do
 
       let(:parsed) { resource.device_properties(properties).last }
 
-      it { parsed[:id].should       == intensity.id }
+      it { parsed[:id].should       == intensity.id.to_s }
       it { parsed[:value].should    == '' }
       it { parsed[:physical].should == '20' }
     end

@@ -3,30 +3,7 @@ en:
     resource:
       not_found: "Resource not found"
       not_valid: "Not valid attributes"
-      not_updatable: "This resource can not be updated (default status)"
-      not_deletable: "This resource can not be deleted (default status)"
-    connection:
-      found: "Resource connection already found"
-      not_found: "Resource connection not found"
-      not_valid_uri: "Not valid connection uri"
-    physical:
-      not_found: "Physical device not existing (insert one)"
     json:
       not_valid: "Not valid JSON"
-      not_array: "Not a valid JSON type associated"
-    pagination:
-      not_valid_page: "Not a valid page"
-      not_valid_per_page: "Not a valid per_page"
     access:
-      denied: "Access denied. HTTP Basic authentication failed"
-    type:
-      unauthorized: "Unauthorized access for the requested type resource"
-      not_found: "The type resource was not found. Please check the type URI."
-      error: "Something is tecnically wrong on the type service. Please write to dev@lelylan.com"
-      unavailable: "Type service is over capacity. Please try again in few minutes. If the problem persist write to dev@lelylan.com"
-    query:
-      time: "Not valid time"
-      time_message: "The value '%{value}' is not valid for the query param '%{key}'"
-    function:
-      not_found: "Function not found"
- 
+      not_authorized: "Token not valid"

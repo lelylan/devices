@@ -37,7 +37,7 @@ class Device
 
   def device_properties(properties)
     properties ||= []
-    properties.map {|p| { id: Moped::BSON::ObjectId(find_id p[:uri]), value: p[:value] || '', physical: p[:physical] || '' } }
+    properties.map {|p| { id: find_id(p[:uri]), value: p[:value] || '', physical: p[:physical] || '' } }
   end
 
   private

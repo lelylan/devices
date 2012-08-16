@@ -7,8 +7,8 @@ module ViewNotAuthorizedMethods
     json.status.should     == '401'
     json.request.should    == page.current_url
 
-    json.error.code.should        == 'notifications.unauthorized'
-    json.error.description.should == 'Access not authorized'
+    json.error.code.should        == 'notifications.access.not_authorized'
+    json.error.description.should == 'Token not valid'
   end
 
 end
