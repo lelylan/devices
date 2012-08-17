@@ -1,5 +1,5 @@
 class PhysicalsController < ApplicationController
-  doorkeeper_for :update, :destroy, scopes: [:write]
+  doorkeeper_for :update, :destroy, scopes: %w(devices resources).map(&:to_sym)
 
   before_filter :find_owned_resources
   before_filter :find_resource, only: %w(update destroy)
