@@ -7,7 +7,7 @@ class FunctionsController < ApplicationController
 
   def update
     begin
-      @device.synchronize_function_properties params[:uri], @properties
+      @device.synchronize_function_properties params[:function], @properties
       @device.pending = params[:pending] if params[:pending]
       @device.save
       create_history

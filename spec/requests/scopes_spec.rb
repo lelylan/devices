@@ -56,7 +56,7 @@ feature 'Scope' do
       it { should authorize "put    /devices/#{device.id}" }
       it { should authorize "delete /devices/#{device.id}" }
       it { should authorize "put    /devices/#{device.id}/properties" }
-      it { should authorize "put    /devices/#{device.id}/functions?uri=#{a_uri(function)}" }
+      it { should authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
       it { should authorize "put    /devices/#{device.id}/physical" }
       it { should authorize "delete /devices/#{device.id}/physical" }
       it { should authorize 'get    /histories' }

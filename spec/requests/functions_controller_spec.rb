@@ -23,10 +23,10 @@ feature 'FunctionsController' do
     let(:function_uri) { a_uri function }
 
     let(:properties) { [ { uri: a_uri(intensity), value: 'updated' } ] }
-    let(:params) { { pending: true, properties: properties } }
+    let(:params) { { pending: true, properties: properties, function: function_uri } }
     let(:update) { page.driver.put uri, params.to_json }
 
-    let(:uri) { "/devices/#{resource.id}/functions?uri=#{function_uri}" }
+    let(:uri) { "/devices/#{resource.id}/functions" }
 
     it_behaves_like 'an updatable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
@@ -49,7 +49,7 @@ feature 'FunctionsController' do
     context 'with a not existing property' do
 
       let(:another) { FactoryGirl.create :property }
-      let(:params)  { { properties: [ { uri: a_uri(another), value: 'not-valid' } ] } }
+      let(:params)  { { properties: [ { uri: a_uri(another), value: 'not-valid' } ], function: function_uri } }
 
       it 'raises a not found property' do
         page.driver.put(uri, params.to_json)
