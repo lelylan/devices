@@ -14,7 +14,7 @@ feature 'PropertiesController' do
 
   context 'PUT /devices/:id/properties' do
 
-    let(:resource)   { FactoryGirl.create :device, resource_owner_id: user.id }
+    let(:resource)   { FactoryGirl.create :device, :with_no_physical, resource_owner_id: user.id }
     let(:status)     { Property.find resource.properties.first.id }
     let(:intensity)  { Property.find resource.properties.last.id }
     let(:properties) { [ { uri: a_uri(status), value: 'updated' }, { uri: a_uri(intensity), value: '20' } ] }
@@ -38,7 +38,7 @@ feature 'PropertiesController' do
     it 'updates #updated_at' do
       old = Time.now - 60
       resource.update_attributes(updated_at: old)
-      expect { update }.to change { resource.reload.updated_at.to_i }.from(old.to_i).to(Time.now.to_i)
+      expect { update }.to change { resource.reload.updated_at.to_i }
     end
 
     context 'with a not existing property' do
@@ -56,6 +56,24 @@ feature 'PropertiesController' do
       end
     end
 
-    # TODO add a system to validate the structure of sent data
+    context 'with no physical connection' do
+
+      before { update }
+
+      it 'returns status code OK' do
+        page.status_code.should == 200
+      end
+    end
+
+    context 'with physical connection' do
+
+      let(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
+
+      before { update }
+
+      it 'returns status code Accepted' do
+        page.status_code.should == 202
+      end
+    end
   end
 end

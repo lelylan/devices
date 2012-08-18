@@ -197,7 +197,7 @@ describe Device do
         end
 
         it 'does not update the intensity value' do
-          resource.properties.last.value.should == ''
+          resource.properties.last.value.should be_nil
         end
       end
     end
@@ -226,7 +226,7 @@ describe Device do
 
       it { parsed[:id].should       == status.id.to_s }
       it { parsed[:value].should    == 'on' }
-      it { parsed[:physical].should == '' }
+      it { parsed[:physical].should be_nil }
     end
 
     context 'with intensity' do
@@ -234,7 +234,7 @@ describe Device do
       let(:parsed) { resource.device_properties(properties).last }
 
       it { parsed[:id].should       == intensity.id.to_s }
-      it { parsed[:value].should    == '' }
+      it { parsed[:value].should    be_nil }
       it { parsed[:physical].should == '20' }
     end
   end

@@ -14,7 +14,7 @@ feature 'FunctionsController' do
 
   context 'PUT /devices/:id/functions' do
 
-    let(:resource)  { FactoryGirl.create :device, resource_owner_id: user.id }
+    let(:resource)  { FactoryGirl.create :device, :with_no_physical, resource_owner_id: user.id }
     let(:status)    { Property.find resource.properties.first.id }
     let(:intensity) { Property.find resource.properties.last.id }
 
@@ -61,6 +61,24 @@ feature 'FunctionsController' do
       end
     end
 
-    # TODO add a system to validate the structure of sent data
+    context 'with no physical connection' do
+
+      before { update }
+
+      it 'returns status code OK' do
+        page.status_code.should == 200
+      end
+    end
+
+    context 'with physical connection' do
+
+      let(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
+
+      before { update }
+
+      it 'returns status code Accepted' do
+        page.status_code.should == 202
+      end
+    end
   end
 end

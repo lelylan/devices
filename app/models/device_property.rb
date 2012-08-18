@@ -5,8 +5,8 @@ class DeviceProperty
 
   field :_id, default: ->{ property_id }, type: Moped::BSON::ObjectId
   field :property_id, type: Moped::BSON::ObjectId
-  field :value,       default: ''
-  field :physical,    default: ''
+  field :value
+  field :physical
 
   embedded_in :device
 

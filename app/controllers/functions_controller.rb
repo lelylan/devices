@@ -4,6 +4,7 @@ class FunctionsController < ApplicationController
   before_filter :find_owned_resources
   before_filter :find_resource
   before_filter :syncrhronize
+  before_filter :status_code
 
   def update
     begin
@@ -11,7 +12,7 @@ class FunctionsController < ApplicationController
       @device.pending = params[:pending] if params[:pending]
       @device.save
       create_history
-      render '/devices/show'
+      render '/devices/show', status: @status_code
     rescue Mongoid::Errors::DocumentNotFound => e
       params[:properties] ||= []
       render_404 'notifications.resource.not_found', params[:properties].map {|p| p[:uri]}
@@ -38,5 +39,9 @@ class FunctionsController < ApplicationController
     History.create device: @device.uri, properties: params[:properties] do |history|
       history.resource_owner_id = current_user.id
     end
+  end
+
+  def status_code
+    @status_code = @device.physical ? 202 : 200
   end
 end

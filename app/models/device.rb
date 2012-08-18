@@ -37,7 +37,7 @@ class Device
 
   def device_properties(properties)
     properties ||= []
-    properties.map {|p| { id: find_id(p[:uri]), value: p[:value] || '', physical: p[:physical] || '' } }
+    properties.map {|p| { id: find_id(p[:uri]), value: p[:value], physical: p[:physical] } }
   end
 
   private
@@ -75,12 +75,12 @@ class Device
 
   def function_properties(function, properties)
     properties = find_function_properties(function, properties)
-    properties.map { |p| { id: p.property_id, value: p.value || '' } }
+    properties.map { |p| { id: p.property_id, value: p.value } }
   end
 
   def override_properties(properties)
     properties ||= []
-    properties.map { |p| { id: p[:id], value: p[:value] || '' } }
+    properties.map { |p| { id: p[:id], value: p[:value] } }
   end
 
   def find_function_properties(function, properties)

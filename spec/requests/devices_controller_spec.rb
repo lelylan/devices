@@ -21,6 +21,21 @@ feature 'DevicesController' do
     it_behaves_like 'a paginable resource'
     it_behaves_like 'a searchable resource', { name: 'My name is resource', pending: 'true', type: a_uri(FactoryGirl.create :type) }
     it_behaves_like 'a searchable resource on properties'
+
+    describe 'with advanced scope' do
+
+      describe 'when limits number of accessible devices' do
+
+        let(:result) { FactoryGirl.create :device, resource_owner_id: user.id }
+
+        before  { access_token.devices = [result.id]; access_token.save; }
+        before  { page.driver.get uri }
+        subject { page }
+
+        it { should have_content result.id.to_s }
+        it { should_not have_content resource.id.to_s }
+      end
+    end
   end
 
   context 'GET /devices/:id' do

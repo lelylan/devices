@@ -3,6 +3,7 @@ class DevicesController < ApplicationController
   doorkeeper_for :create, :update, :destroy, scopes: %w(devices resources).map(&:to_sym)
 
   before_filter :find_owned_resources
+  before_filter :find_scoped_resources
   before_filter :find_resource,     only: %w(show update destroy)
   before_filter :search_params,     only: %w(index)
   before_filter :search_properties, only: %w(index)
@@ -42,6 +43,11 @@ class DevicesController < ApplicationController
 
   def find_owned_resources
     @devices = Device.where(resource_owner_id: current_user.id)
+    @devices.each(&:synchronize_type_properties) # TODO performance caching (N+1)
+  end
+
+  def find_scoped_resources
+    @devices = @devices.in(id: doorkeeper_token.devices) if not doorkeeper_token.devices.empty?
   end
 
   def find_resource

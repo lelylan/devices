@@ -7,7 +7,9 @@ FactoryGirl.define do
   end
 
   trait :with_no_physical do
-    physical = nil
+    after(:create) do |device|
+      device.update_attributes(physical: nil)
+    end
   end
 
   trait :with_device_properties do
