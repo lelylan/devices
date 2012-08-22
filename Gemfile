@@ -11,6 +11,7 @@ gem 'addressable'
 gem 'bcrypt-ruby', require: 'bcrypt'
 
 group :development, :test do
+  gem 'foreman'
   gem 'rspec-rails', '~> 2.6'
   gem 'shoulda'
   gem 'capybara'
@@ -23,7 +24,6 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'hashie'
   gem 'rails_best_practices'
-  gem 'test-unit'
   gem 'debugger'
 end
 
