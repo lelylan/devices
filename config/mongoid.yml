@@ -40,3 +40,12 @@ test:
       options:
         consistency: :strong
   options:
+production:
+  sessions:
+    default:
+      uri: <%= ENV['MONGOLAB_DEVICES_URL'] %>
+    people:
+      uri: <%= ENV['MONGOLAB_PEOPLE_URL'] %>
+    types:
+      uri: <%= ENV['MONGOLAB_TYPES_URL'] %>
+  options:
