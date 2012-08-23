@@ -11,6 +11,7 @@ gem 'yajl-ruby'
 gem 'rails_config'
 gem 'addressable'
 gem 'bcrypt-ruby', require: 'bcrypt'
+gem 'bundler'
 
 group :development, :test do
   gem 'foreman'

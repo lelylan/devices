@@ -233,6 +233,7 @@ PLATFORMS
 DEPENDENCIES
   addressable
   bcrypt-ruby
+  bundler
   capybara
   capybara-json
   coffee-rails (~> 3.2.1)
