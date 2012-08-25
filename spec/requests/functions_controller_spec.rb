@@ -31,6 +31,7 @@ feature 'FunctionsController' do
     it_behaves_like 'an updatable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
+    it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
 
     it 'creates an history resource' do
       expect { update }.to change { History.count }.by(1)

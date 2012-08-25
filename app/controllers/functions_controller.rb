@@ -2,6 +2,7 @@ class FunctionsController < ApplicationController
   doorkeeper_for :update, scopes: %w(devices resources).map(&:to_sym)
 
   before_filter :find_owned_resources
+  before_filter :find_filtered_resources
   before_filter :find_resource
   before_filter :syncrhronize
   before_filter :status_code
@@ -27,6 +28,14 @@ class FunctionsController < ApplicationController
 
   def find_resource
     @device = @devices.find(params[:id])
+  end
+
+  def find_filtered_resources
+    # TODO solution that temporarly solve the bug that should let you use 
+    # @devices.in(id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
+    if not doorkeeper_token.device_ids.empty?
+      doorkeeper_token.device_ids.each {|id| @devices = @devices.or(id: id) }
+    end
   end
 
   def syncrhronize

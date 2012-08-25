@@ -21,21 +21,7 @@ feature 'DevicesController' do
     it_behaves_like 'a paginable resource'
     it_behaves_like 'a searchable resource', { name: 'My name is resource', pending: 'true', type: a_uri(FactoryGirl.create :type) }
     it_behaves_like 'a searchable resource on properties'
-
-    describe 'with advanced scope' do
-
-      describe 'when limits number of accessible devices' do
-
-        let(:result) { FactoryGirl.create :device, resource_owner_id: user.id }
-
-        before  { access_token.devices = [result.id]; access_token.save; }
-        before  { page.driver.get uri }
-        subject { page }
-
-        it { should have_content result.id.to_s }
-        it { should_not have_content resource.id.to_s }
-      end
-    end
+    it_behaves_like 'a filterable list'
   end
 
   context 'GET /devices/:id' do
@@ -47,6 +33,7 @@ feature 'DevicesController' do
     it_behaves_like 'a changeable host'
     it_behaves_like 'a not owned resource', 'page.driver.get(uri)'
     it_behaves_like 'a not found resource', 'page.driver.get(uri)'
+    it_behaves_like 'a filterable resource', 'page.driver.get(uri)'
   end
 
   context 'POST /devices' do
@@ -73,6 +60,7 @@ feature 'DevicesController' do
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a validated resource', 'page.driver.put(uri, { name: "" }.to_json)', { method: 'PUT', error: 'can\'t be blank' }
+    it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
   end
 
   context 'DELETE /devices/:id' do
@@ -82,5 +70,6 @@ feature 'DevicesController' do
     it_behaves_like 'a deletable resource'
     it_behaves_like 'a not owned resource', 'page.driver.delete(uri)'
     it_behaves_like 'a not found resource', 'page.driver.delete(uri)'
+    it_behaves_like 'a filterable resource', 'page.driver.delete(uri)'
   end
 end

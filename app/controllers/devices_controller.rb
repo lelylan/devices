@@ -3,7 +3,7 @@ class DevicesController < ApplicationController
   doorkeeper_for :create, :update, :destroy, scopes: %w(devices resources).map(&:to_sym)
 
   before_filter :find_owned_resources
-  before_filter :find_scoped_resources
+  before_filter :find_filtered_resources
   before_filter :find_resource,     only: %w(show update destroy)
   before_filter :search_params,     only: %w(index)
   before_filter :search_properties, only: %w(index)
@@ -46,8 +46,12 @@ class DevicesController < ApplicationController
     @devices.each(&:synchronize_type_properties) # TODO performance caching (N+1)
   end
 
-  def find_scoped_resources
-    @devices = @devices.in(id: doorkeeper_token.devices) if not doorkeeper_token.devices.empty?
+  def find_filtered_resources
+    # TODO solution that temporarly solve the bug that should let you use 
+    # @devices.in(id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
+    if not doorkeeper_token.device_ids.empty?
+      doorkeeper_token.device_ids.each {|id| @devices = @devices.or(id: id) }
+    end
   end
 
   def find_resource

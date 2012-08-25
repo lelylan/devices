@@ -2,6 +2,7 @@ class PhysicalsController < ApplicationController
   doorkeeper_for :update, :destroy, scopes: %w(devices resources).map(&:to_sym)
 
   before_filter :find_owned_resources
+  before_filter :find_filtered_resources
   before_filter :find_resource, only: %w(update destroy)
 
   def update
@@ -21,6 +22,14 @@ class PhysicalsController < ApplicationController
 
   def find_owned_resources
     @devices = Device.where(resource_owner_id: current_user.id)
+  end
+
+  def find_filtered_resources
+    # TODO solution that temporarly solve the bug that should let you use 
+    # @devices.in(id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
+    if not doorkeeper_token.device_ids.empty?
+      doorkeeper_token.device_ids.each {|id| @devices = @devices.or(id: id) }
+    end
   end
 
   def find_resource
