@@ -19,7 +19,7 @@ module Devices
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir[Rails.root.join('app', 'controllers', '{**}')]
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '{**}')]
-    config.autoload_paths += %W(#{config.root}/lib/validators)
+    config.autoload_paths += Dir[Rails.root.join('lib', '{**}')]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -37,7 +37,7 @@ module Devices
     # config.i18n.default_locale = :de
 
     # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
@@ -58,5 +58,8 @@ module Devices
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Middlewares
+    config.middleware.use 'Hostable'
   end
 end
