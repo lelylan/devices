@@ -1,4 +1,4 @@
-shared_examples_for 'a changeable host' do
+shared_examples_for 'a proxiable service' do
 
   let(:decorator)  { "#{controller.classify}Decorator".constantize }
   let(:changeable) { decorator.decorate(resource) }
@@ -9,11 +9,13 @@ shared_examples_for 'a changeable host' do
     changeable.uri.should == uri
   end
 
-  #context 'with host' do
+  context 'with x-host header' do
 
-    #it 'changes the URI' do
-      #page.driver.get uri, host: 'http://www.lelylan.com'
-      #changeable.uri.should match('http://www.lelylan.com')
-    #end
-  #end
+    before { page.driver.header 'x-host', 'api.lelylan.com' }
+
+    it 'changes the URI' do
+      page.driver.get uri
+      changeable.uri.should match('http://api.lelylan.com')
+    end
+  end
 end
