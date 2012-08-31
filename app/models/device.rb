@@ -8,6 +8,10 @@ class Device
   field :type_id, type: Moped::BSON::ObjectId
   field :pending, type: Boolean, default: false
 
+  index({ resource_owner_id: 1 })
+  index({ type_id: 1 })
+  index({ pending: 1 })
+
   attr_accessor  :type
   attr_protected :resource_owner_id, :type_id
 

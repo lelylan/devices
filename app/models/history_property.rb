@@ -7,6 +7,8 @@ class HistoryProperty
   field :value,    default: ''
   field :physical, default: ''
 
+  index({ property_id: 1, value: 1 })
+
   attr_accessor  :uri
   attr_protected :property_id
 

@@ -6,6 +6,6 @@ class DeviceDecorator < ApplicationDecorator
   end
 
   def type_uri
-    "#{h.request.protocol}#{type_host}/types/#{model.type_id}"
+    "#{h.request.protocol}#{types_host}/types/#{model.type_id}"
   end
 end

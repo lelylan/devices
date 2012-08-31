@@ -8,6 +8,8 @@ class DeviceProperty
   field :value
   field :physical
 
+  index({ property_id: 1, value: 1 })
+
   embedded_in :device
 
   validates :property_id, presence: true
