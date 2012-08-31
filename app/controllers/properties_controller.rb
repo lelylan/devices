@@ -1,5 +1,5 @@
 class PropertiesController < ApplicationController
-  doorkeeper_for :update, scopes: %w(devices resources).map(&:to_sym)
+  doorkeeper_for :update, scopes: Settings.scopes.write.map(&:to_sym)
 
   before_filter :find_owned_resources
   before_filter :find_filtered_resources

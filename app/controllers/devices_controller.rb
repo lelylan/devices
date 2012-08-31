@@ -1,6 +1,7 @@
 class DevicesController < ApplicationController
-  doorkeeper_for :index, :show, scopes: %w(devices.read devices resources.read resources).map(&:to_sym)
-  doorkeeper_for :create, :update, :destroy, scopes: %w(devices resources).map(&:to_sym)
+  doorkeeper_for :index, :show, scopes: Settings.scopes.read.map(&:to_sym)
+  doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
+
 
   before_filter :find_owned_resources
   before_filter :find_filtered_resources

@@ -6,3 +6,12 @@ services:
   types: 'https://types.lelylan.com'
   people: 'https://people.lelylan.com'
   locations: 'https://locations.lelylan.com'
+scopes:
+  read:
+    - resources
+    - 'resources-read'
+    - devices
+    - 'devices-read'
+  write:
+    - resources
+    - devices
