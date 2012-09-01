@@ -1,3 +1,5 @@
+require 'addressable/uri'
+
 module Resourceable
   extend ActiveSupport::Concern
 
