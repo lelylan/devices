@@ -41,7 +41,12 @@ class Device
 
   def device_properties(properties)
     properties ||= []
-    properties.map {|p| { id: find_id(p[:uri]), value: p[:value], physical: p[:physical] } }
+    properties.map do |p| 
+      result = { id: find_id(p[:uri]) }
+      result[:value]    = p[:value]    if p[:value]
+      result[:physical] = p[:physical] if p[:physical]
+      result
+    end
   end
 
   private
