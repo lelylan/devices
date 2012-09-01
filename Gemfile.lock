@@ -106,6 +106,7 @@ GEM
     i18n (0.6.0)
     journey (1.0.4)
     json (1.7.4)
+    kgio (2.7.4)
     launchy (2.1.1)
       addressable (~> 2.3)
     libwebsocket (0.1.5)
@@ -165,6 +166,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
+    raindrops (0.10.0)
     rake (0.9.2.2)
     rb-fchange (0.0.5)
       ffi
@@ -220,6 +222,10 @@ GEM
     uglifier (1.0.4)
       execjs (>= 0.3.0)
       multi_json (>= 1.0.2)
+    unicorn (4.3.1)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
     webmock (1.8.7)
       addressable (>= 2.2.7)
       crack (>= 0.1.7)
@@ -260,5 +266,6 @@ DEPENDENCIES
   shoulda
   spork (~> 1.0rc)
   uglifier (~> 1.0.3)
+  unicorn
   webmock
   yajl-ruby
