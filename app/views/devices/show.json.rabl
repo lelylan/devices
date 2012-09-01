@@ -8,7 +8,7 @@ node(:type) { |d| { uri: d.type_uri } }
 node(:properties) do |d|
   d.properties.map do |p|
     p = DevicePropertyDecorator.decorate p
-    { uri: p.uri, value: p.value }
+    { uri: p.uri, id: p.id, value: p.value, physical: p.physical }
   end
 end
 

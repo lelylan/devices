@@ -7,8 +7,11 @@ module HelpersViewMethods
     json.pending.should  == device.pending
 
     json.properties.each_with_index do |property, i|
-      property.uri.should   == DevicePropertyDecorator.decorate(device.properties[i]).uri
-      property.value.should == device.properties[i].value
+      device_property = DevicePropertyDecorator.decorate(device.properties[i])
+      property.uri.should      == device_property.uri
+      property.id.should       == device_property.id.to_s
+      property.value.should    == device_property.value
+      property.physical.should == device_property.physical
     end
 
     json.physical.should eq (device.physical ? {'uri' => device.physical.uri} : {})

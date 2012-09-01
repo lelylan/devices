@@ -63,6 +63,6 @@ module Devices
     config.middleware.use 'Hostable'
 
     # Set the default Logger in application.rb to STDOUT, otherwise logging with unicorn doesn't work
-    config.logger = Logger.new(STDOUT)
+    config.logger = Logger.new(STDOUT) unless Rails.env.test?
   end
 end
