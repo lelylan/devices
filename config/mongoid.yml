@@ -60,6 +60,6 @@ production:
       uri: <%= ENV['MONGOLAB_PEOPLE_URL'] %>
     types:
       uri: <%= ENV['MONGOLAB_TYPES_URL'] %>
-    queues:
+    jobs:
       uri: <%= ENV['MONGOLAB_JOBS_URL'] %>
   options:
