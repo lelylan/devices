@@ -37,7 +37,7 @@ provide specs to your contribution.
 
 ## Spec guidelines
 
-Follow [rspec best practices](https://docs.google.com/document/d/1gi00-wwPaLk5VvoAJhBVNh9Htw4Rwmj-Ut88T4M2MwI/edit?hl=en#) guidelines.
+Follow [betterspecs.org](http://betterspecs.org) guidelines.
 
 
 ## Coding guidelines
