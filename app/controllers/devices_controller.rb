@@ -9,6 +9,8 @@ class DevicesController < ApplicationController
   before_filter :search_properties, only: %w(index)
   before_filter :pagination,        only: %w(index)
 
+  after_filter :create_event, only: %w(create update destroy)
+
   def index
     @devices = @devices.limit(params[:per])
   end
@@ -76,5 +78,9 @@ class DevicesController < ApplicationController
     params[:per] = Settings.pagination.per if params[:per] == 0 
     params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
     @devices = @devices.gt(id: find_id(params[:start])) if params[:start]
+  end
+
+  def create_event
+    Event.create(resource: 'device', event: params[:action], data: JSON.parse(response.body))
   end
 end

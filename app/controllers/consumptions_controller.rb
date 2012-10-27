@@ -7,6 +7,8 @@ class ConsumptionsController < ApplicationController
   before_filter :search_params, only: %w(index)
   before_filter :pagination,    only: %w(index)
 
+  after_filter :create_event, only: %w(create update destroy)
+
   def index
     @consumptions = @consumptions.limit(params[:per])
   end
@@ -60,5 +62,9 @@ class ConsumptionsController < ApplicationController
     params[:per] = Settings.pagination.per if params[:per] == 0 
     params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
     @consumptions = @consumptions.gt(id: find_id(params[:start])) if params[:start]
+  end
+
+  def create_event
+    Event.create(resource: 'consumption', event: params[:action], data: JSON.parse(response.body))
   end
 end

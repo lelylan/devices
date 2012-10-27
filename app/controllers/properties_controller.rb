@@ -7,6 +7,8 @@ class PropertiesController < ApplicationController
   before_filter :syncrhronize
   before_filter :status_code
 
+  after_filter :create_event, only: %w(update)
+
   def update
     begin
       @device.properties_attributes = @properties
@@ -52,5 +54,9 @@ class PropertiesController < ApplicationController
 
   def status_code
     @status_code = @device.physical ? 202 : 200
+  end
+
+  def create_event
+    Event.create(resource: 'status', event: params[:action], data: params[:properties])
   end
 end

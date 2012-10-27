@@ -64,6 +64,7 @@ feature 'ConsumptionsController' do
 
     it_behaves_like 'a creatable resource'
     it_behaves_like 'a validated resource', 'page.driver.post(uri, {}.to_json)', { method: 'POST', error: 'can\'t be blank' }
+    it_behaves_like 'a registered event', 'page.driver.post(uri, params.to_json)', {}
   end
 
   context 'PUT /consumptions/:id' do
@@ -76,6 +77,7 @@ feature 'ConsumptionsController' do
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a validated resource', 'page.driver.put(uri, { type: "" }.to_json)', { method: 'PUT', error: 'is not included in the list' }
+    it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)', { type: '' }
   end
 
   context 'DELETE /consumptions/:id' do
@@ -85,5 +87,6 @@ feature 'ConsumptionsController' do
     it_behaves_like 'a deletable resource'
     it_behaves_like 'a not owned resource', 'page.driver.delete(uri)'
     it_behaves_like 'a not found resource', 'page.driver.delete(uri)'
+    it_behaves_like 'a registered event', 'page.driver.delete(uri)'
   end
 end
