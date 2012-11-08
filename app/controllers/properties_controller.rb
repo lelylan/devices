@@ -1,4 +1,6 @@
 class PropertiesController < ApplicationController
+  eventable_for 'device', resource: 'devices', prefix: 'property', only: %w(update)
+
   doorkeeper_for :update, scopes: Settings.scopes.write.map(&:to_sym)
 
   before_filter :find_owned_resources
@@ -6,8 +8,6 @@ class PropertiesController < ApplicationController
   before_filter :find_resource
   before_filter :syncrhronize
   before_filter :status_code
-
-  after_filter :create_event, only: %w(update)
 
   def update
     begin
@@ -22,14 +22,14 @@ class PropertiesController < ApplicationController
     end
   end
 
-  private 
+  private
 
   def find_owned_resources
     @devices = Device.where(resource_owner_id: current_user.id)
   end
 
   def find_filtered_resources
-    # TODO solution that temporarly solve the bug that should let you use 
+    # TODO solution that temporarly solve the bug that should let you use
     # @devices.in(id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
     if not doorkeeper_token.device_ids.empty?
       doorkeeper_token.device_ids.each {|id| @devices = @devices.or(id: id) }
@@ -54,9 +54,5 @@ class PropertiesController < ApplicationController
 
   def status_code
     @status_code = @device.physical ? 202 : 200
-  end
-
-  def create_event
-    Event.create(resource: 'status', event: params[:action], data: params[:properties])
   end
 end

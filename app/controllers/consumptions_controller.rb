@@ -1,5 +1,5 @@
 class ConsumptionsController < ApplicationController
-  eventable_for  'consumption', resource: 'devices', prefix: 'consumption', only: %w(create)
+  eventable_for 'consumption', resource: 'devices', prefix: 'consumption', resource_id: 'device_id', only: %w(create)
 
   doorkeeper_for :index, :show, scopes: Settings.scopes.read.map(&:to_sym)
   doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
