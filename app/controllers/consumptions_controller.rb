@@ -1,4 +1,6 @@
 class ConsumptionsController < ApplicationController
+  eventable_for  'consumption', resource: 'devices', prefix: 'consumption', only: %w(create)
+
   doorkeeper_for :index, :show, scopes: Settings.scopes.read.map(&:to_sym)
   doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
 
@@ -6,8 +8,6 @@ class ConsumptionsController < ApplicationController
   before_filter :find_resource, only: %w(show update destroy)
   before_filter :search_params, only: %w(index)
   before_filter :pagination,    only: %w(index)
-
-  after_filter :create_event, only: %w(create)
 
   def index
     @consumptions = @consumptions.limit(params[:per])
@@ -62,15 +62,5 @@ class ConsumptionsController < ApplicationController
     params[:per] = Settings.pagination.per if params[:per] == 0
     params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
     @consumptions = @consumptions.gt(id: find_id(params[:start])) if params[:start]
-  end
-
-  def create_event
-    e = Event.create(
-      resource_owner_id: current_user.id,
-      resource_id: @consumption.device_id,
-      resource: 'consumption',
-      event: 'created',
-      data: JSON.parse(response.body)
-    )
   end
 end
