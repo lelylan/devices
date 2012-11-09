@@ -11,7 +11,7 @@
 #
 # Examples:
 #
-#   eventable_for 'subscription', resource: 'devices', prefix: 'consumption', resource_id: 'device_id', only: %w(create)
+#   eventable_for :subscription, resource: 'devices', prefix: 'consumption', resource_id: 'device_id', only: %w(create)
 #
 
 module Eventable
@@ -25,7 +25,7 @@ module Eventable
 
     def eventable_for(name, options)
       after_filter :create_event, only: options[:only]
-      @resource      = name
+      @resource      = name.to_s
       @resource_name = options[:resource]
       @event_prefix  = options[:prefix]
       @resource_id   = options[:resource_id] || 'id'
@@ -37,7 +37,7 @@ module Eventable
   def create_event
     Event.create(
       resource_owner_id: current_user.id,
-      resource_id: self.class.resource_id,
+      resource_id: resource.send(self.class.resource_id),
       resource: self.class.resource_name,
       event: event,
       data: JSON.parse(response.body))
