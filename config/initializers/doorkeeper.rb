@@ -1,6 +1,6 @@
 # Doorkiper configuration
 Doorkeeper.configure do
-  orm :mongoid
+  orm :mongoid3
 end
 
 # Doorkeeper models extensions
