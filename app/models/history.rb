@@ -6,9 +6,9 @@ class History
   field :resource_owner_id, type: Moped::BSON::ObjectId
   field :device_id, type: Moped::BSON::ObjectId
 
-  index({ resource_owner_id: 1 })
-  index({ device_id: 1 })
-  index({ created_at: 1 })
+  index({ resource_owner_id: 1 }, { background: true })
+  index({ device_id: 1 }, { background: true })
+  index({ created_at: 1 }, { background: true })
 
   attr_accessor  :device
   attr_protected :device_id, :resource_owner_id

@@ -8,7 +8,7 @@ class DeviceProperty
   field :value
   field :physical
 
-  index({ property_id: 1, value: 1 })
+  index({ property_id: 1, value: 1 }, { background: true })
 
   embedded_in :device
 

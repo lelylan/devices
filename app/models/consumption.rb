@@ -12,11 +12,11 @@ class Consumption
   field :end_at,   type: Time
   field :duration, type: Float
 
-  index({ resource_owner_id: 1 })
-  index({ device_id: 1 })
-  index({ type: 1 })
-  index({ unit: 1 })
-  index({ occur_at: 1 })
+  index({ resource_owner_id: 1 }, { background: true })
+  index({ device_id: 1 }, { background: true })
+  index({ type: 1 }, { background: true })
+  index({ unit: 1 }, { background: true })
+  index({ occur_at: 1 }, { background: true })
 
   attr_accessor  :device
   attr_protected :resource_owner_id, :device_id
@@ -48,7 +48,7 @@ class Consumption
     type == 'istantaneous'
   end
 
-  private 
+  private
 
   def calculate_end_at
     occur_at + duration

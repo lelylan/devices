@@ -8,9 +8,9 @@ class Device
   field :type_id, type: Moped::BSON::ObjectId
   field :pending, type: Boolean, default: false
 
-  index({ resource_owner_id: 1 })
-  index({ type_id: 1 })
-  index({ pending: 1 })
+  index({ resource_owner_id: 1 }, { background: true })
+  index({ type_id: 1 }, { background: true })
+  index({ pending: 1 }, { background: true })
 
   attr_accessor  :type
   attr_protected :resource_owner_id, :type_id
@@ -41,7 +41,7 @@ class Device
 
   def device_properties(properties)
     properties ||= []
-    properties.map do |p| 
+    properties.map do |p|
       result = { id: find_id(p[:uri]) }
       result[:value]    = p[:value]    if p[:value]
       result[:physical] = p[:physical] if p[:physical]
