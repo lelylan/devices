@@ -4,30 +4,38 @@ class Device
   include Resourceable
 
   field :resource_owner_id, type: Moped::BSON::ObjectId
+  field :creator_id, type: Moped::BSON::ObjectId
   field :name
   field :type_id, type: Moped::BSON::ObjectId
   field :pending, type: Boolean, default: false
 
   index({ resource_owner_id: 1 }, { background: true })
+  index({ creator_id: 1 }, { background: true })
   index({ type_id: 1 }, { background: true })
   index({ pending: 1 }, { background: true })
 
   attr_accessor  :type
-  attr_protected :resource_owner_id, :type_id
+  attr_protected :resource_owner_id, :creator_id, :type_id
 
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
   embeds_one  :physical,   class_name: 'DevicePhysical', cascade_callbacks: true
 
   validates :resource_owner_id, presence: true
+  validates :creator_id, presence: true
   validates :name, presence: true
   validates :type, presence: true, uri: true, on: :create
 
   accepts_nested_attributes_for :properties, allow_destroy: true
 
   before_create :set_type_uri, :synchronize_type_properties
+  before_validation(on: 'create') { set_creator_id }
 
   def set_type_uri
     self.type_id = find_id type
+  end
+
+  def set_creator_id
+    self.creator_id = resource_owner_id
   end
 
   def synchronize_type_properties
