@@ -1,4 +1,4 @@
-# Doorkiper configuration
+# Doorkeeper configuration
 Doorkeeper.configure do
   orm :mongoid3
 end

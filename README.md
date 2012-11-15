@@ -1,6 +1,6 @@
 # Devices API
 
-Devices API for Lelylan. [Learn more](http://dev.lelylan.com/rest/devices/)
+Devices API for Lelylan. [Learn more](http://dev.lelylan.com/api/devices/)
 
 
 ## Requirements
@@ -18,12 +18,12 @@ Clone the repository.
 ## Resources
 
 * [Lelylan API](http://dev.lelylan.com)
-* [Lelylan Devices API](http://dev.lelylan.com/rest/devices/)
+* [Lelylan Devices API](http://dev.lelylan.com/api/devices/)
 
 
 ## Contributing
 
-Fork the repo on github and send a pull requests with topic branches. Do not forget to 
+Fork the repo on github and send a pull requests with topic branches. Do not forget to
 provide specs to your contribution.
 
 
@@ -51,7 +51,7 @@ Use the [issue tracker](http://github.com/lelylan/devices/issues) for bugs.
 [Mail](mailto:touch@lelylan.com) or [Tweet](http://twitter.com/lelylan) us for any idea that can improve the project.
 
 
-## Links 
+## Links
 
 * [GIT Repository](http://github.com/lelylan/devices)
 * [Lelylan Dev Center](http://dev.lelylan.com)
