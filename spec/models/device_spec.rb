@@ -3,9 +3,10 @@ require 'spec_helper'
 describe Device do
 
   it { should validate_presence_of :resource_owner_id }
-  it { should validate_presence_of :creator_id }
   it { should validate_presence_of :name }
   it { should validate_presence_of :type }
+  #it { should validate_presence_of :creator_id }
+  #it { should validate_presence_of :secret }
 
   its(:pending) { should == false }
 
@@ -27,6 +28,7 @@ describe Device do
     let(:type)     { Type.find resource.type_id }
 
     it 'sets the type_id field' do
+      pp resource
       resource.type_id.should == type.id
     end
   end

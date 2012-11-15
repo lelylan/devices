@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :device do
-    resource_owner_id Settings.resource_id
+    resource_owner_id { FactoryGirl.create(:user).id }
     type { a_uri FactoryGirl.create(:type) }
     name 'Closet dimmer'
     physical { FactoryGirl.build(:device_physical) }

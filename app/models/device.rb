@@ -6,6 +6,7 @@ class Device
   field :resource_owner_id, type: Moped::BSON::ObjectId
   field :creator_id, type: Moped::BSON::ObjectId
   field :name
+  field :secret
   field :type_id, type: Moped::BSON::ObjectId
   field :pending, type: Boolean, default: false
 
@@ -21,14 +22,16 @@ class Device
   embeds_one  :physical,   class_name: 'DevicePhysical', cascade_callbacks: true
 
   validates :resource_owner_id, presence: true
-  validates :creator_id, presence: true
+  validates :creator_id,  presence: true
   validates :name, presence: true
+  validates :secret, presence: true
   validates :type, presence: true, uri: true, on: :create
 
   accepts_nested_attributes_for :properties, allow_destroy: true
 
   before_create :set_type_uri, :synchronize_type_properties
   before_validation(on: 'create') { set_creator_id }
+  before_validation(on: 'create') { set_secret }
 
   def set_type_uri
     self.type_id = find_id type
@@ -36,6 +39,10 @@ class Device
 
   def set_creator_id
     self.creator_id = resource_owner_id
+  end
+
+  def set_secret
+    self.secret = Doorkeeper::OAuth::Helpers::UniqueToken.generate
   end
 
   def synchronize_type_properties
