@@ -6,6 +6,7 @@ Devices::Application.routes.draw do
       put    'physical'   => 'physicals#update'
       delete 'physical'   => 'physicals#destroy'
       get    'pending'    => 'pendings#show'
+      get    'secret'     => 'devices#secret'
     end
   end
 

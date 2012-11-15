@@ -6,6 +6,7 @@ module HelpersViewMethods
     json.type.uri.should  == device.type_uri
     json.pending.should   == device.pending
     json.activated.should == (device.activated_at ? true : false)
+    json.secret.should    == nil
 
     json.properties.each_with_index do |property, i|
       device_property = DevicePropertyDecorator.decorate(device.properties[i])
