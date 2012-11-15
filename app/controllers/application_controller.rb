@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include Rescueable
   include Viewable
   include Eventable
+  include Signable
 
   private
 

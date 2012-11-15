@@ -1,13 +1,14 @@
 class FunctionsController < ApplicationController
-  eventable_for 'device', resource: 'devices', prefix: 'property', only: %w(update)
-
   doorkeeper_for :update, scopes: Settings.scopes.write.map(&:to_sym)
 
   before_filter :find_owned_resources
   before_filter :find_filtered_resources
   before_filter :find_resource
+  before_filter :verify_signature
   before_filter :syncrhronize
   before_filter :status_code
+
+  eventable_for 'device', resource: 'devices', prefix: 'property', only: %w(update)
 
   def update
     begin
@@ -53,6 +54,8 @@ class FunctionsController < ApplicationController
   end
 
   def status_code
-    @status_code = @device.physical ? 202 : 200
+    source = params[:source] || request.headers['X-Request-Source']
+    forward_to_physical = (@device.physical and source != 'physical')
+    @status_code = forward_to_physical ? 202 : 200
   end
 end
