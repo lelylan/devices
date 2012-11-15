@@ -9,6 +9,7 @@ class Device
   field :secret
   field :type_id, type: Moped::BSON::ObjectId
   field :pending, type: Boolean, default: false
+  field :activated_at, type: DateTime, default: ->{ Time.now }
 
   index({ resource_owner_id: 1 }, { background: true })
   index({ creator_id: 1 }, { background: true })
@@ -16,7 +17,7 @@ class Device
   index({ pending: 1 }, { background: true })
 
   attr_accessor  :type
-  attr_protected :resource_owner_id, :creator_id, :type_id
+  attr_protected :resource_owner_id, :creator_id, :type_id, :activated_at
 
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
   embeds_one  :physical,   class_name: 'DevicePhysical', cascade_callbacks: true

@@ -14,6 +14,7 @@ shared_examples_for 'a showable resource' do
 
   it 'view the owned resource' do
     page.driver.get uri
+    save_and_open_page
     page.status_code.should == 200
     has_resource resource
   end

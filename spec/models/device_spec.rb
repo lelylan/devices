@@ -14,7 +14,9 @@ describe Device do
   it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:type) } }
 
   it { should_not allow_mass_assignment_of :resource_owner_id }
+  it { should_not allow_mass_assignment_of :creator_id }
   it { should_not allow_mass_assignment_of :type_id }
+  it { should_not allow_mass_assignment_of :activated_at }
 
   it_behaves_like 'a boolean' do
     let(:field)       { 'pending' }
@@ -28,7 +30,6 @@ describe Device do
     let(:type)     { Type.find resource.type_id }
 
     it 'sets the type_id field' do
-      pp resource
       resource.type_id.should == type.id
     end
   end

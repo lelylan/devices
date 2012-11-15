@@ -1,10 +1,11 @@
 module HelpersViewMethods
   def has_device(device, json = nil)
-    json.uri.should  == device.uri
-    json.id.should   == device.id.to_s
-    json.name.should == device.name
-    json.type.uri.should == device.type_uri
-    json.pending.should  == device.pending
+    json.uri.should       == device.uri
+    json.id.should        == device.id.to_s
+    json.name.should      == device.name
+    json.type.uri.should  == device.type_uri
+    json.pending.should   == device.pending
+    json.activated.should == (device.activated_at ? true : false)
 
     json.properties.each_with_index do |property, i|
       device_property = DevicePropertyDecorator.decorate(device.properties[i])

@@ -19,3 +19,4 @@ end
 node(:pending)    { |d| d.pending }
 node(:created_at) { |d| d.created_at }
 node(:updated_at) { |d| d.updated_at }
+node(:activated)  { |d| d.activated_at ? true : false }
