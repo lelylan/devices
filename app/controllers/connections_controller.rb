@@ -10,7 +10,25 @@ class ConnectionsController < ApplicationController
   before_filter :create_access_token
 
   def create
-    render 'devices/show'
+    connection = Faraday.new(url: @device.physical.uri)
+    body       = { uri: device_url(@device), access_token: @token.token }
+    headers    = { 'Accept' => 'application/json',
+                   'Content-Type' => 'application/json',
+                   'X-Physical-Signature' => Signature.sign(body, @device.secret) }
+
+    response = connection.post do |req|
+      req.url '/physicals'
+      req.headers = headers
+      req.body = body
+    end
+
+    if response.status == 200
+      render 'devices/show'
+    else
+      uri = "#{@device.physical.uri}/physicals"
+      error = 'notifications.physical.failed'
+      render_422 error, "#{I18n.t(error)} for physical device #{uri}"
+    end
   end
 
   private

@@ -19,6 +19,8 @@ feature 'ConnectionsController' do
 
     describe 'when generates the access token' do
 
+      before { stub_request(:post, 'http://ws.lelylan.com/physicals') }
+
       it 'creates the access token' do
         expect { page.driver.post uri }.to change { Doorkeeper::AccessToken.count }.by(1)
       end
@@ -64,6 +66,40 @@ feature 'ConnectionsController' do
       end
     end
 
+    describe 'when connects to the physical device' do
+
+      describe 'when the response status is 200' do
+
+        before { stub_request(:post, 'http://ws.lelylan.com/physicals') }
+        before { page.driver.post uri }
+
+        it 'sends the request' do
+          a_request(:post, 'http://ws.lelylan.com/physicals').should have_been_made
+        end
+
+        it 'shows the device representation' do
+          has_resource resource
+        end
+      end
+
+      describe 'when the response status is not 200' do
+
+        before { stub_request(:post, 'http://ws.lelylan.com/physicals').to_return(status: 500) }
+        before { page.driver.post uri }
+
+        it 'sends the request' do
+          a_request(:post, 'http://ws.lelylan.com/physicals').should have_been_made
+        end
+
+        it 'shows the device representation' do
+          page.status_code.should == 422
+          page.should have_content 'notifications.physical.failed'
+          page.should have_content 'Physical device access failed'
+          page.should have_content "#{resource.physical.uri}/physicals"
+        end
+      end
+    end
+
     describe 'with no physical cannection' do
 
       let(:resource) { FactoryGirl.create 'device', :with_no_physical, resource_owner_id: user.id }
@@ -75,6 +111,5 @@ feature 'ConnectionsController' do
         page.should have_content 'Missing physical device connection'
       end
     end
-
   end
 end

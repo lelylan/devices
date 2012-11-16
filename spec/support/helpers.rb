@@ -1,4 +1,4 @@
-def mock_headers 
+def mock_headers
   {'Accept'=>'application/json', 'Content-Type' => 'application/json'}
 end
 
@@ -26,23 +26,19 @@ end
 
 
 # Stubs
-def stub_get(path, auth=true)
-  path = authenticated(path) if auth
+def stub_get(path)
   stub_request(:get, path).with(headers: mock_headers)
 end
 
-def stub_post(path, auth=true)
-  path = authenticated(path) if auth
+def stub_post(path)
   stub_request(:post, path).with(headers: mock_headers)
 end
 
-def stub_put(path, auth=true)
-  path = authenticated(path) if auth
+def stub_put(path)
   stub_request(:put, path).with(headers: mock_headers)
 end
 
-def stub_delete(path, auth=true)
-  path = authenticated(path) if auth
+def stub_delete(path)
   stub_request(:delete, path).with(headers: mock_headers)
 end
 

@@ -13,6 +13,7 @@ gem 'rails_config'
 gem 'addressable'
 gem 'bcrypt-ruby', require: 'bcrypt'
 gem 'bundler'
+gem 'faraday'
 
 group :development, :test do
   gem 'foreman'
