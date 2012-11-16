@@ -10,6 +10,7 @@ class Device
   field :type_id, type: Moped::BSON::ObjectId
   field :pending, type: Boolean, default: false
   field :activated_at, type: DateTime, default: ->{ Time.now }
+  field :activation_code
 
   index({ resource_owner_id: 1 }, { background: true })
   index({ creator_id: 1 }, { background: true })
@@ -17,7 +18,7 @@ class Device
   index({ pending: 1 }, { background: true })
 
   attr_accessor  :type
-  attr_protected :resource_owner_id, :creator_id, :type_id, :activated_at
+  attr_protected :resource_owner_id, :creator_id, :type_id, :activated_at, :activation_code
 
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
   embeds_one  :physical,   class_name: 'DevicePhysical', cascade_callbacks: true
@@ -26,6 +27,7 @@ class Device
   validates :creator_id,  presence: true
   validates :name, presence: true
   validates :secret, presence: true
+  validates :activation_code, presence: true
   validates :type, presence: true, uri: true, on: :create
 
   accepts_nested_attributes_for :properties, allow_destroy: true
@@ -33,6 +35,7 @@ class Device
   before_create :set_type_uri, :synchronize_type_properties
   before_validation(on: 'create') { set_creator_id }
   before_validation(on: 'create') { set_secret }
+  before_validation(on: 'create') { set_activation_code }
 
   def set_type_uri
     self.type_id = find_id type
@@ -44,6 +47,10 @@ class Device
 
   def set_secret
     self.secret = Doorkeeper::OAuth::Helpers::UniqueToken.generate
+  end
+
+  def set_activation_code
+    self.activation_code = Signature.sign(id, secret)
   end
 
   def synchronize_type_properties

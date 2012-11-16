@@ -3,7 +3,10 @@ en:
     resource:
       not_found: "Resource not found"
       not_valid: "Not valid attributes"
+      already_activated: "Resource is already activated"
     json:
       not_valid: "Not valid JSON"
     access:
       not_authorized: "Token not valid"
+    activation:
+      not_found: "Activation code not found"

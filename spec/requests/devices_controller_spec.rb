@@ -76,22 +76,23 @@ feature 'DevicesController' do
     it_behaves_like 'a registered event', 'page.driver.delete(uri)'
   end
 
-  context 'GET /devices/:id/secret' do
+  context 'GET /devices/:id/private' do
 
-    let!(:access_token) { FactoryGirl.create :access_token, application: application, scopes: 'secrets', resource_owner_id: user.id }
+    let!(:access_token) { FactoryGirl.create :access_token, application: application, scopes: 'private', resource_owner_id: user.id }
     before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
     let!(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
-    let(:uri)       { "/devices/#{resource.id}/secret" }
+    let(:uri)       { "/devices/#{resource.id}/private" }
 
     it_behaves_like 'a proxiable service'
+    it_behaves_like 'a filterable resource', 'page.driver.get(uri)'
     #it_behaves_like 'a not owned resource', 'page.driver.get(uri)', 401
     #it_behaves_like 'a not found resource', 'page.driver.get(uri)', 401
-    it_behaves_like 'a filterable resource', 'page.driver.get(uri)'
 
-    it 'shows the device secret' do
+    it 'shows the private device information' do
       page.driver.get uri
       JSON.parse(page.source)['secret'].should == resource.secret
+      JSON.parse(page.source)['activation_code'].should == Signature.sign(resource.id, resource.secret)
     end
   end
 end

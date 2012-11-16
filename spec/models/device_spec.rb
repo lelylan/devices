@@ -7,6 +7,7 @@ describe Device do
   it { should validate_presence_of :type }
   #it { should validate_presence_of :creator_id }
   #it { should validate_presence_of :secret }
+  #it { should validate_presence_of :activation_code }
 
   its(:pending) { should == false }
 
@@ -17,6 +18,7 @@ describe Device do
   it { should_not allow_mass_assignment_of :creator_id }
   it { should_not allow_mass_assignment_of :type_id }
   it { should_not allow_mass_assignment_of :activated_at }
+  it { should_not allow_mass_assignment_of :activation_code }
 
   it_behaves_like 'a boolean' do
     let(:field)       { 'pending' }
@@ -31,6 +33,15 @@ describe Device do
 
     it 'sets the type_id field' do
       resource.type_id.should == type.id
+    end
+  end
+
+  describe '#activation_code' do
+
+    let(:resource) { FactoryGirl.create :device }
+
+    it 'sets the activation_code field' do
+      resource.activation_code.should == Signature.sign(resource.id, resource.secret)
     end
   end
 
