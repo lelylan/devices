@@ -11,6 +11,9 @@ describe Device do
 
   its(:pending) { should == false }
 
+  it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:physical) } }
+  it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:physical) } }
+
   it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:type) } }
   it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:type) } }
 

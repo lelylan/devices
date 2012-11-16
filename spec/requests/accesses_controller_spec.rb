@@ -19,7 +19,7 @@ feature 'AccessesController' do
 
     describe 'when generates the access token' do
 
-      before { stub_request(:post, 'http://ws.lelylan.com/physicals') }
+      before { stub_request(:post, resource.physical) }
 
       it 'creates the access token' do
         expect { page.driver.post uri }.to change { Doorkeeper::AccessToken.count }.by(1)
@@ -70,11 +70,11 @@ feature 'AccessesController' do
 
       describe 'when the response status is 200' do
 
-        before { stub_request(:post, 'http://ws.lelylan.com/physicals') }
+        before { stub_request(:post, resource.physical) }
         before { page.driver.post uri }
 
         it 'sends the request' do
-          a_request(:post, 'http://ws.lelylan.com/physicals').should have_been_made
+          a_request(:post, resource.physical).should have_been_made
         end
 
         it 'shows the device representation' do
@@ -84,18 +84,18 @@ feature 'AccessesController' do
 
       describe 'when the response status is not 200' do
 
-        before { stub_request(:post, 'http://ws.lelylan.com/physicals').to_return(status: 500) }
+        before { stub_request(:post, resource.physical).to_return(status: 500) }
         before { page.driver.post uri }
 
         it 'sends the request' do
-          a_request(:post, 'http://ws.lelylan.com/physicals').should have_been_made
+          a_request(:post, resource.physical).should have_been_made
         end
 
         it 'shows the device representation' do
           page.status_code.should == 422
           page.should have_content 'notifications.physical.failed'
           page.should have_content 'Physical device access failed'
-          #page.should have_content "#{resource.physical.uri}/physicals"
+          page.should have_content resource.physical
         end
       end
     end

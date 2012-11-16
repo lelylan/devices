@@ -10,13 +10,11 @@ class AccessesController < ApplicationController
   before_filter :create_access_token
 
   def create
-    url     = "#{@device.physical}"
     body    = { uri: device_url(@device), access_token: @token.token, nonce: SecureRandom.uuid }
     headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/json',
                 'X-Physical-Signature' => Signature.sign(body, @device.secret) }
 
-    response = Faraday.new(url: url).post do |req|
-      req.url     '/physicals'
+    response = Faraday.new(url: @device.physical).post do |req|
       req.headers = headers
       req.body    = body
     end
@@ -68,6 +66,6 @@ class AccessesController < ApplicationController
 
   def render_failure
     error = 'notifications.physical.failed'
-    render_422 error, I18n.t(error)
+    render_422 error, "#{I18n.t(error)} for #{@device.physical}"
   end
 end

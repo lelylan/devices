@@ -29,6 +29,7 @@ class Device
   validates :secret, presence: true
   validates :activation_code, presence: true
   validates :type, presence: true, uri: true, on: :create
+  validates :physical, uri: true
 
   accepts_nested_attributes_for :properties, allow_destroy: true
 
