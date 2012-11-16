@@ -55,7 +55,7 @@ class FunctionsController < ApplicationController
 
   def status_code
     source = params[:source] || request.headers['X-Request-Source']
-    forward_to_physical = (@device.physical and source != 'physical')
+    forward_to_physical = (@device.physical_uri and source != 'physical')
     @status_code = forward_to_physical ? 202 : 200
   end
 end

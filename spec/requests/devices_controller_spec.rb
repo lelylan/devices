@@ -76,13 +76,13 @@ feature 'DevicesController' do
     it_behaves_like 'a registered event', 'page.driver.delete(uri)'
   end
 
-  context 'GET /devices/:id/private' do
+  context 'GET /devices/:id/privates' do
 
-    let!(:access_token) { FactoryGirl.create :access_token, application: application, scopes: 'private', resource_owner_id: user.id }
+    let!(:access_token) { FactoryGirl.create :access_token, application: application, scopes: 'privates', resource_owner_id: user.id }
     before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
     let!(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
-    let(:uri)       { "/devices/#{resource.id}/private" }
+    let(:uri)       { "/devices/#{resource.id}/privates" }
 
     it_behaves_like 'a proxiable service'
     it_behaves_like 'a filterable resource', 'page.driver.get(uri)'

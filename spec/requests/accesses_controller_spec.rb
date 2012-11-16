@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-feature 'ConnectionsController' do
+feature 'AccessesController' do
 
   let!(:application)  { FactoryGirl.create :application }
   let!(:user)         { FactoryGirl.create :user }
@@ -12,10 +12,10 @@ feature 'ConnectionsController' do
   let(:controller) { 'devices' }
   let(:factory)    { 'device' }
 
-  context 'POST /devices/:id/connection' do
+  context 'POST /devices/:id/accesses' do
 
     let(:resource) { FactoryGirl.create 'device', resource_owner_id: user.id }
-    let(:uri)      { "/devices/#{resource.id}/connection" }
+    let(:uri)      { "/devices/#{resource.id}/accesses" }
 
     describe 'when generates the access token' do
 

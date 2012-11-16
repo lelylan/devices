@@ -1,4 +1,4 @@
-class ConnectionsController < ApplicationController
+class AccessesController < ApplicationController
   doorkeeper_for :create, scopes: Settings.scopes.write.map(&:to_sym)
 
   before_filter :find_owned_resources
@@ -10,7 +10,7 @@ class ConnectionsController < ApplicationController
   before_filter :create_access_token
 
   def create
-    url     = "#{@device.physical.uri}"
+    url     = "#{@device.physical_uri}"
     body    = { uri: device_url(@device), access_token: @token.token }
     headers = { 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
@@ -41,7 +41,7 @@ class ConnectionsController < ApplicationController
 
   def find_physical
     error = 'notifications.physical.missing'
-    render_422(error, I18n.t(error)) if not @device.physical
+    render_422(error, I18n.t(error)) if not @device.physical_uri
   end
 
   def find_physical_application

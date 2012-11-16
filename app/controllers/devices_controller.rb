@@ -3,11 +3,11 @@ class DevicesController < ApplicationController
 
   doorkeeper_for :index, :show, scopes: Settings.scopes.read.map(&:to_sym)
   doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
-  doorkeeper_for :private, scopes: %w(private).map(&:to_sym)
+  doorkeeper_for :privates, scopes: %w(privates).map(&:to_sym)
 
   before_filter :find_owned_resources
   before_filter :find_filtered_resources
-  before_filter :find_resource,     only: %w(show update destroy private)
+  before_filter :find_resource,     only: %w(show update destroy privates)
   before_filter :search_params,     only: %w(index)
   before_filter :search_properties, only: %w(index)
   before_filter :pagination,        only: %w(index)
@@ -42,8 +42,8 @@ class DevicesController < ApplicationController
     @device.destroy
   end
 
-  def private
-    render 'show_private'
+  def privates
+    render 'show_privates'
   end
 
   private

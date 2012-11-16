@@ -8,6 +8,7 @@ class Device
   field :name
   field :secret
   field :type_id, type: Moped::BSON::ObjectId
+  field :physical_uri
   field :pending, type: Boolean, default: false
   field :activated_at, type: DateTime, default: ->{ Time.now }
   field :activation_code
@@ -21,7 +22,6 @@ class Device
   attr_protected :resource_owner_id, :creator_id, :type_id, :activated_at, :activation_code
 
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
-  embeds_one  :physical,   class_name: 'DevicePhysical', cascade_callbacks: true
 
   validates :resource_owner_id, presence: true
   validates :creator_id,  presence: true

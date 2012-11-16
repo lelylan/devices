@@ -29,8 +29,6 @@ feature 'Scope' do
       it { should_not authorize "delete /devices/#{device.id}" }
       it { should_not authorize "put    /devices/#{device.id}/properties" }
       it { should_not authorize "put    /devices/#{device.id}/functions" }
-      it { should_not authorize "put    /devices/#{device.id}/physical" }
-      it { should_not authorize "delete /devices/#{device.id}/physical" }
       it { should_not authorize 'post   /consumptions' }
       it { should_not authorize "put    /consumptions/#{consumption.id}" }
       it { should_not authorize "delete /consumptions/#{consumption.id}" }
@@ -57,8 +55,6 @@ feature 'Scope' do
       it { should authorize "delete /devices/#{device.id}" }
       it { should authorize "put    /devices/#{device.id}/properties" }
       it { should authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
-      it { should authorize "put    /devices/#{device.id}/physical" }
-      it { should authorize "delete /devices/#{device.id}/physical" }
       it { should authorize 'get    /histories' }
       it { should authorize "get    /histories/#{history.id}" }
       it { should authorize 'get    /consumptions' }

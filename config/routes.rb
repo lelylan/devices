@@ -3,11 +3,8 @@ Devices::Application.routes.draw do
     member do
       put    'properties' => 'properties#update'
       put    'functions'  => 'functions#update'
-      put    'physical'   => 'physicals#update'
-      delete 'physical'   => 'physicals#destroy'
-      get    'pending'    => 'pendings#show'
-      get    'private'    => 'devices#private'
-      post   'connection' => 'connections#create'
+      get    'privates'   => 'devices#privates'
+      post   'accesses'   => 'accesses#create'
     end
   end
 

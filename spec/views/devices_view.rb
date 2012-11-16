@@ -16,7 +16,7 @@ module HelpersViewMethods
       property.physical.should == device_property.physical
     end
 
-    json.physical.should eq (device.physical ? {'uri' => device.physical.uri} : {})
+    json.physical.uri.should == device.physical_uri
   end
 end
 
