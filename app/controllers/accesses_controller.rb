@@ -11,9 +11,8 @@ class AccessesController < ApplicationController
 
   def create
     url     = "#{@device.physical}"
-    body    = { uri: device_url(@device), access_token: @token.token }
-    headers = { 'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
+    body    = { uri: device_url(@device), access_token: @token.token, nonce: SecureRandom.uuid }
+    headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/json',
                 'X-Physical-Signature' => Signature.sign(body, @device.secret) }
 
     response = Faraday.new(url: url).post do |req|
