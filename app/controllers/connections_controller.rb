@@ -18,15 +18,10 @@ class ConnectionsController < ApplicationController
 
   def find_owned_resources
     @devices = Device.where(resource_owner_id: current_user.id)
-    @devices.each(&:synchronize_type_properties) # TODO performance caching (N+1)
   end
 
   def find_filtered_resources
-    # TODO solution that temporarly solve the bug that should let you use
-    # @devices.in(id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
-    if not doorkeeper_token.device_ids.empty?
-      doorkeeper_token.device_ids.each {|id| @devices = @devices.or(id: id) }
-    end
+    doorkeeper_token.device_ids.each {|id| @devices = @devices.or(id: id) } if not doorkeeper_token.device_ids.empty?
   end
 
   def find_resource
@@ -38,19 +33,15 @@ class ConnectionsController < ApplicationController
   end
 
   def delete_previous_access_tokens
-    Doorkeeper::AccessToken
-      .where(device_ids: [@device.id])
-      .where(application: @application.id)
-      .destroy
+    Doorkeeper::AccessToken.where(device_ids: [@device.id]).where(application: @application.id).destroy
   end
 
   def create_access_token
     @token = Doorkeeper::AccessToken.create(
       resource_owner_id: current_user.id,
       application_id: @application.id,
-      scope: 'devices',
+      scopes: 'devices',
       device_ids: [ @device.id ],
-      expires_in: nil
-    )
+      expires_in: nil)
   end
 end
