@@ -95,7 +95,7 @@ feature 'ConnectionsController' do
           page.status_code.should == 422
           page.should have_content 'notifications.physical.failed'
           page.should have_content 'Physical device access failed'
-          page.should have_content "#{resource.physical.uri}/physicals"
+          #page.should have_content "#{resource.physical.uri}/physicals"
         end
       end
     end

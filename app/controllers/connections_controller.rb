@@ -10,25 +10,19 @@ class ConnectionsController < ApplicationController
   before_filter :create_access_token
 
   def create
-    connection = Faraday.new(url: @device.physical.uri)
-    body       = { uri: device_url(@device), access_token: @token.token }
-    headers    = { 'Accept' => 'application/json',
-                   'Content-Type' => 'application/json',
-                   'X-Physical-Signature' => Signature.sign(body, @device.secret) }
+    url     = "#{@device.physical.uri}"
+    body    = { uri: device_url(@device), access_token: @token.token }
+    headers = { 'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'X-Physical-Signature' => Signature.sign(body, @device.secret) }
 
-    response = connection.post do |req|
-      req.url '/physicals'
+    response = Faraday.new(url: url).post do |req|
+      req.url     '/physicals'
       req.headers = headers
-      req.body = body
+      req.body    = body
     end
 
-    if response.status == 200
-      render 'devices/show'
-    else
-      uri = "#{@device.physical.uri}/physicals"
-      error = 'notifications.physical.failed'
-      render_422 error, "#{I18n.t(error)} for physical device #{uri}"
-    end
+    response.status == 200 ? render_success : render_failure
   end
 
   private
@@ -65,5 +59,16 @@ class ConnectionsController < ApplicationController
       scopes: 'devices',
       device_ids: [ @device.id ],
       expires_in: nil)
+  end
+
+  # view rendering methods
+
+  def render_success
+      render 'devices/show'
+  end
+
+  def render_failure
+    error = 'notifications.physical.failed'
+    render_422 error, I18n.t(error)
   end
 end
