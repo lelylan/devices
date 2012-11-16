@@ -6,7 +6,7 @@ shared_examples_for 'a signatured resource' do
     let(:article)     { product.articles.first }
     let(:article_uri) { a_uri(article) }
 
-    before { resource.update_attributes( { physical_uri: a_uri(article) }) }
+    before { resource.update_attributes( { physical: a_uri(article) }) }
 
     describe 'with valid signature' do
 

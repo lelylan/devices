@@ -8,7 +8,7 @@ class Device
   field :name
   field :secret
   field :type_id, type: Moped::BSON::ObjectId
-  field :physical_uri
+  field :physical
   field :pending, type: Boolean, default: false
   field :activated_at, type: DateTime, default: ->{ Time.now }
   field :activation_code

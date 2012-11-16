@@ -3,11 +3,11 @@ FactoryGirl.define do
     resource_owner_id { FactoryGirl.create(:user).id }
     type { a_uri FactoryGirl.create(:type) }
     name 'Closet dimmer'
-    physical_uri { "http://ws.lelylan.com/physicals/#{id}" }
+    physical { "http://ws.lelylan.com/physicals/#{id}" }
   end
 
   trait :with_no_physical do
-    physical_uri nil
+    physical nil
   end
 
   trait :with_device_properties do

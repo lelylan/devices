@@ -10,7 +10,7 @@ class AccessesController < ApplicationController
   before_filter :create_access_token
 
   def create
-    url     = "#{@device.physical_uri}"
+    url     = "#{@device.physical}"
     body    = { uri: device_url(@device), access_token: @token.token }
     headers = { 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
@@ -41,7 +41,7 @@ class AccessesController < ApplicationController
 
   def find_physical
     error = 'notifications.physical.missing'
-    render_422(error, I18n.t(error)) if not @device.physical_uri
+    render_422(error, I18n.t(error)) if not @device.physical
   end
 
   def find_physical_application

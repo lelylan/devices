@@ -10,7 +10,7 @@ module Signable
     # the request must come from the physical device and in a not secure channel
     if source == 'physical' and not request.ssl?
       # get the article id
-      article_id = Moped::BSON::ObjectId(find_id(@device.physical_uri))
+      article_id = Moped::BSON::ObjectId(find_id(@device.physical))
       # find the product
       product = Product.where('articles._id' => article_id).first
       # get the signature

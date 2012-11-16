@@ -12,7 +12,7 @@ node(:properties) do |d|
   end
 end
 
-node(:physical)   { |d| { uri: d.physical_uri } }
+node(:physical)   { |d| { uri: d.physical } }
 node(:pending)    { |d| d.pending }
 node(:created_at) { |d| d.created_at }
 node(:updated_at) { |d| d.updated_at }
