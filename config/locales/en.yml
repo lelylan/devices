@@ -10,3 +10,5 @@ en:
       not_authorized: "Token not valid"
     activation:
       not_found: "Activation code not found"
+    physical:
+      missing: "Missing physical device connection"

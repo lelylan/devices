@@ -1,11 +1,10 @@
-require 'bcrypt'
-
 class ConnectionsController < ApplicationController
   doorkeeper_for :create, scopes: Settings.scopes.write.map(&:to_sym)
 
   before_filter :find_owned_resources
   before_filter :find_filtered_resources
   before_filter :find_resource
+  before_filter :find_physical
   before_filter :find_physical_application
   before_filter :delete_previous_access_tokens
   before_filter :create_access_token
@@ -26,6 +25,11 @@ class ConnectionsController < ApplicationController
 
   def find_resource
     @device = @devices.find(params[:id])
+  end
+
+  def find_physical
+    error = 'notifications.physical.missing'
+    render_422(error, I18n.t(error)) if not @device.physical
   end
 
   def find_physical_application
