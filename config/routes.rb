@@ -7,6 +7,7 @@ Devices::Application.routes.draw do
       delete 'physical'   => 'physicals#destroy'
       get    'pending'    => 'pendings#show'
       get    'private'    => 'devices#private'
+      post   'connection' => 'connections#create'
     end
   end
 
