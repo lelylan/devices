@@ -1,2 +1,0 @@
-class ActivationDecorator < DeviceDecorator
-end
