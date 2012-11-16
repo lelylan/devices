@@ -1,16 +1,10 @@
-shared_examples_for 'a signatured resource' do
+shared_examples_for 'a signed resource' do
 
   describe 'when the request comes from the physical device' do
 
-    let(:product)     { FactoryGirl.create :product }
-    let(:article)     { product.articles.first }
-    let(:article_uri) { a_uri(article) }
-
-    before { resource.update_attributes( { physical: a_uri(article) }) }
-
     describe 'with valid signature' do
 
-      let(:signature) { Signature.sign(params, product.secret) }
+      let(:signature) { Signature.sign(params, resource.secret) }
 
       before { page.driver.header 'X-Physical-Signature', signature }
       before { page.driver.put "#{uri}?source=physical", params.to_json }
@@ -43,7 +37,7 @@ shared_examples_for 'a signatured resource' do
 
     describe 'with X-Request-Source header set with physical' do
 
-      let(:signature) { Signature.sign(params, product.secret) }
+      let(:signature) { Signature.sign(params, resource.secret) }
 
       before { page.driver.header 'X-Physical-Signature', signature }
       before { page.driver.header 'X-Request-Source', 'physical' }

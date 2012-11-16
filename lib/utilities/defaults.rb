@@ -15,13 +15,12 @@ class Defaults
   private
 
   def self.user_application
-    user = User.find_or_create_by(email: 'apps@lelylan.com')
+    user = User.find_or_create_by(email: ENV['LELYLAN_APPS_USER_EMAIL'])
     user.encrypted_password = Defaults.encrypted_password if not user.encrypted_password
     user.save and user
   end
 
   def self.encrypted_password
-    BCrypt::Password.create('hackm3n0w', cost: 10).to_s
+    BCrypt::Password.create(ENV['LELYLAN_APPS_USER_PASSWORD'], cost: 10).to_s
   end
 end
-
