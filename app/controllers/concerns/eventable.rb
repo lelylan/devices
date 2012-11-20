@@ -39,11 +39,8 @@ module Eventable
     Event.create(
       resource_owner_id: current_user.id,
       resource_id: resource.send(self.class.resource_id),
-      #resource_uri: resource.uri,
       resource: self.class.resource_name,
-      event: event,
-      source: source,
-      data: data)
+      event: event, source: source, data: data)
   end
 
   def data
@@ -68,7 +65,7 @@ module Eventable
      resource.device_id || resource.id
   end
 
-  def event_action()
+  def event_action
     return 'created' if params[:action] == 'create'
     return 'updated' if params[:action] == 'update'
     return 'deleted' if params[:action] == 'destroy'

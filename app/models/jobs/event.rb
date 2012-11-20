@@ -7,7 +7,6 @@ class Event
 
   field :resource_owner_id, type: Moped::BSON::ObjectId
   field :resource_id, type: Moped::BSON::ObjectId
-  #field :resource_uri
   field :resource
   field :event
   field :source
@@ -18,9 +17,8 @@ class Event
 
   validates :resource_owner_id, presence: true
   validates :resource_id, presence: true
-  #validates :resource_uri, presence: true, uri: true
   validates :resource, presence: true
   validates :event, presence: true
-  validates :data, presence: true
   validates :source, presence: true, inclusion: { in: %w(lelylan physical) }
+  validates :data, presence: true
 end
