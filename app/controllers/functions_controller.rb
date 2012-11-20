@@ -58,7 +58,7 @@ class FunctionsController < ApplicationController
 
   def status_code
     @source = params[:source] || request.headers['X-Request-Source']
-    @source = 'physical' if doorkeeper_token.application_id == Defaults.phisical_application_id
+    @source = 'physical' if doorkeeper_token.application_id == Defaults.physical_application_id
     forward_to_physical = (@device.physical and @source != 'physical')
     @status_code = forward_to_physical ? 202 : 200
   end

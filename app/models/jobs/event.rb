@@ -21,4 +21,6 @@ class Event
   validates :event, presence: true
   validates :source, presence: true, inclusion: { in: %w(lelylan physical) }
   validates :data, presence: true
+
+  #after_initialize { |doc| doc.attributes.delete('_id') }
 end

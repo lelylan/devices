@@ -36,7 +36,7 @@ feature 'AccessesController' do
 
       describe 'with previous access tokens' do
 
-        let!(:physical_app_id) { Defaults.phisical_application_id }
+        let!(:physical_app_id) { Defaults.physical_application_id }
         let!(:previous_access_token) { FactoryGirl.create :access_token, application_id: physical_app_id, scopes: 'devices-control', device_ids: [resource.id], resource_owner_id: user.id }
 
         it 'destroys previous access tokens related to the physical' do

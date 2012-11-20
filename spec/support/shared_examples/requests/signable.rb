@@ -2,7 +2,7 @@ shared_examples_for 'a signed resource' do
 
   describe 'when the request comes from the physical device' do
 
-    before { access_token.application_id = Defaults.phisical_application_id; access_token.save }
+    before { access_token.application_id = Defaults.physical_application_id; access_token.save }
 
     describe 'with valid signature' do
 
@@ -43,7 +43,7 @@ shared_examples_for 'a denying physical request' do |action|
 
   describe 'when the request comes from the physical device' do
 
-    before { access_token.application_id = Defaults.phisical_application_id; access_token.save }
+    before { access_token.application_id = Defaults.physical_application_id; access_token.save }
     before { eval action }
 
     it 'gets a not authorized response' do

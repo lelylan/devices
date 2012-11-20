@@ -6,7 +6,7 @@ module Signable
 
   def verify_signature
     # I check only if the token is created from the lelylan physical client
-    if doorkeeper_token.application_id == Defaults.phisical_application_id
+    if doorkeeper_token.application_id == Defaults.physical_application_id
       # get the signature
       signature  = request.headers['X-Physical-Signature']
       # remove a key that is automatically added by rails

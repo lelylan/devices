@@ -42,7 +42,7 @@ class AccessesController < ApplicationController
   end
 
   def find_physical_application
-    @application_id = Defaults.phisical_application_id
+    @application_id = Defaults.physical_application_id
   end
 
   def delete_previous_access_tokens

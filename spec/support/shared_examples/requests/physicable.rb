@@ -24,7 +24,7 @@ shared_examples_for 'a physical event' do |service|
 
   describe 'when the request has a physical access token' do
 
-    before          { access_token.application_id = Defaults.phisical_application_id; access_token.save }
+    before          { access_token.application_id = Defaults.physical_application_id; access_token.save }
     let(:signature) { Signature.sign(params, resource.secret) }
     before          { update }
     let(:event)     { Event.last }

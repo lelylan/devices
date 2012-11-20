@@ -8,7 +8,7 @@ describe Event do
     Event.database_name.should == 'jobs_test'
   end
 
-  it 'creates a device' do
+  it 'keeps the id' do
     resource.id.should_not be_nil
   end
 

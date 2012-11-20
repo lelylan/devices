@@ -4,7 +4,7 @@ class Defaults
 
   # Find or create the applciation needed to create the access tokens to
   # send to the physical devices (the only way the can access Lelylan)
-  def self.phisical_application_id
+  def self.physical_application_id
     Rails.cache.fetch 'client:name:physicals:id' do
       app = Doorkeeper::Application.find_or_create_by(
         name: 'Physicals',
