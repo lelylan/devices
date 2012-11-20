@@ -14,7 +14,12 @@ describe Event do
 
   it { should validate_presence_of :resource_owner_id }
   it { should validate_presence_of :resource_id }
+  #it { should validate_presence_of :resource_uri }
   it { should validate_presence_of :resource }
   it { should validate_presence_of :event }
   it { should validate_presence_of :data }
+  it { should validate_presence_of :source }
+
+  #it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:resource_uri) } }
+  #it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:resource_uri) } }
 end

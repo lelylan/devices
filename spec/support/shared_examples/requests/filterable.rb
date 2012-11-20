@@ -18,9 +18,10 @@ shared_examples_for 'a filterable resource' do |action|
     it        { page.status_code.should == 404 }
   end
 
+  # TODO this test is not real for properies and function update as it call the device URL
   describe 'when gets the accessible resource' do
     let(:uri) { "/devices/#{result.id}" }
-    before    { eval(action) } 
+    before    { eval(action) }
     it        { page.should have_content result.id.to_s }
   end
 end

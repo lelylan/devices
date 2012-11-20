@@ -57,8 +57,9 @@ class PropertiesController < ApplicationController
   end
 
   def status_code
-    source = params[:source] || request.headers['X-Request-Source']
-    forward_to_physical = (@device.physical and source != 'physical')
+    @source = params[:source] || request.headers['X-Request-Source']
+    @source = 'physical' if doorkeeper_token.application_id == Defaults.phisical_application_id
+    forward_to_physical = (@device.physical and @source != 'physical')
     @status_code = forward_to_physical ? 202 : 200
   end
 end

@@ -28,6 +28,7 @@ feature 'PropertiesController' do
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
     it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)'
+    it_behaves_like 'a physical event', 'properties'
     it_behaves_like 'a signed resource'
 
     it 'creates an history resource' do

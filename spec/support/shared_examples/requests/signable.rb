@@ -28,7 +28,7 @@ shared_examples_for 'a signed resource' do
       end
     end
 
-    describe 'whit no signature' do
+    describe 'with no signature' do
 
       before { page.driver.put "#{uri}?source=physical", params.to_json }
 

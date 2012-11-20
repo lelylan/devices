@@ -25,6 +25,7 @@ module Eventable
 
     def eventable_for(name, options)
       after_filter :create_event, only: options[:only]
+
       @resource      = name.to_s
       @resource_name = options[:resource]
       @event_prefix  = options[:prefix]
@@ -38,9 +39,20 @@ module Eventable
     Event.create(
       resource_owner_id: current_user.id,
       resource_id: resource.send(self.class.resource_id),
+      #resource_uri: resource.uri,
       resource: self.class.resource_name,
       event: event,
-      data: JSON.parse(response.body))
+      source: source,
+      data: data)
+  end
+
+  def data
+    return JSON.parse(response.body) if event != 'property-updated'
+    { properties: instance_variable_get('@properties') }
+  end
+
+  def source
+    instance_variable_get('@source') || 'lelylan'
   end
 
   def event(result = '')
