@@ -42,17 +42,17 @@ class AccessesController < ApplicationController
   end
 
   def find_physical_application
-    @application = Defaults.find_or_create_phisical_application
+    @application_id = Defaults.phisical_application_id
   end
 
   def delete_previous_access_tokens
-    Doorkeeper::AccessToken.where(device_ids: [@device.id]).where(application: @application.id).destroy
+    Doorkeeper::AccessToken.where(device_ids: [@device.id]).where(application: @application_id).destroy
   end
 
   def create_access_token
     @token = Doorkeeper::AccessToken.create(
       resource_owner_id: current_user.id,
-      application_id: @application.id,
+      application_id: @application_id,
       scopes: 'devices',
       device_ids: [ @device.id ],
       expires_in: nil)
