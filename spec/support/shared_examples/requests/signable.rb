@@ -6,7 +6,6 @@ shared_examples_for 'a signed resource' do
 
     describe 'with valid signature' do
 
-      before { pp params }
       let(:signature) { Signature.sign(params, resource.secret) }
 
       before { page.driver.header 'X-Physical-Signature', signature }
@@ -36,6 +35,19 @@ shared_examples_for 'a signed resource' do
       it 'gets a 401 response' do
         page.status_code.should == 401
       end
+    end
+  end
+end
+
+shared_examples_for 'a denying physical request' do |action|
+
+  describe 'when the request comes from the physical device' do
+
+    before { access_token.application_id = Defaults.phisical_application_id; access_token.save }
+    before { eval action }
+
+    it 'gets a not authorized response' do
+      page.status_code.should == 401
     end
   end
 end

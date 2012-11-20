@@ -4,7 +4,7 @@ feature 'AccessesController' do
 
   let!(:application)  { FactoryGirl.create :application }
   let!(:user)         { FactoryGirl.create :user }
-  let!(:access_token) { FactoryGirl.create :access_token, application: application, scopes: 'resources', resource_owner_id: user.id }
+  let!(:access_token) { FactoryGirl.create :access_token, application: application, scopes: 'devices', resource_owner_id: user.id }
 
   before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
   before { page.driver.header 'Content-Type', 'application/json' }
@@ -29,7 +29,7 @@ feature 'AccessesController' do
         before  { page.driver.post uri }
         subject { Doorkeeper::AccessToken.last }
 
-        its(:scopes)     { should == Doorkeeper::OAuth::Scopes.from_string('devices') }
+        its(:scopes)     { should == Doorkeeper::OAuth::Scopes.from_string('devices-control') }
         its(:expires_in) { should == nil }
         its(:device_ids) { should == [resource.id] }
       end
@@ -37,7 +37,7 @@ feature 'AccessesController' do
       describe 'with previous access tokens' do
 
         let!(:physical_app_id) { Defaults.phisical_application_id }
-        let!(:previous_access_token) { FactoryGirl.create :access_token, application_id: physical_app_id, scopes: 'devices', device_ids: [resource.id], resource_owner_id: user.id }
+        let!(:previous_access_token) { FactoryGirl.create :access_token, application_id: physical_app_id, scopes: 'devices-control', device_ids: [resource.id], resource_owner_id: user.id }
 
         it 'destroys previous access tokens related to the physical' do
           page.driver.post uri
@@ -47,7 +47,7 @@ feature 'AccessesController' do
         describe 'with previous access tokens assigned to different physical devices' do
 
           let!(:another_resource)     { FactoryGirl.create 'device', resource_owner_id: user.id }
-          let!(:another_access_token) { FactoryGirl.create :access_token, application_id: physical_app_id, scopes: 'devices', device_ids: [another_resource.id], resource_owner_id: user.id }
+          let!(:another_access_token) { FactoryGirl.create :access_token, application_id: physical_app_id, scopes: 'devices-control', device_ids: [another_resource.id], resource_owner_id: user.id }
 
           it 'destroys only previous access tokens related to the physical' do
             expect { page.driver.post uri }.to change { Doorkeeper::AccessToken.count }.by(0)
@@ -57,7 +57,7 @@ feature 'AccessesController' do
         describe 'with access tokens assigned to different applications' do
 
           let!(:another_application)  { FactoryGirl.create :application }
-          let!(:another_access_token) { FactoryGirl.create :access_token, application: another_application, scopes: 'devices', device_ids: [resource.id], resource_owner_id: user.id }
+          let!(:another_access_token) { FactoryGirl.create :access_token, application: another_application, scopes: 'devices-control', device_ids: [resource.id], resource_owner_id: user.id }
 
           it 'destroys only previous access tokens related to the physical app' do
             expect { page.driver.post uri }.to change { Doorkeeper::AccessToken.count }.by(0)

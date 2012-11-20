@@ -5,7 +5,13 @@ class ApplicationController < ActionController::Base
   include Eventable
   include Signable
 
+  before_filter :deny_physical_request
+
   private
+
+  def deny_physical_request
+    render_401 if doorkeeper_token.application_id == Defaults.phisical_application_id
+  end
 
   def current_user
     if doorkeeper_token

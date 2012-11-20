@@ -1,5 +1,8 @@
 class FunctionsController < ApplicationController
-  doorkeeper_for :update, scopes: Settings.scopes.write.map(&:to_sym)
+
+  doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym)
+
+  skip_before_filter :deny_physical_request
 
   before_filter :find_owned_resources
   before_filter :find_filtered_resources

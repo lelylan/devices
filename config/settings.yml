@@ -6,7 +6,12 @@ scopes:
     - resources
     - resources-read
     - devices
+    - devices-control
     - devices-read
   write:
     - resources
     - devices
+  control:
+    - resources
+    - devices
+    - devices-control

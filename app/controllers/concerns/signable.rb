@@ -11,9 +11,9 @@ module Signable
       signature  = request.headers['X-Physical-Signature']
       # remove a key that is automatically added by rails
       # do not remove function as it is a mandatory param (coincidentaly the one would be automatically added)
-      payload = request.request_parameters.delete_if {|k, v| k == 'property' }
+      payload = request.request_parameters.delete_if {|k, v| k == 'property' or k == 'device' }
       # unauthorize if the signature is not valid
-      render_401 if not Signature.valid?(signature, payload, @device.secret)
+      render_401 if @device and !Signature.valid?(signature, payload, @device.secret)
     end
   end
 end

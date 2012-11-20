@@ -1,5 +1,5 @@
 class AccessesController < ApplicationController
-  doorkeeper_for :create, scopes: Settings.scopes.write.map(&:to_sym)
+  doorkeeper_for :create, scopes: Settings.scopes.control.map(&:to_sym)
 
   before_filter :find_owned_resources
   before_filter :find_filtered_resources
@@ -53,7 +53,7 @@ class AccessesController < ApplicationController
     @token = Doorkeeper::AccessToken.create(
       resource_owner_id: current_user.id,
       application_id: @application_id,
-      scopes: 'devices',
+      scopes: 'devices-control',
       device_ids: [ @device.id ],
       expires_in: nil)
   end
