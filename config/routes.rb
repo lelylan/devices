@@ -3,12 +3,12 @@ Devices::Application.routes.draw do
     member do
       put    'properties' => 'properties#update'
       put    'functions'  => 'functions#update'
-      put    'physical'   => 'physicals#update'
-      delete 'physical'   => 'physicals#destroy'
-      get    'pending'    => 'pendings#show'
+      get    'privates'   => 'devices#privates'
+      post   'accesses'   => 'accesses#create'
     end
   end
 
   resources :histories,    defaults: { format: 'json' }, only: %w(index show)
   resources :consumptions, defaults: { format: 'json' }
+  resources :activations,  defaults: { format: 'json' }, only: %w(create destroy)
 end
