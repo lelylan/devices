@@ -10,9 +10,6 @@ class ApplicationController < ActionController::Base
   private
 
   def deny_physical_request
-    puts "::::::: HELO THERE ::::::"
-    puts Defaults.physical_application_id
-    puts Defaults.user_application_id
     render_401 if doorkeeper_token.application_id == Defaults.physical_application_id
   end
 
