@@ -2,6 +2,6 @@ class User
   include Mongoid::Document
   store_in session: 'people'
 
-  field :email,              type: String, default: ''
-  field :encrypted_password, type: String, default: ''
+  field :email
+  field :encrypted_password
 end
