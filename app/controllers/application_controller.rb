@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   private
 
   def deny_physical_request
+    pp "::::::: HELO THERE ::::::", Defaults.physical_application_id, Defaults.user_application_id
     render_401 if doorkeeper_token.application_id == Defaults.physical_application_id
   end
 
