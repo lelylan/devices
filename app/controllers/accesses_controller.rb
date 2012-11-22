@@ -10,7 +10,7 @@ class AccessesController < ApplicationController
   before_filter :create_access_token
 
   def create
-    body    = { uri: device_url(@device), access_token: @token.token, nonce: SecureRandom.uuid }
+    body    = { device: device_url(@device), access_token: @token.token, nonce: SecureRandom.uuid }
     headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/json',
                 'X-Physical-Signature' => Signature.sign(body, @device.secret) }
 
