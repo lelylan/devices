@@ -5,8 +5,12 @@ class Defaults
   # Find or create the applciation needed to create the access tokens to
   # send to the physical devices (the only way the can access Lelylan)
   def self.physical_application_id
+    Rails.cache.clear
     Rails.cache.fetch 'client:name:physicals:id' do
       puts ":::::: INITIALIZING PHYSICAL APPLICATION FOR TOKEN GENERATION ::::::"
+      puts ENV['LELYLAN_APPS_USER_PASSWORD']
+      puts Defaults.encrypted_password
+
       app = Doorkeeper::Application.find_or_create_by(
         name: 'Physicals',
         redirect_uri: 'http://lelylan.com')
