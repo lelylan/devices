@@ -7,7 +7,7 @@ class Defaults
   # TODO: add cache for physical_application_id and user_application_id
   # making it expire at any deploy
   def self.physical_application_id
-    Rails.cache.fetch "client:name:physicals:id" do
+    Rails.cache.fetch 'client:name:physicals:id' do
       puts ':::::: Creating the client used to create the access tokend for physical devices'
       app = Doorkeeper::Application.find_or_create_by(
         name: 'Physicals',
