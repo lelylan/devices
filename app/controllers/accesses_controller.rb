@@ -1,5 +1,5 @@
 class AccessesController < ApplicationController
-  doorkeeper_for :create, scopes: Settings.scopes.control.map(&:to_sym)
+  doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym)
 
   before_filter :find_owned_resources
   before_filter :find_filtered_resources
@@ -9,12 +9,12 @@ class AccessesController < ApplicationController
   before_filter :delete_previous_access_tokens
   before_filter :create_access_token
 
-  def create
+  def update
     body    = { device: device_url(@device), access_token: @token.token, nonce: SecureRandom.uuid }
     headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/json',
                 'X-Physical-Signature' => Signature.sign(body, @device.secret) }
 
-    response = Faraday.new(url: @device.physical).post do |req|
+    response = Faraday.new(url: @device.physical).put do |req|
       req.headers = headers
       req.body    = body
     end

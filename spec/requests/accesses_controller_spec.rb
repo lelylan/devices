@@ -12,21 +12,21 @@ feature 'AccessesController' do
   let(:controller) { 'devices' }
   let(:factory)    { 'device' }
 
-  context 'POST /devices/:id/accesses' do
+  context 'PUT /devices/:id/accesses' do
 
     let(:resource) { FactoryGirl.create 'device', resource_owner_id: user.id }
     let(:uri)      { "/devices/#{resource.id}/accesses" }
 
     describe 'when generates the access token' do
 
-      before { stub_request(:post, resource.physical) }
+      before { stub_request(:put, resource.physical) }
 
       it 'creates the access token' do
-        expect { page.driver.post uri }.to change { Doorkeeper::AccessToken.count }.by(1)
+        expect { page.driver.put uri }.to change { Doorkeeper::AccessToken.count }.by(1)
       end
 
       describe 'when showing the access token' do
-        before  { page.driver.post uri }
+        before  { page.driver.put uri }
         subject { Doorkeeper::AccessToken.last }
 
         its(:scopes)     { should == Doorkeeper::OAuth::Scopes.from_string('devices-control') }
@@ -40,7 +40,7 @@ feature 'AccessesController' do
         let!(:previous_access_token) { FactoryGirl.create :access_token, application_id: physical_app_id, scopes: 'devices-control', device_ids: [resource.id], resource_owner_id: user.id }
 
         it 'destroys previous access tokens related to the physical' do
-          page.driver.post uri
+          page.driver.put uri
           Doorkeeper::AccessToken.where(_id: previous_access_token.id).first.should == nil
         end
 
@@ -50,7 +50,7 @@ feature 'AccessesController' do
           let!(:another_access_token) { FactoryGirl.create :access_token, application_id: physical_app_id, scopes: 'devices-control', device_ids: [another_resource.id], resource_owner_id: user.id }
 
           it 'destroys only previous access tokens related to the physical' do
-            expect { page.driver.post uri }.to change { Doorkeeper::AccessToken.count }.by(0)
+            expect { page.driver.put uri }.to change { Doorkeeper::AccessToken.count }.by(0)
           end
         end
 
@@ -60,7 +60,7 @@ feature 'AccessesController' do
           let!(:another_access_token) { FactoryGirl.create :access_token, application: another_application, scopes: 'devices-control', device_ids: [resource.id], resource_owner_id: user.id }
 
           it 'destroys only previous access tokens related to the physical app' do
-            expect { page.driver.post uri }.to change { Doorkeeper::AccessToken.count }.by(0)
+            expect { page.driver.put uri }.to change { Doorkeeper::AccessToken.count }.by(0)
           end
         end
       end
@@ -70,11 +70,11 @@ feature 'AccessesController' do
 
       describe 'when the response status is 200' do
 
-        before { stub_request(:post, resource.physical) }
-        before { page.driver.post uri }
+        before { stub_request(:put, resource.physical) }
+        before { page.driver.put uri }
 
         it 'sends the request' do
-          a_request(:post, resource.physical).should have_been_made
+          a_request(:put, resource.physical).should have_been_made
         end
 
         it 'shows the device representation' do
@@ -84,11 +84,11 @@ feature 'AccessesController' do
 
       describe 'when the response status is not 200' do
 
-        before { stub_request(:post, resource.physical).to_return(status: 500) }
-        before { page.driver.post uri }
+        before { stub_request(:put, resource.physical).to_return(status: 500) }
+        before { page.driver.put uri }
 
         it 'sends the request' do
-          a_request(:post, resource.physical).should have_been_made
+          a_request(:put, resource.physical).should have_been_made
         end
 
         it 'shows the device representation' do
@@ -105,7 +105,7 @@ feature 'AccessesController' do
       let(:resource) { FactoryGirl.create 'device', :with_no_physical, resource_owner_id: user.id }
 
       it 'does not create the token' do
-        page.driver.post uri
+        page.driver.put uri
         page.status_code.should == 422
         page.should have_content 'notifications.physical.missing'
         page.should have_content 'Missing physical device connection'

@@ -1,10 +1,10 @@
 Devices::Application.routes.draw do
   resources :devices, defaults: { format: 'json' } do
     member do
-      put    'properties' => 'properties#update'
-      put    'functions'  => 'functions#update'
-      get    'privates'   => 'devices#privates'
-      post   'accesses'   => 'accesses#create'
+      put 'properties' => 'properties#update'
+      put 'functions'  => 'functions#update'
+      get 'privates'   => 'devices#privates'
+      put 'accesses'   => 'accesses#update'
     end
   end
 
