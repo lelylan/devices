@@ -22,9 +22,10 @@ shared_examples_for 'a searchable resource on properties' do
   context 'when filters the property uri' do
 
     let(:property_uri) { a_uri(result.properties.first, :property_id) }
+    let(:properties)   { { uri: property_uri } }
 
     it 'returns the searched resource' do
-      page.driver.get uri, property: property_uri
+      page.driver.get uri, properties: properties
       contains_resource result
       page.should_not have_content resource.id.to_s
     end
@@ -33,9 +34,10 @@ shared_examples_for 'a searchable resource on properties' do
   context 'when filters the property value' do
 
     before { result.properties.first.update_attributes(value: 'updated') }
+    let(:properties) { { value: 'updated' } }
 
     it 'returns the searched resource' do
-      page.driver.get uri, value: 'updated'
+      page.driver.get uri, properties: properties
       contains_resource result
       page.should_not have_content resource.id.to_s
     end
@@ -44,9 +46,10 @@ shared_examples_for 'a searchable resource on properties' do
   context 'when filters the property physical' do
 
     before { result.properties.first.update_attributes(physical: 'updated') }
+    let(:properties) { { physical: 'updated' } }
 
     it 'returns the searched resource' do
-      page.driver.get uri, physical: 'updated'
+      page.driver.get uri, properties: properties
       contains_resource result
       page.should_not have_content resource.id.to_s
     end
@@ -55,10 +58,12 @@ shared_examples_for 'a searchable resource on properties' do
   context 'when filters the property uri and property value' do
 
     let(:property_uri) { a_uri(result.properties.first, :property_id) }
+    let(:properties)   { { uri: property_uri, value: 'updated', physical: 'updated' } }
+
     before { result.properties.first.update_attributes(value: 'updated', physical: 'updated') }
 
     it 'returns the searched resource' do
-      page.driver.get uri, property: property_uri, value: 'updated', physical: 'updated'
+      page.driver.get uri, properties: properties
       contains_resource result
       page.should_not have_content resource.id.to_s
     end

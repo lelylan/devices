@@ -31,15 +31,17 @@ class HistoriesController < ApplicationController
   end
 
   def search_properties(match = {})
-    match.merge!({ property_id: Moped::BSON::ObjectId(find_id(params[:property])) }) if params[:property]
-    match.merge!({ value: params[:value] }) if params[:value]
-    match.merge!({ physical: params[:physical] }) if params[:physical]
-    @histories = @histories.where('properties' => { '$elemMatch' => match })
+    if params[:properties]
+      match.merge!({ property_id: Moped::BSON::ObjectId(find_id(params[:properties][:uri])) }) if params[:properties][:uri]
+      match.merge!({ value: params[:properties][:value] }) if params[:properties][:value]
+      match.merge!({ physical: params[:properties][:physical] }) if params[:properties][:physical]
+      @histories = @histories.where('properties' => { '$elemMatch' => match })
+    end
   end
 
   def pagination
     params[:per] = (params[:per] || Settings.pagination.per).to_i
-    params[:per] = Settings.pagination.per if params[:per] == 0 
+    params[:per] = Settings.pagination.per if params[:per] == 0
     params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
     @histories = @histories.gt(id: find_id(params[:start])) if params[:start]
   end
