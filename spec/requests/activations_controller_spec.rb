@@ -55,7 +55,7 @@ feature 'ActivationsController' do
   context 'DELETE /activations/:id' do
 
     let!(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
-    let(:uri)       { "/activations/#{resource.id}" }
+    let(:uri)       { "/activations/#{resource.activation_code}" }
 
     it 'deactivates the resource' do
       expect { page.driver.delete(uri) }.to_not change{ Device.count }

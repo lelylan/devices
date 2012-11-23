@@ -4,12 +4,10 @@ class ActivationsController < ApplicationController
   doorkeeper_for :create, :destroy, scopes: Settings.scopes.control.map(&:to_sym)
 
   before_filter :find_all_resources, only: %w(create)
-  before_filter :find_resource_by_activation_code, only: %w(create)
-  before_filter :deactivated, only: %w(create)
-
   before_filter :find_owned_resources, only: %w(destroy)
   before_filter :find_filtered_resources, only: %w(destroy)
-  before_filter :find_resource_by_id, only: %w(destroy)
+  before_filter :find_resource_by_activation_code
+  before_filter :already_activated, only: %w(create)
 
   def create
     @device.activated_at = Time.now
@@ -46,14 +44,10 @@ class ActivationsController < ApplicationController
   end
 
   def find_resource_by_activation_code
-    @device = @devices.find_by(activation_code: params[:activation_code])
+    @device = @devices.find_by(activation_code: params[:activation_code] || params[:id])
   end
 
-  def find_resource_by_id
-    @device = @devices.find(params[:id])
-  end
-
-  def deactivated
+  def already_activated
     error   = 'notifications.resource.already_activated'
     message = "#{I18n.t(error)} by user #{@device.resource_owner_id}"
     render_422(error, message) if @device.activated_at
