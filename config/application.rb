@@ -64,5 +64,8 @@ module Devices
 
     # Set the default Logger in application.rb to STDOUT, otherwise logging with unicorn doesn't work
     config.logger = Logger.new(STDOUT) unless Rails.env.test?
+
+    # Set the cache store
+    config.cache_store = :dalli_store
   end
 end

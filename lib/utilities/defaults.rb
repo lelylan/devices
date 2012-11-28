@@ -8,7 +8,6 @@ class Defaults
   # making it expire at any deploy http://www.broadcastingadam.com/2012/07/advanced_caching_part_2-using_strategies/
   def self.physical_application_id
     Rails.cache.fetch 'client:name:physicals:id' do
-      puts 'DEBUG: Creating the client used to create the access tokend for physical devices'
       app = Doorkeeper::Application.find_or_create_by(
         name: 'Physicals', redirect_uri: 'http://lelylan.com')
       app.resource_owner_id = Defaults.user_application_id

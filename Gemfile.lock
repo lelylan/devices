@@ -59,6 +59,7 @@ GEM
     colored (1.2)
     columnize (0.3.6)
     crack (0.3.1)
+    dalli (2.5.0)
     database_cleaner (0.9.1)
     debugger (1.2.1)
       columnize (>= 0.3.1)
@@ -249,6 +250,7 @@ DEPENDENCIES
   capybara
   capybara-json
   coffee-rails (~> 3.2.1)
+  dalli
   database_cleaner
   debugger
   doorkeeper (~> 0.6.1)

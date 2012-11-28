@@ -14,6 +14,7 @@ gem 'addressable'
 gem 'bcrypt-ruby', require: 'bcrypt'
 gem 'bundler'
 gem 'faraday'
+gem 'dalli'
 
 group :development, :test do
   gem 'foreman'
