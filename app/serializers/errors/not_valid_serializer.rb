@@ -1,8 +1,8 @@
-class NotFoundSerializer < ActiveModel::Serializer
+class NotValidSerializer < ActiveModel::Serializer
   attributes :status, :method, :request, :error
 
   def status
-    404
+    422
   end
 
   def method
@@ -14,10 +14,8 @@ class NotFoundSerializer < ActiveModel::Serializer
   end
 
   def error
-    {
-      code: object[:code],
+    { code: object[:code],
       description: object[:description],
-      uri: object[:uri]
-    }
+      body: object[:body] }
   end
 end

@@ -7,7 +7,6 @@ shared_examples_for 'a not owned resource' do |action|
 
     scenario 'get a not found notification' do
       eval action
-      save_and_open_page
       has_valid_json
       has_not_found_resource uri: uri
     end

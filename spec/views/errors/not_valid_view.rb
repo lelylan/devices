@@ -7,7 +7,7 @@ module ViewNotValidMethods
     json    = Hashie::Mash.new json
 
     json.request.should match Regexp.escape(uri)
-    json.status.should     == '422'
+    json.status.should     == 422
     json[:method].should   == options[:method]
     json.error.code.should == options[:code]
     page.should have_content  options[:error]
