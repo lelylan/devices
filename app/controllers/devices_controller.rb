@@ -17,6 +17,7 @@ class DevicesController < ApplicationController
   end
 
   def show
+    render 'show', json: @device, serializer: DeviceSerializer
   end
 
   def create

@@ -6,7 +6,6 @@ gem 'rails', '~> 3.2.6'
 gem 'unicorn'
 gem 'mongoid', '3.0.9' # TODO: from 3.0.10 I get some strange errors https://github.com/mongoid/mongoid/pull/2454
 gem 'doorkeeper', '~> 0.6.1'
-gem 'rabl'
 gem 'draper', '~> 0.15.0'
 gem 'yajl-ruby'
 gem 'rails_config'
@@ -15,6 +14,8 @@ gem 'bcrypt-ruby', require: 'bcrypt'
 gem 'bundler'
 gem 'faraday'
 gem 'dalli'
+gem 'rails-api'
+gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
 
 group :development, :test do
   gem 'foreman'

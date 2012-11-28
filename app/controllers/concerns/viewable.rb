@@ -10,10 +10,9 @@ module Viewable
   end
 
   def render_404(code = 'notifications.resource.not_found', uri = nil)
-    @code  = code
-    @error = I18n.t(code)
-    @uri   = uri || request.url
-    render 'shared/404', status: 404 and return
+    self.class.serialization_scope :request
+    resource = { code: code, description: I18n.t(code), uri: (uri || request.url) }
+    render 'show', status: 404, json: resource, serializer: ::NotFoundSerializer and return
   end
 
   def render_422(code, error)

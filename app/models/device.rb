@@ -38,6 +38,9 @@ class Device
   before_validation(on: 'create') { set_secret }
   before_validation(on: 'create') { set_activation_code }
 
+  # TODO: seems a bug, as the serializer should be automatically found
+  def active_model_serializer; DeviceSerializer; end
+
   def set_type_uri
     self.type_id = find_id type
   end
