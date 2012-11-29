@@ -20,6 +20,9 @@ class History
 
   before_create :set_device_id
 
+  # TODO: seems a bug, as the serializer should be automatically found
+  def active_model_serializer; HistorySerializer; end
+
   private
 
   def set_device_id

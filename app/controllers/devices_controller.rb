@@ -14,7 +14,7 @@ class DevicesController < ApplicationController
 
   def index
     @devices = @devices.limit(params[:per])
-    render json: @devices.to_json
+    render json: @devices
   end
 
   def show

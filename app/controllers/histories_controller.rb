@@ -9,9 +9,11 @@ class HistoriesController < ApplicationController
 
   def index
     @histories = @histories.limit(params[:per])
+    render json: @histories
   end
 
   def show
+    render json: @history
   end
 
   private

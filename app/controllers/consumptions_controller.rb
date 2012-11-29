@@ -11,16 +11,18 @@ class ConsumptionsController < ApplicationController
 
   def index
     @consumptions = @consumptions.limit(params[:per])
+    render json: @consumptions
   end
 
   def show
+    render json: @consumption if stale?(@consumption)
   end
 
   def create
     @consumption = Consumption.new(params)
     @consumption.resource_owner_id = current_user.id
     if @consumption.save!
-      render 'show', status: 201, location: ConsumptionDecorator.decorate(@consumption).uri
+      render json: @consumption, status: 201, location: ConsumptionDecorator.decorate(@consumption).uri
     else
       render_422 'notifications.resource.not_valid', @consumption.errors
     end
@@ -28,14 +30,14 @@ class ConsumptionsController < ApplicationController
 
   def update
     if @consumption.update_attributes!(params)
-      render 'show'
+      render json: @consumption
     else
       render_422 'notifications.resource.not_valid', @consumption.errors
     end
   end
 
   def destroy
-    render 'show'
+    render json: @consumption
     @consumption.destroy
   end
 

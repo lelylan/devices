@@ -13,7 +13,7 @@ class ActivationsController < ApplicationController
     @device.activated_at = Time.now
     @device.resource_owner_id = current_user.id
     if @device.save!
-      render '/devices/show', status: 201, location: DeviceDecorator.decorate(@device).uri
+      render json: @device, status: 201, location: DeviceDecorator.decorate(@device).uri
     else
       render_422 'notifications.resource.not_valid', @device.errors
     end
@@ -22,7 +22,7 @@ class ActivationsController < ApplicationController
   def destroy
     @device.activated_at = nil
     @device.save
-    render 'devices/show'
+    render json: @device
   end
 
   private
