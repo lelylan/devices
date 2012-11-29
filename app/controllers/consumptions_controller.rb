@@ -5,6 +5,7 @@ class ConsumptionsController < ApplicationController
   doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
 
   before_filter :find_owned_resources
+  before_filter :find_filtered_resources
   before_filter :find_resource, only: %w(show update destroy)
   before_filter :search_params, only: %w(index)
   before_filter :pagination,    only: %w(index)
@@ -45,6 +46,10 @@ class ConsumptionsController < ApplicationController
 
   def find_owned_resources
     @consumptions = Consumption.where(resource_owner_id: current_user.id)
+  end
+
+  def find_filtered_resources
+    @consumptions = @consumptions.in(device_id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
   end
 
   def find_resource

@@ -22,6 +22,7 @@ feature 'HistorysController' do
     it_behaves_like 'a searchable resource', { device: a_uri(FactoryGirl.create :device) }
     it_behaves_like 'a searchable resource on properties'
     it_behaves_like 'a searchable resource on timing', 'created_at'
+    it_behaves_like 'a filterable list'
   end
 
   context 'GET /histories/:id' do
@@ -33,5 +34,6 @@ feature 'HistorysController' do
     it_behaves_like 'a proxiable service'
     it_behaves_like 'a not owned resource', 'page.driver.get(uri)'
     it_behaves_like 'a not found resource', 'page.driver.get(uri)'
+    it_behaves_like 'a filterable resource', 'page.driver.get(uri)'
   end
 end

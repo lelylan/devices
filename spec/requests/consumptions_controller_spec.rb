@@ -21,6 +21,7 @@ feature 'ConsumptionsController' do
     it_behaves_like 'a paginable resource'
     it_behaves_like 'a searchable resource', { type: 'instantaneous', unit: 'lives', device: a_uri(FactoryGirl.create :device) }
     it_behaves_like 'a searchable resource on timing', 'occur_at'
+    it_behaves_like 'a filterable list'
   end
 
   context 'GET /consumptions/:id' do
@@ -43,6 +44,7 @@ feature 'ConsumptionsController' do
     it_behaves_like 'a proxiable service'
     it_behaves_like 'a not owned resource', 'page.driver.get(uri)'
     it_behaves_like 'a not found resource', 'page.driver.get(uri)'
+    it_behaves_like 'a filterable resource', 'page.driver.get(uri)'
   end
 
   context 'POST /consumptions' do
@@ -76,6 +78,7 @@ feature 'ConsumptionsController' do
     it_behaves_like 'an updatable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
+    it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
     it_behaves_like 'a validated resource', 'page.driver.put(uri, { type: "" }.to_json)', { method: 'PUT', error: 'is not included in the list' }
   end
 
@@ -86,5 +89,6 @@ feature 'ConsumptionsController' do
     it_behaves_like 'a deletable resource'
     it_behaves_like 'a not owned resource', 'page.driver.delete(uri)'
     it_behaves_like 'a not found resource', 'page.driver.delete(uri)'
+    it_behaves_like 'a filterable resource', 'page.driver.delete(uri)'
   end
 end
