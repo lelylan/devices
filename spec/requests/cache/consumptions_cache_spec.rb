@@ -1,5 +1,4 @@
 require File.expand_path(File.dirname(__FILE__) + '/../acceptance_helper')
-require File.expand_path(File.dirname(__FILE__) + '/../../../app/serializers/device_serializer')
 
 feature 'Caching' do
 
@@ -14,15 +13,14 @@ feature 'Caching' do
   before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
   before { page.driver.header 'Content-Type', 'application/json' }
 
-  let(:controller) { 'devices' }
-  let(:factory)    { 'device' }
+  let(:controller) { 'consumptions' }
+  let(:factory)    { 'consumption' }
 
+  describe 'GET /consumptions/:id' do
 
-  describe 'GET /devices/:id' do
-
-    let!(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
-    let(:uri)       { "/devices/#{resource.id}" }
-    let(:cache_key) { ActiveSupport::Cache.expand_cache_key(['device_serializer', resource.cache_key, 'to-json']) }
+    let!(:resource) { FactoryGirl.create :consumption, :durational, resource_owner_id: user.id }
+    let(:uri)       { "/consumptions/#{resource.id}" }
+    let(:cache_key) { ActiveSupport::Cache.expand_cache_key(['consumption_serializer', resource.cache_key, 'to-json']) }
 
     before { page.driver.get uri }
 
@@ -65,7 +63,7 @@ feature 'Caching' do
           end
 
           it 'creates a new fragment cache' do
-            new_key = ActiveSupport::Cache.expand_cache_key(['device_serializer', resource.cache_key, 'to-json'])
+            new_key = ActiveSupport::Cache.expand_cache_key(['consumption_serializer', resource.cache_key, 'to-json'])
             Rails.cache.exist?(new_key).should be_true
           end
 
@@ -100,7 +98,7 @@ feature 'Caching' do
           end
 
           it 'creates a new fragment cache' do
-            new_key = ActiveSupport::Cache.expand_cache_key(['device_serializer', resource.cache_key, 'to-json'])
+            new_key = ActiveSupport::Cache.expand_cache_key(['consumption_serializer', resource.cache_key, 'to-json'])
             Rails.cache.exist?(new_key).should be_true
           end
 

@@ -13,7 +13,7 @@ class HistoriesController < ApplicationController
   end
 
   def show
-    render json: @history
+    render json: @history if stale?(@history)
   end
 
   private

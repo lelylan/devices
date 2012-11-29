@@ -1,4 +1,4 @@
-class SecretSerializer < ApplicationSerializer
+class PrivateSerializer < ApplicationSerializer
   cached true
 
   attributes :uri, :id, :name, :secret, :activation_code
