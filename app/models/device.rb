@@ -1,10 +1,3 @@
-module Mongoid
-  class Criteria
-
-  end
-end
-
-
 class Device
   include Mongoid::Document
   include Mongoid::Timestamps

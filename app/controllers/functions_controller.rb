@@ -44,7 +44,7 @@ class FunctionsController < ApplicationController
   end
 
   def syncrhronize
-    @device.synchronize_type_properties
+    #@device.synchronize_type_properties
     @properties = @device.device_properties params[:properties]
   end
 
