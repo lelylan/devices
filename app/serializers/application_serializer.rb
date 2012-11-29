@@ -14,9 +14,13 @@ class ApplicationSerializer < ActiveModel::Serializer
 
   class_attribute :perform_caching
 
-  # Confugure the usage of the cache (or not)
-  def cached(value = true)
-    self.perform_caching = value
+  class << self
+
+    # Confugure the usage of the cache (or not)
+    def cached(value = true)
+      self.perform_caching = value
+    end
+
   end
 
   # Cache entire JSON string
@@ -43,7 +47,7 @@ class ApplicationSerializer < ActiveModel::Serializer
   end
 
   def perform_caching?
-     rails_caching && perform_caching && Rails.cache && respond_to?(:cache_key)
+    rails_caching && perform_caching && Rails.cache && respond_to?(:cache_key)
   end
 
   def rails_caching

@@ -1,4 +1,6 @@
-class SecretSerializer < ActiveModel::Serializer
+class SecretSerializer < ApplicationSerializer
+  cached true
+
   attributes :uri, :id, :name, :secret, :activation_code
 
   def uri

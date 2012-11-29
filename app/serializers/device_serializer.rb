@@ -1,4 +1,6 @@
 class DeviceSerializer < ApplicationSerializer
+  cached true
+
   attributes :uri, :id, :name, :type, :properties, :physical, :pending,
              :activated, :created_at, :updated_at
 
