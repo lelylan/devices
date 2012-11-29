@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../acceptance_helper')
 require File.expand_path(File.dirname(__FILE__) + '/../../../app/serializers/device_serializer')
 
-feature 'Fragment Caching' do
+feature 'Caching' do
 
   before { ActionController::Base.perform_caching = true }
   before { Rails.cache.clear }
@@ -25,19 +25,89 @@ feature 'Fragment Caching' do
 
     before { page.driver.get uri }
 
-    it 'creates the fragment cache' do
-      Rails.cache.exist?(cache_key).should be_true
+    describe 'with fragment caching' do
+
+      it 'creates the fragment cache' do
+        Rails.cache.exist?(cache_key).should be_true
+      end
+
+      it 'saves the JSON resource into the cache' do
+        cached = JSON.parse Rails.cache.read(cache_key)
+        has_resource resource, cached
+      end
     end
 
-    it 'save the json resource' do
-      cached = JSON.parse Rails.cache.read(cache_key)
-      has_resource resource, cached
+    describe 'with HTTP caching' do
+
+      describe 'when sends the If-Modified-Since header' do
+
+        describe 'when the resource does not change' do
+
+          before { page.driver.header 'If-Modified-Since', resource.updated_at.httpdate }
+          before { page.driver.get uri }
+
+          it 'returns a not modified response' do
+            page.status_code.should == 304
+          end
+        end
+
+        describe 'when the resource changes' do
+
+          let!(:timestamp) { resource.updated_at }
+
+          before { resource.updated_at = resource.updated_at + 1; resource.save }
+          before { page.driver.header 'If-Modified-Since', (timestamp).httpdate }
+          before { page.driver.get uri }
+
+          it 'executes the action' do
+            page.status_code.should == 200
+          end
+
+          it 'creates a new fragment cache' do
+            new_key = ActiveSupport::Cache.expand_cache_key(['device_serializer', resource.cache_key, 'to-json'])
+            Rails.cache.exist?(new_key).should be_true
+          end
+
+          it 'returns the Last-Modified header' do
+            page.response_headers['Last-Modified'].should == resource.updated_at.httpdate
+          end
+        end
+      end
+
+      describe 'when sends the If-None-Match header' do
+
+        let(:etag) { page.response_headers['ETag'] }
+
+        describe 'when the resource does not change' do
+
+          before { page.driver.header 'If-None-Match', etag }
+          before { page.driver.get uri }
+
+          it 'returns a not modified response' do
+            page.status_code.should == 304
+          end
+        end
+
+        describe 'when the resource changes' do
+
+          before { resource.updated_at = resource.updated_at + 1; resource.save }
+          before { page.driver.header 'If-None-Match', etag }
+          before { page.driver.get uri }
+
+          it 'executes the action' do
+            page.status_code.should == 200
+          end
+
+          it 'creates a new fragment cache' do
+            new_key = ActiveSupport::Cache.expand_cache_key(['device_serializer', resource.cache_key, 'to-json'])
+            Rails.cache.exist?(new_key).should be_true
+          end
+
+          it 'returns the ETag header' do
+            page.response_headers['ETag'].should_not == etag
+          end
+        end
+      end
     end
   end
 end
-
-#describe 'when If-Modified-Since match with the resource updated at' do
-
-        #before { page.driver.header 'If-Modified-Since', resource.updated_at.httpdate }
-
-
