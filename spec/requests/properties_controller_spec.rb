@@ -40,8 +40,7 @@ feature 'PropertiesController' do
     end
 
     it 'updates #updated_at' do
-      old = Time.now - 60
-      resource.update_attributes(updated_at: old)
+      resource.update_attributes(updated_at: Time.now - 60)
       expect { update }.to change { resource.reload.updated_at.to_i }
     end
 

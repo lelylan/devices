@@ -17,6 +17,7 @@ feature 'Caching' do
   let(:controller) { 'devices' }
   let(:factory)    { 'device' }
 
+
   describe 'GET /devices/:id' do
 
     let!(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }

@@ -9,7 +9,6 @@ class PropertiesController < ApplicationController
   before_filter :find_resource
   before_filter :verify_signature
   before_filter :syncrhronize
-  before_filter :status_code
 
   eventable_for 'device', resource: 'devices', prefix: 'property', only: %w(update)
 
@@ -19,7 +18,7 @@ class PropertiesController < ApplicationController
       @device.pending = params[:pending] if params[:pending]
       @device.save
       create_history
-      render '/devices/show', status: @status_code
+      render json: @device, status: status_code
     rescue Mongoid::Errors::DocumentNotFound => e
       params[:properties] ||= []
       render_404 'notifications.resource.not_found', params[:properties].map {|p| p[:uri]}
@@ -60,6 +59,6 @@ class PropertiesController < ApplicationController
     @source = params[:source] || request.headers['X-Request-Source']
     @source = 'physical' if doorkeeper_token.application_id == Defaults.physical_application_id
     forward_to_physical = (@device.physical and @source != 'physical')
-    @status_code = forward_to_physical ? 202 : 200
+    forward_to_physical ? 202 : 200
   end
 end

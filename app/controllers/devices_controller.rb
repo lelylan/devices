@@ -14,13 +14,11 @@ class DevicesController < ApplicationController
 
   def index
     @devices = @devices.limit(params[:per])
-    render 'index', json: @devices
+    render json: @devices.to_json
   end
 
   def show
-    #if stale?(@device)
-      render 'show', json: @device
-    #end
+    render json: @device if stale?(@device)
   end
 
   def create
