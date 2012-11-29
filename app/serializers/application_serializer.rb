@@ -47,14 +47,11 @@ class ApplicationSerializer < ActiveModel::Serializer
   end
 
   def perform_caching?
-    rails_caching && perform_caching && Rails.cache && respond_to?(:cache_key)
-  end
-
-  def rails_caching
-    Rails.application.config.action_controller.perform_caching
+    ActionController::Base.perform_caching && perform_caching && Rails.cache && object.respond_to?(:cache_key)
   end
 
   def expand_cache_key(*args)
+    pp ActiveSupport::Cache.expand_cache_key(args)
     ActiveSupport::Cache.expand_cache_key(args)
   end
 end
