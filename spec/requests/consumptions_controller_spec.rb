@@ -14,8 +14,8 @@ feature 'ConsumptionsController' do
 
   describe 'GET /consumptions' do
 
-    let!(:resource)  { FactoryGirl.create :consumption, :durational, resource_owner_id: user.id }
-    let(:uri)        { '/consumptions' }
+    let!(:resource) { FactoryGirl.create :consumption, :durational, resource_owner_id: user.id }
+    let(:uri)       { '/consumptions' }
 
     it_behaves_like 'a listable resource'
     it_behaves_like 'a paginable resource'

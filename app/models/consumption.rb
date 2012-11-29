@@ -32,6 +32,9 @@ class Consumption
   before_validation :normalize_timings
   before_create :set_device_id
 
+  # TODO: seems a bug, as the serializer should be automatically found
+  def active_model_serializer; ConsumptionSerializer; end
+
   def normalize_timings
     if durational?
       self.end_at   = calculate_end_at   if (occur_at and duration and end_at.nil?)

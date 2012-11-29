@@ -61,7 +61,7 @@ class AccessesController < ApplicationController
   # view rendering methods
 
   def render_success
-      render 'devices/show'
+      render json: @device
   end
 
   def render_failure

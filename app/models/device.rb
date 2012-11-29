@@ -1,3 +1,10 @@
+module Mongoid
+  class Criteria
+
+  end
+end
+
+
 class Device
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -37,6 +44,9 @@ class Device
   before_validation(on: 'create') { set_creator_id }
   before_validation(on: 'create') { set_secret }
   before_validation(on: 'create') { set_activation_code }
+
+  # TODO: seems a bug, as the serializer should be automatically found
+  def active_model_serializer; DeviceSerializer; end
 
   def set_type_uri
     self.type_id = find_id type

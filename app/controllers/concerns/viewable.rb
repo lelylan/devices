@@ -6,21 +6,21 @@ module Viewable
   end
 
   def render_401
-    render 'shared/404', status: 401 and return
+    self.class.serialization_scope :request
+    render 'show', status: 401, json: {}, serializer: ::UnauthorizedSerializer and return
+    render 'shared/401', status: 401 and return
   end
 
   def render_404(code = 'notifications.resource.not_found', uri = nil)
-    @code  = code
-    @error = I18n.t(code)
-    @uri   = uri || request.url
-    render 'shared/404', status: 404 and return
+    self.class.serialization_scope :request
+    resource = { code: code, description: I18n.t(code), uri: (uri || request.url) }
+    render 'show', status: 404, json: resource, serializer: ::NotFoundSerializer and return
   end
 
-  def render_422(code, error)
-    @body  = json_body
-    @code  = code
-    @error = error
-    render 'shared/422', status: 422 and return
+  def render_422(code, description)
+    self.class.serialization_scope :request
+    resource = { code: code, description: description, body: json_body }
+    render 'show', status: 422, json: resource, serializer: ::NotValidSerializer and return
   end
 
   private

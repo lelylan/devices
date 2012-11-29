@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::Base
+class ApplicationController < ActionController::API
   include Resourceable
   include Rescueable
   include Viewable

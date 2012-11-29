@@ -14,16 +14,18 @@ class DevicesController < ApplicationController
 
   def index
     @devices = @devices.limit(params[:per])
+    render json: @devices
   end
 
   def show
+    render json: @device if stale?(@device)
   end
 
   def create
     @device = Device.new(params)
     @device.resource_owner_id = current_user.id
     if @device.save!
-      render 'show', status: 201, location: DeviceDecorator.decorate(@device).uri
+      render json: @device, status: 201, location: DeviceDecorator.decorate(@device).uri
     else
       render_422 'notifications.resource.not_valid', @device.errors
     end
@@ -31,19 +33,21 @@ class DevicesController < ApplicationController
 
   def update
     if @device.update_attributes!(params)
-      render 'show'
+      render json: @device
     else
       render_422 'notifications.resource.not_valid', @device.errors
     end
   end
 
   def destroy
-    render 'show'
+    render json: @device
     @device.destroy
   end
 
+  # TODO: understand why if you use @device it does not work.
   def privates
-    render 'show_privates'
+    resource = { id: @device.id, name: @device.name, secret: @device.secret, activation_code: @device.activation_code, uri: DeviceDecorator.decorate(@device).uri }
+    render json: resource, serializer: PrivateSerializer
   end
 
   private

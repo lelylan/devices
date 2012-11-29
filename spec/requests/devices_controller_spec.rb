@@ -34,6 +34,12 @@ feature 'DevicesController' do
     it_behaves_like 'a not owned resource', 'page.driver.get(uri)'
     it_behaves_like 'a not found resource', 'page.driver.get(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.get(uri)'
+
+    it 'does not show the private device information' do
+      page.driver.get uri
+      JSON.parse(page.source).should_not have_key 'secret'
+      JSON.parse(page.source).should_not have_key 'activation_code'
+    end
   end
 
   context 'POST /devices' do
@@ -86,13 +92,11 @@ feature 'DevicesController' do
 
     it_behaves_like 'a proxiable service'
     it_behaves_like 'a filterable resource', 'page.driver.get(uri)'
-    #it_behaves_like 'a not owned resource', 'page.driver.get(uri)', 401
-    #it_behaves_like 'a not found resource', 'page.driver.get(uri)', 401
 
     it 'shows the private device information' do
       page.driver.get uri
       JSON.parse(page.source)['secret'].should == resource.secret
-      JSON.parse(page.source)['activation_code'].should == Signature.sign(resource.id, resource.secret)
+      JSON.parse(page.source)['activation_code'].should == resource.activation_code
     end
   end
 end

@@ -5,7 +5,6 @@ shared_examples_for 'a not found resource' do |action|
     scenario 'get a not found notification' do
       resource.delete
       eval action
-      has_valid_json
       has_not_found_resource uri: uri
     end
   end
