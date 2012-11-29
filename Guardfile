@@ -19,7 +19,7 @@ guard 'rspec', cli: '--drb --format Fuubar --color', all_on_start: false, all_af
   watch(%r{^app/decorators/(.+)_decorator\.rb$})      { |m| "spec/requests/#{m[1]}_controller_spec.rb" }
   watch('app/controllers/application_controller.rb')  { "spec/requests" }
 
-  watch(%r{^app/views/(.+)/(.+)\.rabl$})                 { |m| "spec/requests/#{m[1]}_controller_spec.rb" }
+  watch(%r{^app/serializers/(.+)_serializer\.rb$})       { |m| "spec/requests/#{m[1]}s_controller_spec.rb" }
   watch(%r{^spec/requests/support/views/(.+)_view\.rb$}) { |m| "spec/requests/#{m[1]}_controller_spec.rb" }
 end
 

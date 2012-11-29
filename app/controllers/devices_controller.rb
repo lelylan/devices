@@ -18,7 +18,9 @@ class DevicesController < ApplicationController
   end
 
   def show
-    render 'show', json: @device
+    if stale?(@device)
+      render 'show', json: @device
+    end
   end
 
   def create
