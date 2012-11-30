@@ -21,7 +21,8 @@ module Doorkeeper
           doorkeeper_for = DoorkeeperForBuilder.create_doorkeeper_for(*args)
           before_filter doorkeeper_for.filter_options do
             return if doorkeeper_for.validate_token(doorkeeper_token)
-            render 'show', status: 401, json: {}, serializer: ::UnauthorizedSerializer and return
+            self.class.serialization_scope :request
+            render json: {}, status: 401, serializer: ::NotAuthorizedSerializer and return
           end
         end
       end
