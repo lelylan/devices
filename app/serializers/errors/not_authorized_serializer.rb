@@ -1,4 +1,4 @@
-class UnauthorizedSerializer < ActiveModel::Serializer
+class NotAuthorizedSerializer < ActiveModel::Serializer
   attributes :status, :method, :request, :error
 
   def status
