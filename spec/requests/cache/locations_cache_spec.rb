@@ -22,7 +22,7 @@ feature 'Caching' do
     let!(:device)   { Device.find(resource.device_ids).first }
     before          { resource.update_attributes(updated_at: Time.now - 60) }
     let!(:uri)      { "/devices/#{device.id}" }
-    let!(:old_time) { resource.reload.updated_at }
+    let!(:old_time) { resource.updated_at }
 
     describe 'when the device is updated' do
 
