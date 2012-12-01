@@ -32,7 +32,7 @@ feature 'Caching' do
         let!(:new_time)   { resource.reload.updated_at }
 
         it 'updates the location updated_at attribute' do
-          (new_time - old_time).to_i.should == 60
+          (new_time - old_time).should be_within(1).of(60)
         end
       end
 
@@ -42,7 +42,7 @@ feature 'Caching' do
         let!(:new_time)   { resource.reload.updated_at }
 
         it 'does not update the location updated_at attribute' do
-          (new_time - old_time).to_i.should == 0
+          (new_time - old_time).should be_within(1).of(0)
         end
       end
     end
