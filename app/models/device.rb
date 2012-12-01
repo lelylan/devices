@@ -34,11 +34,12 @@ class Device
   accepts_nested_attributes_for :properties, allow_destroy: true
 
   before_create :set_type_uri, :synchronize_type_properties
+  before_save   :touch_locations # used to create an autoexpiring cache key on locations
+
   before_validation(on: 'create') { set_creator_id }
   before_validation(on: 'create') { set_secret }
   before_validation(on: 'create') { set_activation_code }
 
-  # TODO: seems a bug, as the serializer should be automatically found
   def active_model_serializer; DeviceSerializer; end
 
   def set_type_uri
@@ -55,6 +56,10 @@ class Device
 
   def set_activation_code
     self.activation_code = Signature.sign(id, secret)
+  end
+
+  def touch_locations
+    Location.in(device_ids: id).update_all(updated_at: Time.now) if name_changed?
   end
 
   def synchronize_type_properties
