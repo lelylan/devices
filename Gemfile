@@ -4,7 +4,7 @@ ruby '1.9.3'
 
 gem 'rails', '~> 3.2.6'
 gem 'unicorn'
-gem 'mongoid', '3.0.9' # TODO: from 3.0.10 I get some strange errors https://github.com/mongoid/mongoid/pull/2454
+gem 'mongoid'
 gem 'doorkeeper', '~> 0.6.1'
 gem 'draper', '~> 0.15.0'
 gem 'yajl-ruby'

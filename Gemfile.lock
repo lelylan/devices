@@ -273,7 +273,7 @@ DEPENDENCIES
   guard-spork
   hashie
   launchy
-  mongoid (= 3.0.9)
+  mongoid
   rails (~> 3.2.6)
   rails-api
   rails_best_practices
