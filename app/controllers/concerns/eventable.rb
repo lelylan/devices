@@ -36,11 +36,13 @@ module Eventable
   private
 
   def create_event
-    Event.create(
-      resource_owner_id: current_user.id,
-      resource_id: resource.send(self.class.resource_id),
-      resource: self.class.resource_name,
-      event: event, source: source, data: data)
+    if resource.valid?
+      Event.create(
+        resource_owner_id: current_user.id,
+        resource_id: resource.send(self.class.resource_id),
+        resource: self.class.resource_name,
+        event: event, source: source, data: data)
+    end
   end
 
   def data

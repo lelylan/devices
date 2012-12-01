@@ -22,7 +22,7 @@ class ConsumptionsController < ApplicationController
   def create
     @consumption = Consumption.new(params)
     @consumption.resource_owner_id = current_user.id
-    if @consumption.save!
+    if @consumption.save
       render json: @consumption, status: 201, location: ConsumptionDecorator.decorate(@consumption).uri
     else
       render_422 'notifications.resource.not_valid', @consumption.errors
@@ -30,7 +30,7 @@ class ConsumptionsController < ApplicationController
   end
 
   def update
-    if @consumption.update_attributes!(params)
+    if @consumption.update_attributes(params)
       render json: @consumption
     else
       render_422 'notifications.resource.not_valid', @consumption.errors

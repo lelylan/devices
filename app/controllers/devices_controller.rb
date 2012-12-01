@@ -24,7 +24,7 @@ class DevicesController < ApplicationController
   def create
     @device = Device.new(params)
     @device.resource_owner_id = current_user.id
-    if @device.save!
+    if @device.save
       render json: @device, status: 201, location: DeviceDecorator.decorate(@device).uri
     else
       render_422 'notifications.resource.not_valid', @device.errors
@@ -32,7 +32,7 @@ class DevicesController < ApplicationController
   end
 
   def update
-    if @device.update_attributes!(params)
+    if @device.update_attributes(params)
       render json: @device
     else
       render_422 'notifications.resource.not_valid', @device.errors
