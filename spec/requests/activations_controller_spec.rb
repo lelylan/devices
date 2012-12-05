@@ -65,8 +65,20 @@ feature 'ActivationsController' do
       has_resource resource
     end
 
+    describe 'when the activation code does not exist' do
+
+      let(:activation_code) { Signature.sign resource.id, 'not-existing' }
+      let(:uri)             { "/activations/#{activation_code}" }
+
+      it 'can not be activated by another user' do
+        page.driver.delete(uri)
+        page.status_code.should == 404
+        page.should have_content 'notifications.activation.not_found'
+        page.should have_content 'Activation code not found'
+      end
+    end
+
     it_behaves_like 'a not owned resource', 'page.driver.delete(uri)'
-    it_behaves_like 'a not found resource', 'page.driver.delete(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.delete(uri)'
   end
 end

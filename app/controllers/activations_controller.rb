@@ -54,7 +54,6 @@ class ActivationsController < ApplicationController
   end
 
   def document_not_found
-    render_404 'notifications.activation.not_found' if params[:action] == 'create'
-    render_404 'notifications.resource.not_found' if params[:action] == 'destroy'
+    render_404 'notifications.activation.not_found'
   end
 end
