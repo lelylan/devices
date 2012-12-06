@@ -18,6 +18,7 @@ class PropertiesController < ApplicationController
     render json: @device, status: status_code
   end
 
+
   private
 
   def find_owned_resources
@@ -57,6 +58,7 @@ class PropertiesController < ApplicationController
   end
 
   def params_properties
+    params[:properties] ||= []
     params[:properties].tap { |p| p.map { |p| p[:id] = find_id p[:uri] } }
   end
 

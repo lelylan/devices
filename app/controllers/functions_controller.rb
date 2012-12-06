@@ -67,6 +67,7 @@ class FunctionsController < ApplicationController
   end
 
   def params_properties
+    params[:properties] ||= []
     params[:properties].tap { |p| p.map { |p| p[:id] = find_id p[:uri] } }
   end
 
