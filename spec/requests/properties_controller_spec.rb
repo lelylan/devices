@@ -61,7 +61,7 @@ feature 'PropertiesController' do
 
       it 'raises a not found property' do
         page.driver.put(uri, params.to_json)
-        has_not_found_resource uri: params[:properties].map {|p| p[:uri]}, code: 'notifications.property.not_found'
+        has_not_found_resource uri: params[:properties].map { |p| p[:uri] }, code: 'notifications.property.not_found'
       end
 
       it 'does not create an history resource' do

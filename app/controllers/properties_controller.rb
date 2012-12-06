@@ -1,5 +1,5 @@
 class PropertiesController < ApplicationController
-
+  rescue_from    Mongoid::Errors::DocumentNotFound, with: :document_not_found
   doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym)
 
   skip_before_filter :deny_physical_request
@@ -12,15 +12,10 @@ class PropertiesController < ApplicationController
   eventable_for 'device', resource: 'devices', prefix: 'property', only: %w(update)
 
   def update
-    begin
-      @device.properties_attributes = properties_attributes
-      @device.update_attributes(pending: params[:pending]) if params[:pending]
-      create_history
-      render json: @device, status: status_code
-    rescue Mongoid::Errors::DocumentNotFound => e
-      params[:properties] ||= []
-      render_404 'notifications.property.not_found', params[:properties].map {|p| p[:uri]}
-    end
+    @device.properties_attributes = properties_attributes
+    @device.update_attributes(pending: params[:pending]) if params[:pending]
+    create_history
+    render json: @device, status: status_code
   end
 
   private
@@ -58,6 +53,16 @@ class PropertiesController < ApplicationController
   # extras
 
   def properties_attributes
+    params_properties
+  end
+
+  def params_properties
     params[:properties].tap { |p| p.map { |p| p[:id] = find_id p[:uri] } }
+  end
+
+  def document_not_found(e)
+    params[:properties] ||= []
+    render_404 'notifications.resource.not_found', request.url if not @device
+    render_404 'notifications.property.not_found', params[:properties].map { |p| p[:uri] } if @device
   end
 end

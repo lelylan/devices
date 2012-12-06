@@ -74,30 +74,23 @@ class Device
 
   private
 
-  # synchronize_function_properties private methods
 
-  def synchronized_function_properties(function, properties)
-    (function_properties(function, properties) + override_properties(properties)).flatten
-  end
+  #def function_properties(function, properties)
+    #properties = find_function_properties(function, properties)
+    #properties.map { |p| { id: p.property_id, value: p.value } }
+  #end
 
-  def function_properties(function, properties)
-    properties = find_function_properties(function, properties)
-    properties.map { |p| { id: p.property_id, value: p.value } }
-  end
+  #def find_function_properties(function, properties = [])
+    #properties ||= []
+    #override_ids = properties.map {|p| p[:id]}
+    #find_function(function).properties.nin(property_id: override_ids)
+  #end
 
-  def override_properties(properties)
-    properties ||= []
-    properties.map { |p| { id: p[:id], value: p[:value] } }
-  end
+  #def find_function(function)
+    #Function.find(find_id function)
+  #end
 
-  def find_function_properties(function, properties)
-    properties ||= []
-    override_ids = properties.map {|p| p[:id]}
-    find_function(function).properties.nin(property_id: override_ids)
-  end
-
-  def find_function(function)
-    function_id = find_id function
-    function    = Function.find function_id
-  end
+  #def override_properties(properties = [])
+    #properties.map { |p| { id: p[:id], value: p[:value] } }
+  #end
 end
