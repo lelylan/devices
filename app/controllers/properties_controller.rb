@@ -8,20 +8,18 @@ class PropertiesController < ApplicationController
   before_filter :find_filtered_resources
   before_filter :find_resource
   before_filter :verify_signature
-  before_filter :syncrhronize
 
   eventable_for 'device', resource: 'devices', prefix: 'property', only: %w(update)
 
   def update
     begin
-      @device.properties_attributes = @properties
-      @device.pending = params[:pending] if params[:pending]
-      @device.save
+      @device.properties_attributes = properties_attributes
+      @device.update_attributes(pending: params[:pending]) if params[:pending]
       create_history
       render json: @device, status: status_code
     rescue Mongoid::Errors::DocumentNotFound => e
       params[:properties] ||= []
-      render_404 'notifications.resource.not_found', params[:properties].map {|p| p[:uri]}
+      render_404 'notifications.property.not_found', params[:properties].map {|p| p[:uri]}
     end
   end
 
@@ -43,11 +41,6 @@ class PropertiesController < ApplicationController
     @device = @devices.find(params[:id])
   end
 
-  def syncrhronize
-    #@device.synchronize_type_properties
-    @properties = @device.device_properties params[:properties]
-  end
-
   def create_history
     @device = DeviceDecorator.decorate @device
     History.create device: @device.uri, properties: params[:properties] do |history|
@@ -60,5 +53,11 @@ class PropertiesController < ApplicationController
     @source = 'physical' if doorkeeper_token.application_id == Defaults.physical_application_id
     forward_to_physical = (@device.physical and @source != 'physical')
     forward_to_physical ? 202 : 200
+  end
+
+  # extras
+
+  def properties_attributes
+    params[:properties].tap { |p| p.map { |p| p[:id] = find_id p[:uri] } }
   end
 end

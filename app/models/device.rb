@@ -31,40 +31,31 @@ class Device
   validates :type, presence: true, uri: true, on: :create
   validates :physical, uri: true
 
-  accepts_nested_attributes_for :properties, allow_destroy: true
+  accepts_nested_attributes_for :properties
 
-  before_create :set_type_uri, :synchronize_type_properties
-  before_save   :touch_locations # used to create an autoexpiring cache key on locations
+  before_create :set_type_uri
+  before_create :set_device_properties
+  before_save   :touch_locations
 
   before_validation(on: 'create') { set_creator_id }
   before_validation(on: 'create') { set_secret }
   before_validation(on: 'create') { set_activation_code }
 
+  def set_type_uri; self.type_id = find_id type; end
+  def set_creator_id; self.creator_id = resource_owner_id; end
+  def set_secret; self.secret = Doorkeeper::OAuth::Helpers::UniqueToken.generate; end
+  def set_activation_code; self.activation_code = Signature.sign(id, secret); end
   def active_model_serializer; DeviceSerializer; end
 
-  def set_type_uri
-    self.type_id = find_id type
-  end
-
-  def set_creator_id
-    self.creator_id = resource_owner_id
-  end
-
-  def set_secret
-    self.secret = Doorkeeper::OAuth::Helpers::UniqueToken.generate
-  end
-
-  def set_activation_code
-    self.activation_code = Signature.sign(id, secret)
+  def set_device_properties
+    type       = Type.find(type_id)
+    properties = Property.in(id: type.property_ids)
+    entries    = properties.map { |p| { property_id: p.id, value: p.default } }
+    self.properties_attributes = entries
   end
 
   def touch_locations
     Location.in(device_ids: id).update_all(updated_at: Time.now) if name_changed?
-  end
-
-  def synchronize_type_properties
-    # Cache with auto-expiring key composed by device created_at and type updated_at.
-    self.properties_attributes = synchronized_type_properties
   end
 
   def synchronize_function_properties(function, properties = [])
@@ -82,31 +73,6 @@ class Device
   end
 
   private
-
-  # synchronize_type_properties private methods
-
-  def synchronized_type_properties
-    type = Type.find(type_id)
-    (add_properties(type) + remove_properties(type)).flatten
-  end
-
-  def add_properties(type)
-    properties = Property.in(id: new_properties(type))
-    properties.map{ |p| { property_id: p.id, value: p.default } }
-  end
-
-  def remove_properties(type)
-    properties = old_properties(type)
-    properties.map{ |p| { id: p, _destroy: '1' } }
-  end
-
-  def new_properties(type)
-    [ type.property_ids - properties.map(&:id) ].flatten
-  end
-
-  def old_properties(type)
-    [ properties.map(&:id) - type.property_ids ].flatten
-  end
 
   # synchronize_function_properties private methods
 
