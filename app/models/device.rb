@@ -61,36 +61,4 @@ class Device
   def synchronize_function_properties(function, properties = [])
     self.properties_attributes = synchronized_function_properties function, properties
   end
-
-  def device_properties(properties)
-    properties ||= []
-    properties.map do |p|
-      result = { id: find_id(p[:uri]) }
-      result[:value]    = p[:value]    if p[:value]
-      result[:physical] = p[:physical] if p[:physical]
-      result
-    end
-  end
-
-  private
-
-
-  #def function_properties(function, properties)
-    #properties = find_function_properties(function, properties)
-    #properties.map { |p| { id: p.property_id, value: p.value } }
-  #end
-
-  #def find_function_properties(function, properties = [])
-    #properties ||= []
-    #override_ids = properties.map {|p| p[:id]}
-    #find_function(function).properties.nin(property_id: override_ids)
-  #end
-
-  #def find_function(function)
-    #Function.find(find_id function)
-  #end
-
-  #def override_properties(properties = [])
-    #properties.map { |p| { id: p[:id], value: p[:value] } }
-  #end
 end

@@ -58,9 +58,9 @@ class FunctionsController < ApplicationController
   end
 
   def properties(function, params_properties)
-    function = Function.find(find_id function)
+    @function = Function.find(find_id function)
     override_ids = params_properties.map { |p| p[:id] }
-    function_properties = function.properties.nin(property_id: override_ids)
+    function_properties = @function.properties.nin(property_id: override_ids)
     function_properties = function_properties.map { |p|  DevicePropertyDecorator.decorate(p) }
     function_properties = function_properties.map { |p| { uri: p.uri, id: p.property_id.to_s, value: p.value } }
     (function_properties + params_properties).flatten
@@ -73,7 +73,8 @@ class FunctionsController < ApplicationController
 
   def document_not_found(e)
     params[:properties] ||= []
-    render_404 'notifications.resource.not_found', request.url if not @device
-    render_404 'notifications.property.not_found', params[:properties].map { |p| p[:uri] } if @device
+    return render_404 'notifications.resource.not_found', request.url if !@device
+    return render_404 'notifications.function.not_found', request.url if !@function
+    return render_404 'notifications.property.not_found', params[:properties].map { |p| p[:uri] } if @device
   end
 end
