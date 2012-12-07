@@ -31,51 +31,68 @@ feature 'PropertiesController' do
     it_behaves_like 'a physical event', 'properties'
     it_behaves_like 'a signed resource'
 
-    it 'creates an history resource' do
-      expect { update }.to change { History.count }.by(1)
-    end
-
-    it 'creates an history resource' do
-      expect { update }.to change { resource.reload.pending }.from(false).to(true)
-    end
-
-    it 'updates #updated_at' do
+    it 'touches the device' do
       resource.update_attributes(updated_at: Time.now - 60)
       expect { update }.to change { resource.reload.updated_at.to_i }
     end
 
-    context 'with a not existing property' do
+    it 'creates a history resource' do
+      expect { update }.to change { History.count }.by(1)
+    end
+
+    describe 'when creates an event' do
+
+      before  { update }
+      subject { Hashie::Mash.new Event.last.data['properties'].first }
+
+      it 'has two properties' do
+        Event.last.data['properties'].should have(2).properties
+      end
+
+      its(:id)    { should == status.id.to_s }
+      its(:uri)   { should == properties.first[:uri] }
+      its(:value) { should == properties.first[:value] }
+    end
+
+    describe 'when updates a not existing property' do
 
       let(:another) { FactoryGirl.create :property }
       let(:params)  { { properties: [ { uri: a_uri(another), value: 'not-valid' } ] } }
 
       it 'raises a not found property' do
         page.driver.put(uri, params.to_json)
-        has_not_found_resource uri: params[:properties].map {|p| p[:uri]}
+        has_not_found_resource uri: params[:properties].map { |p| p[:uri] }, code: 'notifications.property.not_found'
       end
 
       it 'does not create an history resource' do
         expect { update }.to_not change { History.count }.by(1)
       end
-    end
 
-    context 'with no physical connection' do
-
-      before { update }
-
-      it 'returns status code OK' do
-        page.status_code.should == 200
+      it 'does not create an event resource' do
+        expect { update }.to_not change { Event.count }.by(1)
       end
     end
 
-    context 'with physical connection' do
+    describe '#physical' do
 
-      let(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
+      describe 'when not connected' do
 
-      before { update }
+        before { update }
 
-      it 'returns status code Accepted' do
-        page.status_code.should == 202
+        it 'returns status code 200' do
+          page.status_code.should == 200
+        end
+      end
+
+      describe 'when connected' do
+
+        let(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
+
+        before { update }
+
+        it 'returns status code 202' do
+          page.status_code.should == 202
+        end
       end
     end
   end

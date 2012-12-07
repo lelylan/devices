@@ -4,6 +4,10 @@ en:
       not_found: "Resource not found"
       not_valid: "Not valid attributes"
       already_activated: "Resource is already activated"
+    property:
+      not_found: "Property not found"
+    function:
+      not_found: "Function not found"
     json:
       not_valid: "Not valid JSON"
     access:

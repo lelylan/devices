@@ -46,8 +46,8 @@ module Eventable
   end
 
   def data
-    return JSON.parse(response.body) if event != 'property-updated'
-    { properties: instance_variable_get('@properties') }
+    return JSON.parse(response.body)                         if event != 'property-updated'
+    return { properties: self.send(:properties_attributes) } if event == 'property-updated'
   end
 
   def source

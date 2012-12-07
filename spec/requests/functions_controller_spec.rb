@@ -18,8 +18,8 @@ feature 'FunctionsController' do
     let(:status)    { Property.find resource.properties.first.id }
     let(:intensity) { Property.find resource.properties.last.id }
 
-    let(:properties)   { [ { uri: a_uri(status), value: 'on' }, { uri: a_uri(intensity) } ] }
-    let(:function)     { FactoryGirl.create :function, properties: properties }
+    let(:function_properties) { [ { uri: a_uri(status), value: 'on' }, { uri: a_uri(intensity) } ] }
+    let(:function)     { FactoryGirl.create :function, properties: function_properties }
     let(:function_uri) { a_uri function }
 
     let(:properties) { [ { uri: a_uri(intensity), value: 'updated' } ] }
@@ -29,6 +29,7 @@ feature 'FunctionsController' do
     let(:uri) { "/devices/#{resource.id}/functions" }
 
     it_behaves_like 'an updatable resource'
+    it_behaves_like 'a functionable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
@@ -36,32 +37,58 @@ feature 'FunctionsController' do
     it_behaves_like 'a physical event', 'functions'
     it_behaves_like 'a signed resource'
 
-    it 'creates an history resource' do
-      expect { update }.to change { History.count }.by(1)
-    end
-
-    it 'creates an history resource' do
-      expect { update }.to change { resource.reload.pending }.from(false).to(true)
-    end
-
-    it 'updates #updated_at' do
-      old = Time.now - 60
-      resource.update_attributes(updated_at: old)
+    it 'touches the device' do
+      resource.update_attributes(updated_at: Time.now - 60)
       expect { update }.to change { resource.reload.updated_at.to_i }
     end
 
-    context 'with a not existing property' do
+    it 'creates a history resource' do
+      expect { update }.to change { History.count }.by(1)
+    end
+
+    describe 'when creates an event' do
+
+      before  { update }
+
+      it 'has two properties' do
+        Event.last.data['properties'].should have(2).properties
+      end
+
+      describe 'with a property defined in the function' do
+
+        subject { Hashie::Mash.new Event.last.data['properties'].first }
+
+        its(:id)    { should == status.id.to_s }
+        its(:uri)   { should match(status.id.to_s) }
+        its(:value) { should == 'on' }
+      end
+
+      describe 'with a property defined in the body request' do
+
+        subject { Hashie::Mash.new Event.last.data['properties'].last }
+
+        its(:id)    { should == intensity.id.to_s }
+        its(:uri)   { should match(intensity.id.to_s) }
+        its(:value) { should == 'updated' }
+      end
+    end
+
+    describe 'when updates a not existing property' do
 
       let(:another) { FactoryGirl.create :property }
       let(:params)  { { properties: [ { uri: a_uri(another), value: 'not-valid' } ], function: function_uri } }
 
       it 'raises a not found property' do
         page.driver.put(uri, params.to_json)
-        has_not_found_resource uri: params[:properties].map {|p| p[:uri]}
+        has_not_found_resource uri: params[:properties].map {|p| p[:uri]}, code: 'notifications.property.not_found'
       end
 
       it 'does not create an history resource' do
         expect { update }.to_not change { History.count }.by(1)
+      end
+
+      it 'does not create an event resource' do
+        expect { update }.to_not change { Event.count }.by(1)
       end
     end
 
@@ -74,14 +101,26 @@ feature 'FunctionsController' do
       end
     end
 
-    context 'with physical connection' do
+    describe '#physical' do
 
-      let(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
+      describe 'when not connected' do
 
-      before { update }
+        before { update }
 
-      it 'returns status code Accepted' do
-        page.status_code.should == 202
+        it 'returns status code 200' do
+          page.status_code.should == 200
+        end
+      end
+
+      describe 'when connected' do
+
+        let(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
+
+        before { update }
+
+        it 'returns status code 202' do
+          page.status_code.should == 202
+        end
       end
     end
   end

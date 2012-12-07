@@ -1,5 +1,5 @@
 class FunctionsController < ApplicationController
-
+  rescue_from    Mongoid::Errors::DocumentNotFound, with: :document_not_found
   doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym)
 
   skip_before_filter :deny_physical_request
@@ -8,22 +8,16 @@ class FunctionsController < ApplicationController
   before_filter :find_filtered_resources
   before_filter :find_resource
   before_filter :verify_signature
-  before_filter :syncrhronize
 
   eventable_for 'device', resource: 'devices', prefix: 'property', only: %w(update)
 
   def update
-    begin
-      @device.synchronize_function_properties params[:function], @properties
-      @device.pending = params[:pending] if params[:pending]
-      @device.save
-      create_history
-      render json: @device, status: status_code
-    rescue Mongoid::Errors::DocumentNotFound => e
-      params[:properties] ||= []
-      render_404 'notifications.resource.not_found', params[:properties].map {|p| p[:uri]}
-    end
+    @device.properties_attributes = properties_attributes
+    @device.update_attributes(pending: params[:pending]) if params[:pending]
+    create_history
+    render json: @device, status: status_code
   end
+
 
   private
 
@@ -43,11 +37,6 @@ class FunctionsController < ApplicationController
     end
   end
 
-  def syncrhronize
-    #@device.synchronize_type_properties
-    @properties = @device.device_properties params[:properties]
-  end
-
   def create_history
     @device = DeviceDecorator.decorate @device
     History.create device: @device.uri, properties: params[:properties] do |history|
@@ -60,5 +49,32 @@ class FunctionsController < ApplicationController
     @source = 'physical' if doorkeeper_token.application_id == Defaults.physical_application_id
     forward_to_physical = (@device.physical and @source != 'physical')
     forward_to_physical ? 202 : 200
+  end
+
+  # extras
+
+  def properties_attributes
+    properties(params[:function], params_properties)
+  end
+
+  def properties(function, params_properties)
+    @function = Function.find(find_id function)
+    override_ids = params_properties.map { |p| p[:id] }
+    function_properties = @function.properties.nin(property_id: override_ids)
+    function_properties = function_properties.map { |p|  DevicePropertyDecorator.decorate(p) }
+    function_properties = function_properties.map { |p| { uri: p.uri, id: p.property_id.to_s, value: p.value } }
+    (function_properties + params_properties).flatten
+  end
+
+  def params_properties
+    params[:properties] ||= []
+    params[:properties].tap { |p| p.map { |p| p[:id] = find_id p[:uri] } }
+  end
+
+  def document_not_found(e)
+    params[:properties] ||= []
+    return render_404 'notifications.resource.not_found', request.url if !@device
+    return render_404 'notifications.function.not_found', request.url if !@function
+    return render_404 'notifications.property.not_found', params[:properties].map { |p| p[:uri] } if @device
   end
 end
