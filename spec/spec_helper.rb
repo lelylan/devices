@@ -42,4 +42,5 @@ Spork.each_run do
   I18n.backend.reload!
   Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
   Dir[Rails.root.join('spec/views/**/*.rb')].each   {|f| require f}
+  Dir[Rails.root.join('lib/**/*.rb')].each          {|f| require f}
 end

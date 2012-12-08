@@ -61,8 +61,9 @@ module Devices
     config.assets.version = '1.0'
 
     # Middlewares
-    config.middleware.use 'Hostable'
+    config.middleware.insert_after Rack::Lock, 'DailyRateLimit', max: 5000
     config.middleware.use Rack::MethodOverride
+    config.middleware.use 'Hostable'
 
     # Set the default Logger in application.rb to STDOUT, otherwise logging with unicorn doesn't work
     config.logger = Logger.new(STDOUT) unless Rails.env.test?
