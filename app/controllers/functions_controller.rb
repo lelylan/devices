@@ -12,8 +12,8 @@ class FunctionsController < ApplicationController
   eventable_for 'device', resource: 'devices', prefix: 'property', only: %w(update)
 
   def update
-    @device.properties_attributes = properties_attributes
-    @device.update_attributes(pending: params[:pending]) if params[:pending]
+    @device.update_attributes(properties_attributes: properties_attributes)
+    @device.update_attributes(pending: params[:pending]) if params[:pending] # remove
     create_history
     render json: @device, status: status_code
   end
