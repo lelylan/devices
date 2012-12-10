@@ -5,6 +5,9 @@ require 'spork'
 Spork.prefork do
   ENV['RAILS_ENV'] ||= 'test'
 
+  # Rate limit fake redis connection
+  require 'rack/redis_throttle/testing/connection'
+
   # Mongoid models reload
   require 'rails/mongoid'
   Spork.trap_class_method(Rails::Mongoid, :load_models)
@@ -42,4 +45,5 @@ Spork.each_run do
   I18n.backend.reload!
   Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
   Dir[Rails.root.join('spec/views/**/*.rb')].each   {|f| require f}
+  Dir[Rails.root.join('lib/**/*.rb')].each          {|f| require f}
 end

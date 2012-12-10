@@ -16,6 +16,7 @@ gem 'faraday'
 gem 'dalli'
 gem 'rails-api'
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
+gem 'redis-throttle', git: 'git@github.com:andreareginato/redis-throttle.git'
 
 group :development, :test do
   gem 'foreman'
@@ -23,6 +24,7 @@ group :development, :test do
   gem 'shoulda'
   gem 'capybara'
   gem 'capybara-json'
+  gem 'mock_redis'
   gem 'factory_girl_rails', require: false
   gem 'database_cleaner'
   gem 'fuubar'
