@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: git@github.com:andreareginato/redis-throttle.git
-  revision: 0e36788d981fe563c663f0fdd49874107e18b3d0
+  revision: 47ec26ab6f332b882b1a68c9d6c580575ed08d54
   specs:
     redis-throttle (0.0.1)
       activesupport
@@ -144,6 +144,7 @@ GEM
       treetop (~> 1.4.8)
     method_source (0.8.1)
     mime-types (1.19)
+    mock_redis (0.6.1)
     mongoid (3.0.9)
       activemodel (~> 3.1)
       moped (~> 1.1)
@@ -290,16 +291,14 @@ DEPENDENCIES
   guard-rspec
   guard-spork
   hashie
-  hiredis
   launchy
+  mock_redis
   mongoid
   rails (~> 3.2.6)
   rails-api
   rails_best_practices
   rails_config
   rb-fsevent
-  redis
-  redis-namespace
   redis-throttle!
   rspec-rails (~> 2.6)
   sass-rails (~> 3.2.3)

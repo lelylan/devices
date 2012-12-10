@@ -21,6 +21,7 @@ feature DailyRateLimit do
     before { page.driver.get uri }
 
     it 'sets the rate limit header' do
+      pp Rack::RedisThrottle::Connection.create.class
       page.response_headers['X-RateLimit-Limit'].should == '5000'
     end
 
