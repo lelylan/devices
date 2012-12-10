@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: git@github.com:andreareginato/redis-throttle.git
-  revision: 47ec26ab6f332b882b1a68c9d6c580575ed08d54
+  revision: 27eb82d69f0a9c60ae21f73c09dbabc7719edf2b
   specs:
     redis-throttle (0.0.1)
       activesupport
