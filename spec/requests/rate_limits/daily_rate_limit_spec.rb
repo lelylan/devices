@@ -21,7 +21,6 @@ feature DailyRateLimit do
     before { page.driver.get uri }
 
     it 'sets the rate limit header' do
-      pp Rack::RedisThrottle::Connection.create.class
       page.response_headers['X-RateLimit-Limit'].should == '5000'
     end
 
@@ -29,7 +28,7 @@ feature DailyRateLimit do
       page.response_headers['X-RateLimit-Remaining'].should == '4999'
     end
 
-    describe 'when the same user makes a request' do
+    describe 'when the same user makes another request' do
 
       before { page.driver.get uri }
 
@@ -62,7 +61,7 @@ feature DailyRateLimit do
     before { page.driver.get uri }
 
     it 'does not set the rate limit header' do
-      page.response_headers['X-RateLimit-Limit'].should == '9999'
+      page.response_headers['X-RateLimit-Limit'].should == '1000'
     end
 
     it 'returns a not authorized code' do
