@@ -8,9 +8,6 @@ feature DailyRateLimit do
 
   before { page.driver.header 'Content-Type', 'application/json' }
 
-  let(:controller) { 'devices' }
-  let(:factory)    { 'device' }
-
   describe 'when request header contains an authorization token' do
 
     before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }

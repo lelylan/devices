@@ -61,7 +61,7 @@ module Devices
     config.assets.version = '1.0'
 
     # Middlewares
-    config.middleware.insert_after Rack::Lock, 'DailyRateLimit', max: 5000
+    config.middleware.insert_after Rack::Lock, 'DailyRateLimit'
     config.middleware.use Rack::MethodOverride
     config.middleware.use 'Hostable'
 

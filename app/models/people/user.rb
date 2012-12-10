@@ -3,6 +3,6 @@ class User
   store_in session: 'people'
 
   field :email
-  field :rate_limit
   field :encrypted_password
+  field :rate_limit
 end
