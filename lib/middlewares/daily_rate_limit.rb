@@ -3,16 +3,16 @@ require 'rack/redis_throttle'
 class DailyRateLimit < Rack::RedisThrottle::Daily
 
   def call(env)
-    @user_rate_limit = nil
+    @user_rate_limit = user_rate_limit(env)
     super
   end
 
   def client_identifier(request)
-    user_rate_limit(request).respond_to?(:_id) ? user_rate_limit(request).id : 'user-unknown'
+    @user_rate_limit.respond_to?(:_id) ? @user_rate_limit._id : 'user-unknown'
   end
 
   def max_per_window(request)
-    user_rate_limit(request).respond_to?(:rate_limit) ? user_rate_limit(request).rate_limit : 1000
+    @user_rate_limit.respond_to?(:rate_limit) ? @user_rate_limit.rate_limit : 1000
   end
 
   def need_protection?(request)
@@ -38,13 +38,10 @@ class DailyRateLimit < Rack::RedisThrottle::Daily
 
   private
 
-  def user_rate_limit(request)
-    @user_rate_limit ||= find_user_rate_limit(request)
-  end
-
-  def user_rate_limit(request)
-    token         = request.env['HTTP_AUTHORIZATION'].split(' ')[-1]
-    access_token  = Doorkeeper::AccessToken.where(token: token).first
+  def user_rate_limit(env)
+    request      = Rack::Request.new(env)
+    token        = request.env['HTTP_AUTHORIZATION'].split(' ')[-1]
+    access_token = Doorkeeper::AccessToken.where(token: token).first
     access_token ? User.find(access_token.resource_owner_id) : nil
   end
 end
