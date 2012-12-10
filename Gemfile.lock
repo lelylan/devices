@@ -293,7 +293,7 @@ DEPENDENCIES
   hashie
   launchy
   mock_redis
-  mongoid
+  mongoid (~> 3.0.9)
   rails (~> 3.2.6)
   rails-api
   rails_best_practices
