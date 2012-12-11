@@ -19,7 +19,7 @@ class Device
   index({ pending: 1 }, { background: true })
 
   attr_accessor  :type
-  attr_protected :resource_owner_id, :creator_id, :type_id, :activated_at, :activation_code
+  attr_protected :resource_owner_id, :creator_id, :type_id, :activated_at, :activation_code, :pending
 
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
 
@@ -35,6 +35,7 @@ class Device
 
   before_create :set_type_uri
   before_create :set_device_properties
+  before_save   :set_pending
   before_save   :touch_locations
 
   before_validation(on: 'create') { set_creator_id }
@@ -50,8 +51,13 @@ class Device
   def set_device_properties
     type       = Type.find(type_id)
     properties = Property.in(id: type.property_ids)
-    entries    = properties.map { |p| { property_id: p.id, value: p.default } }
+    entries    = properties.map { |p| { property_id: p.id, value: p.default, physical_value: p.default } }
     self.properties_attributes = entries
+  end
+
+  def set_pending
+    self.pending = properties.map(&:pending).inject(:|)
+    return true
   end
 
   def touch_locations
