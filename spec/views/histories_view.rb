@@ -8,6 +8,8 @@ module HelpersViewMethods
     json.properties.each_with_index do |property, i|
       property.uri.should   == HistoryPropertyDecorator.decorate(history.properties[i]).uri
       property.value.should == history.properties[i].value
+      #property.physical_value.should == history.properties[i].physical_value
+      #property.pending.should == history.properties[i].pending
     end
   end
 end

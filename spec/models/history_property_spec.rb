@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe HistoryProperty do
 
+  its(:pending) { should == false }
+
   it { should validate_presence_of :uri }
   it { should validate_presence_of :value }
 

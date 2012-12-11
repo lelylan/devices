@@ -4,8 +4,9 @@ class HistoryProperty
   include Resourceable
 
   field :property_id, type: Moped::BSON::ObjectId
-  field :value,    default: ''
-  field :physical, default: ''
+  field :value
+  field :physical_value
+  field :pending, type: Boolean, default: false
 
   index({ property_id: 1, value: 1 }, { background: true })
 
