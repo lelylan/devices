@@ -105,35 +105,93 @@ describe Device do
         end
       end
 
-      describe 'when updates the pending status' do
+      describe 'when updates a not existing property value' do
+        let(:properties) { [ { id: Settings.resource_id, value: 'on'} ] }
+        let(:update)     { resource.properties_attributes = properties }
 
-        describe 'when all pending statuses are false' do
-
-          let(:properties) { [ { id: resource.properties.first.id, pending: false } ] }
-          before           { resource.update_attributes(properties_attributes: properties) }
-
-          it 'updates the global pending status to false' do
-            resource.pending.should == false
-          end
+        it 'raises a not found error' do
+          expect { update }.to raise_error Mongoid::Errors::DocumentNotFound
         end
+      end
+    end
+  end
 
-        describe 'when one pending status is true' do
+  describe 'when updates the type uri' do
 
-          let(:properties) { [ { id: resource.properties.first.id, pending: true } ] }
-          before           { resource.update_attributes(properties_attributes: properties) }
+    let!(:resource) { FactoryGirl.create :device }
+    let!(:type_id)  { resource.type_id }
+    before          { resource.update_attributes(type: a_uri(FactoryGirl.create :type)) }
 
-          it 'updates the global pending status to false' do
-            resource.pending.should == true
-          end
+    it 'does not let the type being updated' do
+      resource.reload.type_id.should == type_id
+    end
+  end
+
+  describe 'when Lelyaln automatically updates the pending status' do
+
+    let(:resource) { FactoryGirl.create :device }
+
+    describe 'when a physical device is not present' do
+
+      let(:properties) { [ { id: resource.properties.first.id, value: '100', physical_value: '100' } ] }
+      before           { resource.update_attributes(physical: nil, properties_attributes: properties) }
+      subject          { resource.properties.first }
+      its(:pending)    { should == false }
+      its(:pending)    { should == resource.pending }
+
+      describe 'when the pending property is overriden' do
+
+        let(:override) { [ { id: resource.properties.first.id, value: '100', physical_value: '100', pending: true } ] }
+        before         { resource.update_attributes(physical: nil, properties_attributes: override) }
+        subject        { resource.properties.first }
+        its(:pending)  { should == true }
+      end
+    end
+
+    describe 'when the pending status was false' do
+
+      before { resource.update_attributes(properties_attributes: [{ id: resource.properties.first.id, pending: false}]) }
+
+      describe 'when updates the value' do
+
+        let(:properties) { [ { id: resource.properties.first.id, value: '100' } ] }
+        before           { resource.update_attributes(properties_attributes: properties) }
+        subject          { resource.properties.first }
+        its(:pending)    { should == true }
+        its(:pending)    { should == resource.pending }
+
+        describe 'when the pending property is overriden' do
+
+          let(:override) { [ { id: resource.properties.first.id, value: '100', pending: false } ] }
+          before         { resource.update_attributes(properties_attributes: override) }
+          subject        { resource.properties.first }
+          its(:pending)  { should == false }
         end
       end
 
-      describe 'when Lelyaln automatically updates the pending status' do
+      describe 'when updates the physical value' do
 
-        describe 'when a physical device is not present' do
+        let(:properties) { [ { id: resource.properties.first.id, physical_value: '100' } ] }
+        before           { resource.update_attributes(properties_attributes: properties) }
+        subject          { resource.properties.first }
+        its(:pending)    { should == false }
+        its(:pending)    { should == resource.pending }
+
+        describe 'when the pending property is overriden' do
+
+          let(:override) { [ { id: resource.properties.first.id, physical_value: '100', pending: true } ] }
+          before         { resource.update_attributes(properties_attributes: override) }
+          subject        { resource.properties.first }
+          its(:pending)  { should == true }
+        end
+      end
+
+      describe 'when updates both value and physical value' do
+
+        describe 'when they are equal' do
 
           let(:properties) { [ { id: resource.properties.first.id, value: '100', physical_value: '100' } ] }
-          before           { resource.update_attributes(physical: nil, properties_attributes: properties) }
+          before           { resource.update_attributes(properties_attributes: properties) }
           subject          { resource.properties.first }
           its(:pending)    { should == false }
           its(:pending)    { should == resource.pending }
@@ -141,192 +199,124 @@ describe Device do
           describe 'when the pending property is overriden' do
 
             let(:override) { [ { id: resource.properties.first.id, value: '100', physical_value: '100', pending: true } ] }
-            before         { resource.update_attributes(physical: nil, properties_attributes: override) }
+            before         { resource.update_attributes(properties_attributes: override) }
             subject        { resource.properties.first }
             its(:pending)  { should == true }
           end
         end
 
-        describe 'when the pending status was false' do
+        describe 'when they are not equal' do
 
-          before { resource.update_attributes(properties_attributes: [{ id: resource.properties.first.id, pending: false}]) }
+          let(:properties) { [ { id: resource.properties.first.id, value: '100', physical_value: '10' } ] }
+          before           { resource.update_attributes(properties_attributes: properties) }
+          subject          { resource.properties.first }
+          its(:pending)    { should == true }
+          its(:pending)    { should == resource.pending }
 
-          describe 'when updates the value' do
+          describe 'when the pending property is overriden' do
 
-            let(:properties) { [ { id: resource.properties.first.id, value: '100' } ] }
-            before           { resource.update_attributes(properties_attributes: properties) }
-            subject          { resource.properties.first }
-            its(:pending)    { should == true }
-            its(:pending)    { should == resource.pending }
-
-            describe 'when the pending property is overriden' do
-
-              let(:override) { [ { id: resource.properties.first.id, value: '100', pending: false } ] }
-              before         { resource.update_attributes(properties_attributes: override) }
-              subject        { resource.properties.first }
-              its(:pending)  { should == false }
-            end
-          end
-
-          describe 'when updates the physical value' do
-
-            let(:properties) { [ { id: resource.properties.first.id, physical_value: '100' } ] }
-            before           { resource.update_attributes(properties_attributes: properties) }
-            subject          { resource.properties.first }
-            its(:pending)    { should == false }
-            its(:pending)    { should == resource.pending }
-
-            describe 'when the pending property is overriden' do
-
-              let(:override) { [ { id: resource.properties.first.id, physical_value: '100', pending: true } ] }
-              before         { resource.update_attributes(properties_attributes: override) }
-              subject        { resource.properties.first }
-              its(:pending)  { should == true }
-            end
-          end
-
-          describe 'when updates both value and physical value' do
-
-            describe 'when they are equal' do
-
-              let(:properties) { [ { id: resource.properties.first.id, value: '100', physical_value: '100' } ] }
-              before           { resource.update_attributes(properties_attributes: properties) }
-              subject          { resource.properties.first }
-              its(:pending)    { should == false }
-              its(:pending)    { should == resource.pending }
-
-              describe 'when the pending property is overriden' do
-
-                let(:override) { [ { id: resource.properties.first.id, value: '100', physical_value: '100', pending: true } ] }
-                before         { resource.update_attributes(properties_attributes: override) }
-                subject        { resource.properties.first }
-                its(:pending)  { should == true }
-              end
-            end
-
-            describe 'when they are not equal' do
-
-              let(:properties) { [ { id: resource.properties.first.id, value: '100', physical_value: '10' } ] }
-              before           { resource.update_attributes(properties_attributes: properties) }
-              subject          { resource.properties.first }
-              its(:pending)    { should == true }
-              its(:pending)    { should == resource.pending }
-
-              describe 'when the pending property is overriden' do
-
-                let(:override) { [ { id: resource.properties.first.id, value: '100', physical_value: '10', pending: true } ] }
-                before         { resource.update_attributes(properties_attributes: override) }
-                subject        { resource.properties.first }
-                its(:pending)  { should == true }
-              end
-            end
-          end
-        end
-
-        describe 'when the pending status was true' do
-
-          before { resource.update_attributes(properties_attributes: [{ id: resource.properties.first.id, value: '100', pending: true }] ) }
-
-          describe 'when updates the value' do
-
-            let(:properties) { [ { id: resource.properties.first.id, value: '100' } ] }
-            before           { resource.update_attributes(properties_attributes: properties) }
-            subject          { resource.properties.first }
-            its(:pending)    { should == true }
-            its(:pending)    { should == resource.pending }
-
-            describe 'when the pending property is overriden' do
-
-              let(:override) { [ { id: resource.properties.first.id, value: '100', pending: false } ] }
-              before         { resource.update_attributes(properties_attributes: override) }
-              subject        { resource.properties.first }
-              its(:pending)  { should == false }
-            end
-          end
-
-          describe 'when updates the physical value' do
-
-            describe 'when equals the value' do
-
-              let(:properties) { [ { id: resource.properties.first.id, physical_value: '100' } ] }
-              before           { resource.update_attributes(properties_attributes: properties) }
-              subject          { resource.properties.first }
-              its(:pending)    { should == false }
-              its(:pending)    { should == resource.pending }
-
-              describe 'when the pending property is overriden' do
-
-                let(:override) { [ { id: resource.properties.first.id, physical_value: '100', pending: true } ] }
-                before         { resource.update_attributes(properties_attributes: override) }
-                subject        { resource.properties.first }
-                its(:pending)  { should == true }
-              end
-            end
-
-            describe 'when does not equal the value' do
-
-              let(:properties) { [ { id: resource.properties.first.id, physical_value: '50' } ] }
-              before           { resource.update_attributes(properties_attributes: properties) }
-              subject          { resource.properties.first }
-              its(:pending)    { should == true }
-              its(:pending)    { should == resource.pending }
-
-              describe 'when the pending property is overriden' do
-
-                let(:override) { [ { id: resource.properties.first.id, physical_value: '100', pending: false } ] }
-                before         { resource.update_attributes(properties_attributes: override) }
-                subject        { resource.properties.first }
-                its(:pending)  { should == false }
-              end
-            end
-
-          end
-
-          describe 'when updates both value and physical value' do
-
-            describe 'when they are equal' do
-
-              let(:properties) { [ { id: resource.properties.first.id, value: '100', physical_value: '100' } ] }
-              before           { resource.update_attributes(properties_attributes: properties) }
-              subject          { resource.properties.first }
-              its(:pending)    { should == false }
-              its(:pending)    { should == resource.pending }
-
-              describe 'when the pending property is overriden' do
-
-                let(:override) { [ { id: resource.properties.first.id, value: '100', physical_value: '100', pending: true } ] }
-                before         { resource.update_attributes(properties_attributes: override) }
-                subject        { resource.properties.first }
-                its(:pending)  { should == true }
-              end
-            end
-
-            describe 'when they are not equal' do
-
-              let(:properties) { [ { id: resource.properties.first.id, value: '100', physical_value: '10' } ] }
-              before           { resource.update_attributes(properties_attributes: properties) }
-              subject          { resource.properties.first }
-              its(:pending)    { should == true }
-              its(:pending)    { should == resource.pending }
-
-              describe 'when the pending property is overriden' do
-
-                let(:override) { [ { id: resource.properties.first.id, value: '100', physical_value: '10', pending: true } ] }
-                before         { resource.update_attributes(properties_attributes: override) }
-                subject        { resource.properties.first }
-                its(:pending)  { should == true }
-              end
-            end
+            let(:override) { [ { id: resource.properties.first.id, value: '100', physical_value: '10', pending: true } ] }
+            before         { resource.update_attributes(properties_attributes: override) }
+            subject        { resource.properties.first }
+            its(:pending)  { should == true }
           end
         end
       end
+    end
 
-      describe 'when updates a not existing property value' do
-        let(:properties) { [ { id: Settings.resource_id, value: 'on'} ] }
-        let(:update)     { resource.properties_attributes = properties }
+    describe 'when the pending status was true' do
 
-        it 'raises a not found error' do
-          expect { update }.to raise_error Mongoid::Errors::DocumentNotFound
+      before { resource.update_attributes(properties_attributes: [{ id: resource.properties.first.id, value: '100', pending: true }] ) }
+
+      describe 'when updates the value' do
+
+        let(:properties) { [ { id: resource.properties.first.id, value: '100' } ] }
+        before           { resource.update_attributes(properties_attributes: properties) }
+        subject          { resource.properties.first }
+        its(:pending)    { should == true }
+        its(:pending)    { should == resource.pending }
+
+        describe 'when the pending property is overriden' do
+
+          let(:override) { [ { id: resource.properties.first.id, value: '100', pending: false } ] }
+          before         { resource.update_attributes(properties_attributes: override) }
+          subject        { resource.properties.first }
+          its(:pending)  { should == false }
+        end
+      end
+
+      describe 'when updates the physical value' do
+
+        describe 'when equals the value' do
+
+          let(:properties) { [ { id: resource.properties.first.id, physical_value: '100' } ] }
+          before           { resource.update_attributes(properties_attributes: properties) }
+          subject          { resource.properties.first }
+          its(:pending)    { should == false }
+          its(:pending)    { should == resource.pending }
+
+          describe 'when the pending property is overriden' do
+
+            let(:override) { [ { id: resource.properties.first.id, physical_value: '100', pending: true } ] }
+            before         { resource.update_attributes(properties_attributes: override) }
+            subject        { resource.properties.first }
+            its(:pending)  { should == true }
+          end
+        end
+
+        describe 'when does not equal the value' do
+
+          let(:properties) { [ { id: resource.properties.first.id, physical_value: '50' } ] }
+          before           { resource.update_attributes(properties_attributes: properties) }
+          subject          { resource.properties.first }
+          its(:pending)    { should == true }
+          its(:pending)    { should == resource.pending }
+
+          describe 'when the pending property is overriden' do
+
+            let(:override) { [ { id: resource.properties.first.id, physical_value: '100', pending: false } ] }
+            before         { resource.update_attributes(properties_attributes: override) }
+            subject        { resource.properties.first }
+            its(:pending)  { should == false }
+          end
+        end
+
+      end
+
+      describe 'when updates both value and physical value' do
+
+        describe 'when they are equal' do
+
+          let(:properties) { [ { id: resource.properties.first.id, value: '100', physical_value: '100' } ] }
+          before           { resource.update_attributes(properties_attributes: properties) }
+          subject          { resource.properties.first }
+          its(:pending)    { should == false }
+          its(:pending)    { should == resource.pending }
+
+          describe 'when the pending property is overriden' do
+
+            let(:override) { [ { id: resource.properties.first.id, value: '100', physical_value: '100', pending: true } ] }
+            before         { resource.update_attributes(properties_attributes: override) }
+            subject        { resource.properties.first }
+            its(:pending)  { should == true }
+          end
+        end
+
+        describe 'when they are not equal' do
+
+          let(:properties) { [ { id: resource.properties.first.id, value: '100', physical_value: '10' } ] }
+          before           { resource.update_attributes(properties_attributes: properties) }
+          subject          { resource.properties.first }
+          its(:pending)    { should == true }
+          its(:pending)    { should == resource.pending }
+
+          describe 'when the pending property is overriden' do
+
+            let(:override) { [ { id: resource.properties.first.id, value: '100', physical_value: '10', pending: true } ] }
+            before         { resource.update_attributes(properties_attributes: override) }
+            subject        { resource.properties.first }
+            its(:pending)  { should == true }
+          end
         end
       end
     end
