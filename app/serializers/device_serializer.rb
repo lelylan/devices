@@ -15,7 +15,7 @@ class DeviceSerializer < ApplicationSerializer
   def properties
     device.properties.map do |property|
       property = DevicePropertyDecorator.decorate property
-      { uri: property.uri, id: property.id, value: property.value, physical: property.physical }
+      { uri: property.uri, id: property.id, value: property.value, physical_value: property.physical_value }
     end
   end
 

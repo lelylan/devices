@@ -10,10 +10,10 @@ module HelpersViewMethods
 
     json.properties.each_with_index do |property, i|
       device_property = DevicePropertyDecorator.decorate(device.properties[i])
-      property.uri.should      == device_property.uri
-      property.id.should       == device_property.id.to_s
-      property.value.should    == device_property.value
-      property.physical.should == device_property.physical
+      property.uri.should   == device_property.uri
+      property.id.should    == device_property.id.to_s
+      property.value.should == device_property.value
+      property.physical_value.should == device_property.physical_value
     end
 
     json.physical.uri.should == device.physical

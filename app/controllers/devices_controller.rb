@@ -74,7 +74,7 @@ class DevicesController < ApplicationController
     @devices = @devices.where('name' => /.*#{params[:name]}.*/i) if params[:name]
     @devices = @devices.where('physical' => /.*#{params[:physical]}.*/i) if params[:physical]
     @devices = @devices.where(type_id: find_id(params[:type])) if params[:type]
-    @devices = @devices.where(pending: find_id(params[:pending])) if params[:pending]
+    @devices = @devices.where(pending: params[:pending].to_bool) if params[:pending]
   end
 
   # TODO: see if you are able to build a query to match multiple properties.
@@ -82,7 +82,8 @@ class DevicesController < ApplicationController
     if params[:properties]
       match.merge!({ property_id: Moped::BSON::ObjectId(find_id(params[:properties][:uri])) }) if params[:properties][:uri]
       match.merge!({ value: params[:properties][:value] }) if params[:properties][:value]
-      match.merge!({ physical: params[:properties][:physical] }) if params[:properties][:physical]
+      match.merge!({ physical_value: params[:properties][:physical_value] }) if params[:properties][:physical_value]
+      match.merge!({ pending: params[:properties][:pending].to_bool }) if params[:properties][:pending]
       @devices = @devices.where('properties' => { '$elemMatch' => match })
     end
   end

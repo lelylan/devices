@@ -31,7 +31,7 @@ shared_examples_for 'a searchable resource on properties' do
     end
   end
 
-  context 'when filters the property value' do
+  context 'when filters #value' do
 
     before { result.properties.first.update_attributes(value: 'updated') }
     let(:properties) { { value: 'updated' } }
@@ -43,10 +43,10 @@ shared_examples_for 'a searchable resource on properties' do
     end
   end
 
-  context 'when filters the property physical' do
+  context 'when filters #physical_value' do
 
-    before { result.properties.first.update_attributes(physical: 'updated') }
-    let(:properties) { { physical: 'updated' } }
+    before { result.properties.first.update_attributes(physical_value: 'updated') }
+    let(:properties) { { physical_value: 'updated' } }
 
     it 'returns the searched resource' do
       page.driver.get uri, properties: properties
@@ -55,12 +55,24 @@ shared_examples_for 'a searchable resource on properties' do
     end
   end
 
-  context 'when filters the property uri and property value' do
+  context 'when filters #pending' do
+
+    before { result.properties.first.update_attributes(pending: true) }
+    let(:properties) { { pending: true } }
+
+    it 'returns the searched resource' do
+      page.driver.get uri, properties: properties
+      contains_resource result
+      page.should_not have_content resource.id.to_s
+    end
+  end
+
+  context 'when filters #uri, #value, #physical_value, #pending' do
 
     let(:property_uri) { a_uri(result.properties.first, :property_id) }
-    let(:properties)   { { uri: property_uri, value: 'updated', physical: 'updated' } }
+    let(:properties)   { { uri: property_uri, value: 'updated', physical_value: 'updated', pending: 'true' } }
 
-    before { result.properties.first.update_attributes(value: 'updated', physical: 'updated') }
+    before { result.properties.first.update_attributes(value: 'updated', physical_value: 'updated', pending: true) }
 
     it 'returns the searched resource' do
       page.driver.get uri, properties: properties

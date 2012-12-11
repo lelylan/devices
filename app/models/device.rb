@@ -56,7 +56,7 @@ class Device
   end
 
   def set_pending
-    self.pending = properties.map(&:pending).inject(:|)
+    self.pending = properties.map(&:pending).inject(:|) || false
     return true
   end
 
