@@ -54,11 +54,11 @@ feature 'FunctionsController' do
         let(:history) { History.last }
 
         it 'saves the new status value' do
-          history.properties.first.value.should == 'updated'
+          history.properties.first.value.should == 'on'
         end
 
         it 'saves the new intensity value' do
-          history.properties.last.value.should == '20'
+          history.properties.last.value.should == 'updated'
         end
       end
     end

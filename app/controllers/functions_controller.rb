@@ -13,7 +13,6 @@ class FunctionsController < ApplicationController
 
   def update
     @device.update_attributes(properties_attributes: properties_attributes)
-    @device.update_attributes(pending: params[:pending]) if params[:pending] # remove
     create_history
     render json: @device, status: status_code
   end
