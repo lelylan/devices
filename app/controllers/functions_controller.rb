@@ -39,7 +39,7 @@ class FunctionsController < ApplicationController
 
   def create_history
     @device = DeviceDecorator.decorate @device
-    History.create device: @device.uri, properties: params[:properties] do |history|
+    History.create device: @device.uri, properties: @device.properties do |history|
       history.resource_owner_id = current_user.id
     end
   end

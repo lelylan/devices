@@ -42,8 +42,25 @@ feature 'FunctionsController' do
       expect { update }.to change { resource.reload.updated_at.to_i }
     end
 
-    it 'creates a history resource' do
-      expect { update }.to change { History.count }.by(1)
+    describe 'when creating a new history' do
+
+      it 'adds a new history record' do
+        expect { update }.to change { History.count }.by(1)
+      end
+
+      describe 'when saving the device properties' do
+
+        before        { update }
+        let(:history) { History.last }
+
+        it 'saves the new status value' do
+          history.properties.first.value.should == 'updated'
+        end
+
+        it 'saves the new intensity value' do
+          history.properties.last.value.should == '20'
+        end
+      end
     end
 
     describe 'when creates an event' do
