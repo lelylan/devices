@@ -18,9 +18,6 @@ class DeviceProperty
   before_save :set_pending
 
   def set_pending
-    #pp pending_changed?
-    #pp changes
-    #pp pending_was
     self.pending = auto_pending if not pending_changed?
     return true
   end
