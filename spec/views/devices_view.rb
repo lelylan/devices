@@ -13,7 +13,8 @@ module HelpersViewMethods
       property.uri.should   == device_property.uri
       property.id.should    == device_property.id.to_s
       property.value.should == device_property.value
-      property.physical_value.should == device_property.physical_value
+      property.expected_value.should == device_property.expected_value
+      property.pending.should == device_property.pending
     end
 
     json.physical.uri.should == device.physical
