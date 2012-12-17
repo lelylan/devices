@@ -127,7 +127,7 @@ describe Device do
     end
   end
 
-  describe 'when updates a property field' do
+  describe 'when updates a property' do
 
     let(:resource)    { FactoryGirl.create :device }
     let(:property_id) { resource.properties.first.id }
@@ -150,6 +150,7 @@ describe Device do
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == true }
+        its(:value)      { should == 'off' }
       end
 
       describe 'when updates :value and :expected_value' do
@@ -195,10 +196,11 @@ describe Device do
 
       describe 'when updates :expected_value' do
 
-        let(:properties) { [ { id: property_id, value: '50' } ] }
+        let(:properties) { [ { id: property_id, expected_value: '50' } ] }
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == true }
+        its(:value)      { should == 'off' }
       end
 
       describe 'when updates :value and :expected_value' do

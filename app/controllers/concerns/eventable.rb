@@ -46,8 +46,7 @@ module Eventable
   end
 
   def data
-    return JSON.parse(response.body)                         if event != 'property-updated'
-    return { properties: self.send(:properties_attributes) } if event == 'property-updated'
+    return JSON.parse(response.body)
   end
 
   def source

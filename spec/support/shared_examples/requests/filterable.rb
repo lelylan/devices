@@ -10,7 +10,6 @@ shared_examples_for 'a filterable list' do
   before { page.driver.get(uri) }
 
   it { page.should have_content result.id.to_s }
-  #it { page.should_not have_content resource.id.to_s }
 end
 
 shared_examples_for 'a filterable resource' do |action|

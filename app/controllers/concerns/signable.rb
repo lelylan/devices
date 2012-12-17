@@ -1,19 +1,25 @@
-# This module is used to check the signature of a request coming
-# form the physical device in a not secure channel (HTTP)
+# Check the signature of a coming request from the physical device.
+# This is used to avoid the usage of an Access Token
+# * unsecure channels
+# * extra step to ask the access token (must be invisible)
 
 module Signable
   extend ActiveSupport::Concern
 
   def verify_signature
-    # I check only if the token is created from the lelylan physical client
-    if doorkeeper_token.application_id == Defaults.physical_application_id
-      # get the signature
+    if request.headers['X-Physical-Signature']
       signature  = request.headers['X-Physical-Signature']
-      # remove a key that is automatically added by rails
-      # do not remove function as it is a mandatory param (coincidentaly the one would be automatically added)
-      payload = request.request_parameters.delete_if {|k, v| k == 'property' or k == 'device' }
-      # unauthorize if the signature is not valid
+      payload    = clean_payload
       render_401 if @device and !Signature.valid?(signature, payload, @device.secret)
     end
+  end
+
+  private
+
+  # Remove a key automatically added by rails
+  # (do not remove function as it is a mandatory param on functions service)
+  def clean_payload
+    extras = %w(property device consumption)
+    request.request_parameters.delete_if {|key, value| extras.include? key }
   end
 end

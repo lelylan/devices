@@ -1,15 +1,14 @@
 class PropertiesController < ApplicationController
-  rescue_from    Mongoid::Errors::DocumentNotFound, with: :document_not_found
-  doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym)
-
-  skip_before_filter :deny_physical_request
-
-  before_filter :find_owned_resources
-  before_filter :find_filtered_resources
-  before_filter :find_resource
-  before_filter :verify_signature
+  rescue_from Mongoid::Errors::DocumentNotFound, with: :document_not_found
 
   eventable_for 'device', resource: 'devices', prefix: 'property', only: %w(update)
+
+  doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym), if: -> { not physical_request }
+
+  before_filter :find_from_physical,      if: -> { physical_request }
+  before_filter :find_owned_resources,    if: -> { not physical_request }
+  before_filter :find_filtered_resources, if: -> { not physical_request }
+  before_filter :find_resource,           if: -> { not physical_request }
 
   def update
     @device.update_attributes(properties_attributes: properties_attributes)
@@ -20,16 +19,18 @@ class PropertiesController < ApplicationController
 
   private
 
+  def find_from_physical
+    @device = Device.find(params[:id])
+    verify_signature
+  end
+
   def find_owned_resources
     @devices = Device.where(resource_owner_id: current_user.id)
   end
 
   def find_filtered_resources
-    # TODO solution that temporarly solve the bug that should let you use
-    # @devices.in(id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
-    if not doorkeeper_token.device_ids.empty?
-      doorkeeper_token.device_ids.each {|id| @devices = @devices.or(id: id) }
-    end
+    # TODO there is a bag in mongoid that does not let you use the #in method
+    doorkeeper_token.device_ids.each { |id| @devices = @devices.or(id: id) } if !doorkeeper_token.device_ids.empty?
   end
 
   def find_resource
@@ -44,11 +45,9 @@ class PropertiesController < ApplicationController
   end
 
   def status_code
-    @source = params[:source] || request.headers['X-Request-Source']
-    @source = 'physical' if doorkeeper_token.application_id == Defaults.physical_application_id
-    forward_to_physical = (@device.physical and @source != 'physical')
-    forward_to_physical ? 202 : 200
+    @device.physical ? 202 : 200
   end
+
 
   # extras
 

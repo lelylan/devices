@@ -34,7 +34,6 @@ feature 'FunctionsController' do
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
     it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)'
-    it_behaves_like 'a physical event', 'functions'
     it_behaves_like 'a signed resource'
 
     it 'touches the device' do

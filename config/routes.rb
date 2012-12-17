@@ -4,7 +4,6 @@ Devices::Application.routes.draw do
       put 'properties' => 'properties#update'
       put 'functions'  => 'functions#update'
       get 'privates'   => 'devices#privates'
-      put 'accesses'   => 'accesses#update'
     end
   end
 

@@ -28,7 +28,6 @@ feature 'PropertiesController' do
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
     it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)'
-    it_behaves_like 'a physical event', 'properties'
     it_behaves_like 'a signed resource'
 
     it 'touches the device' do
@@ -66,9 +65,7 @@ feature 'PropertiesController' do
         Event.last.data['properties'].should have(2).properties
       end
 
-      its(:id)    { should == status.id.to_s }
-      its(:uri)   { should == properties.first[:uri] }
-      its(:value) { should == properties.first[:value] }
+      its(:value) { should == 'updated' }
     end
 
     describe 'when updates a not existing property' do

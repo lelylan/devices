@@ -55,7 +55,6 @@ class DevicesController < ApplicationController
 
   def find_owned_resources
     @devices = Device.where(resource_owner_id: current_user.id)
-    #@devices.each(&:synchronize_type_properties) # TODO performance caching (N+1)
   end
 
   def find_filtered_resources
