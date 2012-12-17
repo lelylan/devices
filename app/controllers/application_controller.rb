@@ -2,7 +2,6 @@ class ApplicationController < ActionController::API
   include Resourceable
   include Rescueable
   include Viewable
-  include Eventable
   include Signable
 
   private

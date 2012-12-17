@@ -29,12 +29,12 @@ feature 'FunctionsController' do
     let(:uri) { "/devices/#{resource.id}/functions" }
 
     it_behaves_like 'an updatable resource'
+    it_behaves_like 'an updatable resource from physical'
     it_behaves_like 'a functionable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
-    it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)'
-    it_behaves_like 'a physical updatable resource'
+    it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)', nil, 'histories', 'create'
 
     it 'touches the device' do
       resource.update_attributes(updated_at: Time.now - 60)
@@ -68,14 +68,6 @@ feature 'FunctionsController' do
 
       it 'has two properties' do
         Event.last.data['properties'].should have(2).properties
-      end
-
-      it 'creates an history resource event' do
-        Event.last.resource.should == 'histories'
-      end
-
-      it 'creates a created event' do
-        Event.last.event.should == 'created'
       end
 
       describe 'with a property defined in the function' do

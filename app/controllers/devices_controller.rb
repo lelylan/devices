@@ -1,5 +1,4 @@
 class DevicesController < ApplicationController
-  eventable_for 'device', resource: 'devices', only: %w(create update destroy)
 
   doorkeeper_for :index, :show, scopes: Settings.scopes.read.map(&:to_sym)
   doorkeeper_for :create, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
@@ -13,6 +12,8 @@ class DevicesController < ApplicationController
   before_filter :search_params,     only: %w(index)
   before_filter :search_properties, only: %w(index)
   before_filter :pagination,        only: %w(index)
+  after_filter  :create_event,      only: %w(create update destroy)
+
 
   def index
     @devices = @devices.limit(params[:per])
@@ -65,11 +66,8 @@ class DevicesController < ApplicationController
   end
 
   def find_filtered_resources
-    # TODO solution that temporarly solve the bug that should let you use
-    # @devices.in(id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
-    if not doorkeeper_token.device_ids.empty?
-      doorkeeper_token.device_ids.each {|id| @devices = @devices.or(id: id) }
-    end
+    # TODO there is a bag in mongoid that does not let you use the #in method
+    doorkeeper_token.device_ids.each { |id| @devices = @devices.or(id: id) } if !doorkeeper_token.device_ids.empty?
   end
 
   def find_resource
@@ -83,7 +81,7 @@ class DevicesController < ApplicationController
     @devices = @devices.where(pending: params[:pending].to_bool) if params[:pending]
   end
 
-  # TODO: see if you are able to build a query to match multiple properties.
+  # TODO see if you are able to build a query to match multiple properties.
   def search_properties(match = {})
     if params[:properties]
       match.merge!({ property_id: Moped::BSON::ObjectId(find_id(params[:properties][:uri])) }) if params[:properties][:uri]
@@ -99,5 +97,9 @@ class DevicesController < ApplicationController
     params[:per] = Settings.pagination.per if params[:per] == 0
     params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
     @devices = @devices.gt(id: find_id(params[:start])) if params[:start]
+  end
+
+  def create_event
+    Event.create(resource_id: @device.id, resource: 'devices', event: params[:action], data: JSON.parse(response.body), resource_owner_id: current_user.id) if @device.valid?
   end
 end

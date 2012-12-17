@@ -65,9 +65,9 @@ feature 'ConsumptionsController' do
     let(:resource) { Consumption.last }
 
     it_behaves_like 'a creatable resource'
+    it_behaves_like 'a creatable resource from physical'
     it_behaves_like 'a validated resource', 'page.driver.post(uri, {}.to_json)', { method: 'POST', error: 'can\'t be blank' }
-    it_behaves_like 'a registered event', 'page.driver.post(uri, params.to_json)', {}
-    it_behaves_like 'a physical creatable resource'
+    it_behaves_like 'a registered event', 'page.driver.post(uri, params.to_json)', {}, 'consumptions', 'create'
   end
 
   context 'PUT /consumptions/:id' do

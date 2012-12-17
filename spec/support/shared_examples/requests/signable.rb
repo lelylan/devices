@@ -1,4 +1,4 @@
-shared_examples_for 'a physical updatable resource' do
+shared_examples_for 'an updatable resource from physical' do
 
   describe 'when the request comes from the physical device' do
 
@@ -39,7 +39,7 @@ shared_examples_for 'a physical updatable resource' do
   end
 end
 
-shared_examples_for 'a physical creatable resource' do |action|
+shared_examples_for 'a creatable resource from physical' do |action|
 
   describe 'when the request comes from the physical device' do
 

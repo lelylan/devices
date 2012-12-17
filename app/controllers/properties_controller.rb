@@ -1,14 +1,13 @@
 class PropertiesController < ApplicationController
   rescue_from Mongoid::Errors::DocumentNotFound, with: :document_not_found
 
-  eventable_for 'device', resource: 'histories', action: 'create', only: %w(update)
-
   doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym), if: -> { not physical_request }
 
   before_filter :find_from_physical,      if: -> { physical_request }
   before_filter :find_owned_resources,    if: -> { not physical_request }
   before_filter :find_filtered_resources, if: -> { not physical_request }
   before_filter :find_resource,           if: -> { not physical_request }
+  after_filter  :create_event
 
   def update
     @device.update_attributes(properties_attributes: properties_attributes)
@@ -48,6 +47,9 @@ class PropertiesController < ApplicationController
     @device.physical ? 202 : 200
   end
 
+  def create_event
+    Event.create(resource_id: @device.id, resource: 'histories', event: 'create', data: JSON.parse(response.body), resource_owner_id: current_user.id) if @device.valid?
+  end
 
   # Properties normalization
 
