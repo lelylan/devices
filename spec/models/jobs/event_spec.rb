@@ -17,8 +17,4 @@ describe Event do
   it { should validate_presence_of :resource }
   it { should validate_presence_of :event }
   it { should validate_presence_of :data }
-  it { should validate_presence_of :source }
-
-  it { %w(lelylan physical).each     { |uri| should allow_value(uri).for(:source) } }
-  it { %w(not-valid).each { |uri| should_not allow_value(uri).for(:source) } }
 end

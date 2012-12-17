@@ -25,6 +25,7 @@ feature 'PropertiesController' do
 
     it_behaves_like 'an updatable resource'
     it_behaves_like 'an updatable resource from physical'
+    it_behaves_like 'a forwardable physical request resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
@@ -56,9 +57,10 @@ feature 'PropertiesController' do
       end
     end
 
+
     describe 'when creates an event' do
 
-      before  { update }
+      before { update }
 
       it 'has two properties' do
         Event.last.data['properties'].should have(2).properties

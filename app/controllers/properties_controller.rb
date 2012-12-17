@@ -7,6 +7,7 @@ class PropertiesController < ApplicationController
   before_filter :find_owned_resources,    if: -> { not physical_request }
   before_filter :find_filtered_resources, if: -> { not physical_request }
   before_filter :find_resource,           if: -> { not physical_request }
+  before_filter :create_physical_request
   after_filter  :create_event
 
   def update
@@ -36,6 +37,17 @@ class PropertiesController < ApplicationController
     @device = @devices.find(params[:id])
   end
 
+  def status_code
+    (!physical_request and @device.physical) ? 202 : 200
+  end
+
+  def create_physical_request
+    if (!physical_request and @device.physical)
+      properties = properties_attributes.tap { |p| p.map { |p| p[:value] = p[:expected_value] unless p[:value] } }
+      Physical.create(resource_id: @device.id, data: { properties: properties })
+    end
+  end
+
   def create_history
     @device = DeviceDecorator.decorate @device
     History.create! device: @device.uri, properties: @device.properties do |history|
@@ -43,13 +55,12 @@ class PropertiesController < ApplicationController
     end
   end
 
-  def status_code
-    @device.physical ? 202 : 200
+  def create_event
+    if @device.valid?
+      Event.create(resource_id: @device.id, resource: 'histories', event: 'create', data: JSON.parse(response.body), resource_owner_id: current_user.id)
+    end
   end
 
-  def create_event
-    Event.create(resource_id: @device.id, resource: 'histories', event: 'create', data: JSON.parse(response.body), resource_owner_id: current_user.id) if @device.valid?
-  end
 
   # Properties normalization
 

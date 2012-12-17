@@ -30,6 +30,7 @@ feature 'FunctionsController' do
 
     it_behaves_like 'an updatable resource'
     it_behaves_like 'an updatable resource from physical'
+    it_behaves_like 'a forwardable physical request resource'
     it_behaves_like 'a functionable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
