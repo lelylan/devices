@@ -69,6 +69,7 @@ feature 'DevicesController' do
     it_behaves_like 'a validated resource', 'page.driver.put(uri, { name: "" }.to_json)', { method: 'PUT', error: 'can\'t be blank' }
     it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
     it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)', { name: '' }
+    it_behaves_like 'a physical updatable resource'
   end
 
   context 'DELETE /devices/:id' do

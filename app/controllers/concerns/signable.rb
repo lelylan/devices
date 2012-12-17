@@ -8,8 +8,8 @@ module Signable
 
   def verify_signature
     if request.headers['X-Physical-Signature']
-      signature  = request.headers['X-Physical-Signature']
-      payload    = clean_payload
+      signature = request.headers['X-Physical-Signature']
+      payload   = request.request_parameters
       render_401 if @device and !Signature.valid?(signature, payload, @device.secret)
     end
   end
@@ -18,8 +18,10 @@ module Signable
 
   # Remove a key automatically added by rails
   # (do not remove function as it is a mandatory param on functions service)
+  # TODO remove if not used anymore
   def clean_payload
-    extras = %w(property device consumption)
-    request.request_parameters.delete_if {|key, value| extras.include? key }
+    #extras = %w(property device consumption) if params[:controller] == 'consumptions'
+    #extras = %w(property device consumption)
+    #request.request_parameters.delete_if {|key, value| extras.include? key }
   end
 end

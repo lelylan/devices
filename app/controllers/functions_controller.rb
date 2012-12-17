@@ -10,7 +10,6 @@ class FunctionsController < ApplicationController
   before_filter :find_filtered_resources, if: -> { not physical_request }
   before_filter :find_resource,           if: -> { not physical_request }
 
-
   def update
     @device.update_attributes(properties_attributes: properties_attributes)
     create_history
@@ -29,13 +28,13 @@ class FunctionsController < ApplicationController
     @devices = Device.where(resource_owner_id: current_user.id)
   end
 
-  def find_resource
-    @device = @devices.find(params[:id])
-  end
-
   def find_filtered_resources
     # TODO there is a bag in mongoid that does not let you use the #in method
     doorkeeper_token.device_ids.each { |id| @devices = @devices.or(id: id) } if !doorkeeper_token.device_ids.empty?
+  end
+
+  def find_resource
+    @device = @devices.find(params[:id])
   end
 
   def create_history
@@ -50,7 +49,7 @@ class FunctionsController < ApplicationController
   end
 
 
-  # extras
+  # Properties normalization
 
   def properties_attributes
     merge_properties(params[:function], params_properties)

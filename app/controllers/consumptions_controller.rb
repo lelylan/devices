@@ -2,11 +2,12 @@ class ConsumptionsController < ApplicationController
   eventable_for 'consumption', resource: 'devices', prefix: 'consumption', resource_id: 'device_id', only: %w(create)
 
   doorkeeper_for :index, :show, scopes: Settings.scopes.read.map(&:to_sym)
-  doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
+  doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym), if: -> { not physical_request }
 
-  before_filter :find_owned_resources
-  before_filter :find_filtered_resources
-  before_filter :find_resource, only: %w(show update destroy)
+  before_filter :find_from_physical,      if: -> { physical_request }
+  before_filter :find_owned_resources,    if: -> { not physical_request }
+  before_filter :find_filtered_resources, if: -> { not physical_request }
+  before_filter :find_resource, only: %w(show update destroy), if: -> { not physical_request }
   before_filter :search_params, only: %w(index)
   before_filter :pagination,    only: %w(index)
 
@@ -43,6 +44,12 @@ class ConsumptionsController < ApplicationController
   end
 
   private
+
+  def find_from_physical
+    device_id    = find_id params[:device] if params[:device]
+    @device      = Device.find(device_id || 0)
+    verify_signature
+  end
 
   def find_owned_resources
     @consumptions = Consumption.where(resource_owner_id: current_user.id)

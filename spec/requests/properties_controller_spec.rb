@@ -28,7 +28,7 @@ feature 'PropertiesController' do
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
     it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)'
-    it_behaves_like 'a signed resource'
+    it_behaves_like 'a physical updatable resource'
 
     it 'touches the device' do
       resource.update_attributes(updated_at: Time.now - 60)

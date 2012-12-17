@@ -2,12 +2,14 @@ class DevicesController < ApplicationController
   eventable_for 'device', resource: 'devices', only: %w(create update destroy)
 
   doorkeeper_for :index, :show, scopes: Settings.scopes.read.map(&:to_sym)
-  doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
+  doorkeeper_for :create, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
+  doorkeeper_for :update, scopes: Settings.scopes.write.map(&:to_sym), if: -> { not physical_request }
   doorkeeper_for :privates, scopes: %w(privates).map(&:to_sym)
 
-  before_filter :find_owned_resources
-  before_filter :find_filtered_resources
-  before_filter :find_resource,     only: %w(show update destroy privates)
+  before_filter :find_from_physical,      if: -> { physical_request }
+  before_filter :find_owned_resources,    if: -> { not physical_request }
+  before_filter :find_filtered_resources, if: -> { not physical_request }
+  before_filter :find_resource,     only: %w(show update destroy privates), if: -> { not physical_request }
   before_filter :search_params,     only: %w(index)
   before_filter :search_properties, only: %w(index)
   before_filter :pagination,        only: %w(index)
@@ -50,8 +52,13 @@ class DevicesController < ApplicationController
     render json: resource, serializer: PrivateSerializer
   end
 
+
   private
 
+  def find_from_physical
+    @device = Device.find(params[:id])
+    verify_signature
+  end
 
   def find_owned_resources
     @devices = Device.where(resource_owner_id: current_user.id)

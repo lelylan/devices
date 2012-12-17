@@ -49,7 +49,7 @@ class PropertiesController < ApplicationController
   end
 
 
-  # extras
+  # Properties normalization
 
   def properties_attributes
     params_properties
