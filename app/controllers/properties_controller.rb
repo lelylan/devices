@@ -1,7 +1,7 @@
 class PropertiesController < ApplicationController
   rescue_from Mongoid::Errors::DocumentNotFound, with: :document_not_found
 
-  eventable_for 'device', resource: 'devices', prefix: 'property', only: %w(update)
+  eventable_for 'device', resource: 'histories', action: 'create', only: %w(update)
 
   doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym), if: -> { not physical_request }
 

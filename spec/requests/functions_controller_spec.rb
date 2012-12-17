@@ -70,6 +70,14 @@ feature 'FunctionsController' do
         Event.last.data['properties'].should have(2).properties
       end
 
+      it 'creates an history resource event' do
+        Event.last.resource.should == 'histories'
+      end
+
+      it 'creates a created event' do
+        Event.last.event.should == 'created'
+      end
+
       describe 'with a property defined in the function' do
 
         subject { Hashie::Mash.new Event.last.data['properties'].first }

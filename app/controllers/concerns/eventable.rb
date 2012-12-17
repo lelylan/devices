@@ -21,7 +21,7 @@ module Eventable
 
   module ClassMethods
 
-    attr_accessor :resource, :resource_name, :resource_id, :event_prefix
+    attr_accessor :resource, :resource_name, :resource_id, :event_prefix, :the_action
 
     def eventable_for(name, options)
       after_filter :create_event, only: options[:only]
@@ -29,6 +29,7 @@ module Eventable
       @resource      = name.to_s
       @resource_name = options[:resource]
       @event_prefix  = options[:prefix]
+      @the_action    = options[:action]
       @resource_id   = options[:resource_id] || 'id'
     end
   end
@@ -41,16 +42,13 @@ module Eventable
         resource_owner_id: current_user.id,
         resource_id: resource.send(self.class.resource_id),
         resource: self.class.resource_name,
-        event: event, source: source, data: data)
+        event: event,
+        data: data)
     end
   end
 
   def data
     return JSON.parse(response.body)
-  end
-
-  def source
-    instance_variable_get('@source') || 'lelylan'
   end
 
   def event(result = '')
@@ -67,8 +65,8 @@ module Eventable
   end
 
   def event_action
-    return 'created' if params[:action] == 'create'
-    return 'updated' if params[:action] == 'update'
-    return 'deleted' if params[:action] == 'destroy'
+    return 'created' if self.class.the_action || params[:action] == 'create'
+    return 'updated' if self.class.the_action || params[:action] == 'update'
+    return 'deleted' if self.class.the_action || params[:action] == 'destroy'
   end
 end

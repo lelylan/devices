@@ -59,13 +59,22 @@ feature 'PropertiesController' do
     describe 'when creates an event' do
 
       before  { update }
-      subject { Hashie::Mash.new Event.last.data['properties'].first }
 
       it 'has two properties' do
         Event.last.data['properties'].should have(2).properties
       end
 
-      its(:value) { should == 'updated' }
+      it 'saves the updated properties' do
+        Event.last.data['properties'].first['value'].should == 'updated'
+      end
+
+      it 'creates an history resource event' do
+        Event.last.resource.should == 'histories'
+      end
+
+      it 'creates a created event' do
+        Event.last.event.should == 'created'
+      end
     end
 
     describe 'when updates a not existing property' do
