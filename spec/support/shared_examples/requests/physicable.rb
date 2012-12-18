@@ -6,6 +6,16 @@ shared_examples_for 'a forwardable physical request resource' do
     expect { update }.to change { Physical.last.id }
   end
 
+
+  describe 'when check physical' do
+    before         { update }
+    let(:physical) { Physical.last }
+
+    it 'sets the resource id' do
+      physical.resource_id.should == resource.id
+    end
+  end
+
   describe 'when the there is only :expected_value' do
 
     let(:properties) { [ { uri: a_uri(status), expected_value: 'updated' } ] }
@@ -33,16 +43,6 @@ shared_examples_for 'a forwardable physical request resource' do
 
     its(:value) { should == 'updated' }
     its(:expected_value) { should == 'expected_updated' }
-  end
-
-  describe 'with request from the physical' do
-
-    let(:signature) { Signature.sign(params, resource.secret) }
-    before  { page.driver.header 'X-Physical-Signature', signature }
-
-    it 'does not create a physical request resource' do
-      expect { update }.to_not change { Physical.last.id }
-    end
   end
 
   describe 'when the request comes from the physical' do

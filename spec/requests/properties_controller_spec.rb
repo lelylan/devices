@@ -18,7 +18,7 @@ feature 'PropertiesController' do
     let(:status)     { Property.find resource.properties.first.id }
     let(:intensity)  { Property.find resource.properties.last.id }
     let(:properties) { [ { uri: a_uri(status), value: 'updated' }, { uri: a_uri(intensity), value: '20' } ] }
-    let(:params)     { { pending: true, properties: properties } }
+    let(:params)     { { properties: properties } }
     let(:update)     { page.driver.put uri, params.to_json }
 
     let(:uri) { "/devices/#{resource.id}/properties" }

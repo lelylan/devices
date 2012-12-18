@@ -23,8 +23,8 @@ feature 'FunctionsController' do
     let(:function_uri) { a_uri function }
 
     let(:properties) { [ { uri: a_uri(intensity), value: 'updated' } ] }
-    let(:params) { { pending: true, properties: properties, function: function_uri } }
-    let(:update) { page.driver.put uri, params.to_json }
+    let(:params)     { { properties: properties, function: function_uri } }
+    let(:update)     { page.driver.put uri, params.to_json }
 
     let(:uri) { "/devices/#{resource.id}/functions" }
 
