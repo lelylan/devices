@@ -1,7 +1,7 @@
 class HistorySerializer < ApplicationSerializer
   cached true
 
-  attributes :uri, :id, :device, :properties, :created_at, :updated_at
+  attributes :uri, :id, :device, :source, :properties, :created_at, :updated_at
 
   def uri
     HistoryDecorator.decorate(object).uri

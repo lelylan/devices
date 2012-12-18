@@ -31,6 +31,7 @@ feature 'FunctionsController' do
     it_behaves_like 'an updatable resource'
     it_behaves_like 'an updatable resource from physical'
     it_behaves_like 'a forwardable physical request resource'
+    it_behaves_like 'a historable resource'
     it_behaves_like 'a functionable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
@@ -40,27 +41,6 @@ feature 'FunctionsController' do
     it 'touches the device' do
       resource.update_attributes(updated_at: Time.now - 60)
       expect { update }.to change { resource.reload.updated_at.to_i }
-    end
-
-    describe 'when creating a new history' do
-
-      it 'adds a new history record' do
-        expect { update }.to change { History.count }.by(1)
-      end
-
-      describe 'when saving the device properties' do
-
-        before        { update }
-        let(:history) { History.last }
-
-        it 'saves the new status value' do
-          history.properties.first.value.should == 'on'
-        end
-
-        it 'saves the new intensity value' do
-          history.properties.last.value.should == 'updated'
-        end
-      end
     end
 
     describe 'when creates an event' do

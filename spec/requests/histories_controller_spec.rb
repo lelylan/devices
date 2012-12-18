@@ -19,7 +19,7 @@ feature 'HistorysController' do
 
     it_behaves_like 'a listable resource'
     it_behaves_like 'a paginable resource'
-    it_behaves_like 'a searchable resource', { device: a_uri(FactoryGirl.create :device) }
+    it_behaves_like 'a searchable resource', { device: a_uri(FactoryGirl.create :device), source: 'physical' }
     it_behaves_like 'a searchable resource on properties'
     it_behaves_like 'a searchable resource on timing', 'created_at'
     it_behaves_like 'a filterable list'

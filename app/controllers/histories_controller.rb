@@ -33,6 +33,7 @@ class HistoriesController < ApplicationController
 
   def search_params
     @histories = @histories.where(device_id: find_id(params[:device])) if params[:device]
+    @histories = @histories.where(source: find_id(params[:source]))    if params[:source]
     @histories = @histories.gte(created_at: params[:from]) if params[:from]
     @histories = @histories.lte(created_at: params[:to])   if params[:to]
   end

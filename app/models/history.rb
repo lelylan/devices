@@ -5,6 +5,7 @@ class History
 
   field :resource_owner_id, type: Moped::BSON::ObjectId
   field :device_id, type: Moped::BSON::ObjectId
+  field :source, default: 'lelylan'
 
   index({ resource_owner_id: 1 }, { background: true })
   index({ device_id: 1 }, { background: true })
@@ -17,6 +18,7 @@ class History
 
   validates :resource_owner_id, presence:true
   validates :device, presence: true, uri: true, on: :create
+  validates :source, inclusion: %w(lelylan physical)
 
   before_create :set_device_id
 

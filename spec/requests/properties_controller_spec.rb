@@ -17,7 +17,7 @@ feature 'PropertiesController' do
     let(:resource)   { FactoryGirl.create :device, :with_no_physical, resource_owner_id: user.id }
     let(:status)     { Property.find resource.properties.first.id }
     let(:intensity)  { Property.find resource.properties.last.id }
-    let(:properties) { [ { uri: a_uri(status), value: 'updated' }, { uri: a_uri(intensity), value: '20' } ] }
+    let(:properties) { [ { uri: a_uri(status), value: 'on' }, { uri: a_uri(intensity), value: 'updated' } ] }
     let(:params)     { { properties: properties } }
     let(:update)     { page.driver.put uri, params.to_json }
 
@@ -26,6 +26,7 @@ feature 'PropertiesController' do
     it_behaves_like 'an updatable resource'
     it_behaves_like 'an updatable resource from physical'
     it_behaves_like 'a forwardable physical request resource'
+    it_behaves_like 'a historable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
@@ -36,28 +37,6 @@ feature 'PropertiesController' do
       expect { update }.to change { resource.reload.updated_at.to_i }
     end
 
-    describe 'when creating a new history' do
-
-      it 'adds a new history record' do
-        expect { update }.to change { History.count }.by(1)
-      end
-
-      describe 'when saving the device properties' do
-
-        before        { update }
-        let(:history) { History.last }
-
-        it 'saves the new status value' do
-          history.properties.first.value.should == 'updated'
-        end
-
-        it 'saves the new intensity value' do
-          history.properties.last.value.should == '20'
-        end
-      end
-    end
-
-
     describe 'when creates an event' do
 
       before { update }
@@ -67,7 +46,7 @@ feature 'PropertiesController' do
       end
 
       it 'saves the updated properties' do
-        Event.last.data['properties'].first['value'].should == 'updated'
+        Event.last.data['properties'].first['value'].should == 'on'
       end
     end
 

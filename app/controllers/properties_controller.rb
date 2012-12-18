@@ -50,7 +50,8 @@ class PropertiesController < ApplicationController
 
   def create_history
     @device = DeviceDecorator.decorate @device
-    History.create! device: @device.uri, properties: @device.properties do |history|
+    source  = physical_request ? 'physical' : 'lelylan'
+    History.create!(device: @device.uri, properties: @device.properties, source: source) do |history|
       history.resource_owner_id = current_user.id
     end
   end

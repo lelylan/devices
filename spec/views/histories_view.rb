@@ -4,6 +4,7 @@ module HelpersViewMethods
     json.device.uri.should == history.device_uri
     json.uri.should == history.uri
     json.id.should  == history.id.as_json
+    json.source.should == history.source.source
 
     json.properties.each_with_index do |property, i|
       property.uri.should == HistoryPropertyDecorator.decorate(history.properties[i]).uri
