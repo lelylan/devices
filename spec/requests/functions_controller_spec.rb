@@ -36,7 +36,7 @@ feature 'FunctionsController' do
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.put(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.put(uri)'
-    it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)', nil, 'histories', 'create'
+    it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)', nil, 'devices', 'property-update'
 
     it 'touches the device' do
       resource.update_attributes(updated_at: Time.now - 60)
