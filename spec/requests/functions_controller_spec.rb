@@ -108,37 +108,5 @@ feature 'FunctionsController' do
         expect { update }.to_not change { Event.count }.by(1)
       end
     end
-
-    context 'with no physical connection' do
-
-      before { update }
-
-      it 'returns status code OK' do
-        page.status_code.should == 200
-      end
-    end
-
-    describe '#physical' do
-
-      describe 'when not connected' do
-
-        before { update }
-
-        it 'returns status code 200' do
-          page.status_code.should == 200
-        end
-      end
-
-      describe 'when connected' do
-
-        let(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
-
-        before { update }
-
-        it 'returns status code 202' do
-          page.status_code.should == 202
-        end
-      end
-    end
   end
 end

@@ -38,7 +38,7 @@ class FunctionsController < ApplicationController
   end
 
   def status_code
-    @device.physical ? 202 : 200
+    (!physical_request and @device.physical) ? 202 : 200
   end
 
   def create_physical_request

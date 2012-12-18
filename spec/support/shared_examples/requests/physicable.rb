@@ -1,11 +1,16 @@
 shared_examples_for 'a forwardable physical request resource' do
 
-  before { resource.update_attributes(physical: 'http://arduino.casa.com/5cf372d4')}
+  before { FactoryGirl.create :physical } # not used but avoid test error on empty collection
+  before { resource.update_attributes(physical: 'http://arduino.casa.com/5cf372d4') }
 
   it 'creates a physical request' do
     expect { update }.to change { Physical.last.id }
   end
 
+  it 'returns status code 202' do
+    update
+    page.status_code.should == 202
+  end
 
   describe 'when check physical' do
     before         { update }
@@ -53,14 +58,24 @@ shared_examples_for 'a forwardable physical request resource' do
     it 'does not create a physical request' do
       expect { update }.to_not change { Physical.last.id }
     end
+
+    it 'returns status code 200' do
+      update
+      page.status_code.should == 200
+    end
   end
 
   describe 'when the resource has not physical connection' do
 
-    before { resource.update_attributes(physical: nil)}
+    before { resource.update_attributes physical: nil }
 
     it 'does not create a physical request' do
       expect { update }.to_not change { Physical.last.id }
+    end
+
+    it 'returns status code 200' do
+      update
+      page.status_code.should == 200
     end
   end
 end
