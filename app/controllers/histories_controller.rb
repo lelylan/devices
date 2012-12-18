@@ -1,5 +1,5 @@
 class HistoriesController < ApplicationController
-  doorkeeper_for :index, :show, scopes: Settings.scopes.read.map(&:to_sym)
+  doorkeeper_for :index, :show, scopes: Settings.scopes.history_read.map(&:to_sym)
 
   before_filter :find_owned_resources
   before_filter :find_filtered_resources

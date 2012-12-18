@@ -15,3 +15,15 @@ scopes:
     - resources
     - devices
     - devices-control
+  history_read:
+    - resources
+    - resources-read
+    - histories-read
+  consumptions:
+    - resources
+    - consumptions
+  consumptions_read:
+    - resources
+    - resources-read
+    - consumptions
+    - consumptions-read

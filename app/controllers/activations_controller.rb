@@ -1,7 +1,7 @@
 class ActivationsController < ApplicationController
   rescue_from Mongoid::Errors::DocumentNotFound, with: :document_not_found
 
-  doorkeeper_for :create, :destroy, scopes: Settings.scopes.control.map(&:to_sym)
+  doorkeeper_for :create, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
 
   before_filter :find_all_resources, only: %w(create)
   before_filter :find_owned_resources, only: %w(destroy)

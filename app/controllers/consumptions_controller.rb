@@ -1,7 +1,7 @@
 class ConsumptionsController < ApplicationController
 
-  doorkeeper_for :index, :show, scopes: Settings.scopes.read.map(&:to_sym)
-  doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym), if: -> { not physical_request }
+  doorkeeper_for :index, :show, scopes: Settings.scopes.consumptions_read.map(&:to_sym)
+  doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.consumptions.map(&:to_sym), if: -> { not physical_request }
 
   before_filter :find_from_physical,      if: -> { physical_request }
   before_filter :find_owned_resources,    if: -> { not physical_request }

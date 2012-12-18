@@ -2,7 +2,7 @@ class DevicesController < ApplicationController
 
   doorkeeper_for :index, :show, scopes: Settings.scopes.read.map(&:to_sym)
   doorkeeper_for :create, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
-  doorkeeper_for :update, scopes: Settings.scopes.write.map(&:to_sym), if: -> { not physical_request }
+  doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym), if: -> { not physical_request }
   doorkeeper_for :privates, scopes: %w(privates).map(&:to_sym)
 
   before_filter :find_from_physical,      if: -> { physical_request }
