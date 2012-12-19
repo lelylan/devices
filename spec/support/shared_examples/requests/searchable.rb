@@ -43,10 +43,10 @@ shared_examples_for 'a searchable resource on properties' do
     end
   end
 
-  context 'when filters #expected_value' do
+  context 'when filters #expected' do
 
-    before { result.properties.first.update_attributes(expected_value: 'updated') }
-    let(:properties) { { expected_value: 'updated' } }
+    before { result.properties.first.update_attributes(expected: 'updated') }
+    let(:properties) { { expected: 'updated' } }
 
     it 'returns the searched resource' do
       page.driver.get uri, properties: properties
@@ -67,12 +67,12 @@ shared_examples_for 'a searchable resource on properties' do
     end
   end
 
-  context 'when filters #uri, #value, #expected_value, #pending' do
+  context 'when filters #uri, #value, #expected, #pending' do
 
     let(:property_uri) { a_uri(result.properties.first, :property_id) }
-    let(:properties)   { { uri: property_uri, value: 'updated', expected_value: 'updated', pending: true } }
+    let(:properties)   { { uri: property_uri, value: 'updated', expected: 'updated', pending: true } }
 
-    before { result.properties.first.update_attributes(value: 'updated', expected_value: 'updated', pending: true) }
+    before { result.properties.first.update_attributes(value: 'updated', expected: 'updated', pending: true) }
 
     it 'returns the searched resource' do
       page.driver.get uri, properties: properties

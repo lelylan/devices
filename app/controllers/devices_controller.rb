@@ -86,7 +86,7 @@ class DevicesController < ApplicationController
     if params[:properties]
       match.merge!({ property_id: Moped::BSON::ObjectId(find_id(params[:properties][:uri])) }) if params[:properties][:uri]
       match.merge!({ value: params[:properties][:value] }) if params[:properties][:value]
-      match.merge!({ expected_value: params[:properties][:expected_value] }) if params[:properties][:expected_value]
+      match.merge!({ expected: params[:properties][:expected] }) if params[:properties][:expected]
       match.merge!({ pending: params[:properties][:pending].to_bool }) if params[:properties][:pending]
       @devices = @devices.where('properties' => { '$elemMatch' => match })
     end

@@ -9,7 +9,7 @@ module HelpersViewMethods
     json.properties.each_with_index do |property, i|
       property.uri.should == HistoryPropertyDecorator.decorate(history.properties[i]).uri
       property.value.should == history.properties[i].value
-      property.expected_value.should == history.properties[i].expected_value
+      property.expected.should == history.properties[i].expected
       property.pending.should == history.properties[i].pending
     end
   end

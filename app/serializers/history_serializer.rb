@@ -15,7 +15,7 @@ class HistorySerializer < ApplicationSerializer
     object.properties.map do |property|
       property = HistoryPropertyDecorator.decorate property
       { uri: property.uri, id: property.id, value: property.value,
-        expected_value: property.expected_value, pending: property.pending }
+        expected: property.expected, pending: property.pending }
     end
   end
 end

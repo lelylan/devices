@@ -51,7 +51,7 @@ class Device
   def set_device_properties
     type       = Type.find(type_id)
     properties = Property.in(id: type.property_ids)
-    entries    = properties.map { |p| { property_id: p.id, value: p.default, expected_value: p.default, suggested: p.suggested } }
+    entries    = properties.map { |p| { property_id: p.id, value: p.default, expected: p.default, suggested: p.suggested } }
     self.properties_attributes = entries
   end
 

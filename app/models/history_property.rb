@@ -5,7 +5,7 @@ class HistoryProperty
 
   field :property_id, type: Moped::BSON::ObjectId
   field :value
-  field :expected_value
+  field :expected
   field :pending, type: Boolean, default: false
 
   index({ property_id: 1, value: 1 }, { background: true })

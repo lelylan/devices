@@ -62,31 +62,31 @@ describe Device do
 
         subject { resource.properties.first }
 
-        its(:value)          { should == 'off' }
-        its(:expected_value) { should == 'off' }
-        its(:pending)        { should == false }
-        its(:suggested)      { should == { 'on' => 'On', 'off' => 'Off' } }
-        its(:property_id)    { should_not be_nil }
-        its(:id)             { should == resource.properties.first.property_id }
+        its(:value)       { should == 'off' }
+        its(:expected)    { should == 'off' }
+        its(:pending)     { should == false }
+        its(:suggested)   { should == { 'on' => 'On', 'off' => 'Off' } }
+        its(:property_id) { should_not be_nil }
+        its(:id)          { should == resource.properties.first.property_id }
       end
 
       describe 'with intensity' do
 
         subject { resource.properties.last }
 
-        its(:value)          { should == '0' }
-        its(:expected_value) { should == '0' }
-        its(:pending)        { should == false }
-        its(:property_id)    { should_not be_nil }
-        its(:suggested)      { should == { '0' => 'min', '50' => 'half', '100' => 'max' } }
-        its(:id)             { should == resource.properties.last.property_id }
+        its(:value)       { should == '0' }
+        its(:expected)    { should == '0' }
+        its(:pending)     { should == false }
+        its(:property_id) { should_not be_nil }
+        its(:suggested)   { should == { '0' => 'min', '50' => 'half', '100' => 'max' } }
+        its(:id)          { should == resource.properties.last.property_id }
       end
     end
 
     describe 'when updates the resource properties' do
 
       describe 'when updates the status value' do
-        let(:properties) { [ { id: resource.properties.first.id, value: 'on', expected_value: 'off', pending: true, suggested: { 'updated' => 'updated' } } ] }
+        let(:properties) { [ { id: resource.properties.first.id, value: 'on', expected: 'off', pending: true, suggested: { 'updated' => 'updated' } } ] }
 
         before  { resource.update_attributes(properties_attributes: properties) }
 
@@ -95,7 +95,7 @@ describe Device do
         end
 
         it 'updates its physical value' do
-          resource.properties.first.expected_value.should == 'off'
+          resource.properties.first.expected.should == 'off'
         end
 
         it 'updates its pending status' do
@@ -150,26 +150,26 @@ describe Device do
         its(:pending)    { should == false }
       end
 
-      describe 'when updates :expected_value' do
+      describe 'when updates :expected' do
 
-        let(:properties) { [ { id: property_id, expected_value: '100' } ] }
+        let(:properties) { [ { id: property_id, expected: '100' } ] }
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == true }
         its(:value)      { should == 'off' }
       end
 
-      describe 'when updates :value and :expected_value' do
+      describe 'when updates :value and :expected' do
 
         describe 'when they are equal' do
-        let(:properties) { [ { id: property_id, value: '100', expected_value: '100' } ] }
+        let(:properties) { [ { id: property_id, value: '100', expected: '100' } ] }
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == false }
         end
 
         describe 'when they are different' do
-        let(:properties) { [ { id: property_id, value: '50', expected_value: '100' } ] }
+        let(:properties) { [ { id: property_id, value: '50', expected: '100' } ] }
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == true }
@@ -179,11 +179,11 @@ describe Device do
 
     describe 'when :pending was true' do
 
-      before { resource.update_attributes(properties_attributes: [{ id: property_id, pending: true, expected_value: '100' }]) }
+      before { resource.update_attributes(properties_attributes: [{ id: property_id, pending: true, expected: '100' }]) }
 
       describe 'when updates :value' do
 
-        describe 'when :value and :expected_value are equal' do
+        describe 'when :value and :expected are equal' do
 
           let(:properties) { [ { id: property_id, value: '100' } ] }
           before           { resource.update_attributes(properties_attributes: properties) }
@@ -191,7 +191,7 @@ describe Device do
           its(:pending)    { should == false }
         end
 
-        describe 'when :value and :expected_value are not equal' do
+        describe 'when :value and :expected are not equal' do
 
           let(:properties) { [ { id: property_id, value: '50' } ] }
           before           { resource.update_attributes(properties_attributes: properties) }
@@ -200,26 +200,26 @@ describe Device do
         end
       end
 
-      describe 'when updates :expected_value' do
+      describe 'when updates :expected' do
 
-        let(:properties) { [ { id: property_id, expected_value: '50' } ] }
+        let(:properties) { [ { id: property_id, expected: '50' } ] }
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == true }
         its(:value)      { should == 'off' }
       end
 
-      describe 'when updates :value and :expected_value' do
+      describe 'when updates :value and :expected' do
 
         describe 'when they are equal' do
-          let(:properties) { [ { id: property_id, value: '100', expected_value: '100' } ] }
+          let(:properties) { [ { id: property_id, value: '100', expected: '100' } ] }
           before           { resource.update_attributes(properties_attributes: properties) }
           subject          { resource.properties.first }
           its(:pending)    { should == false }
         end
 
         describe 'when they are different' do
-          let(:properties) { [ { id: property_id, value: '50', expected_value: '100' } ] }
+          let(:properties) { [ { id: property_id, value: '50', expected: '100' } ] }
           before           { resource.update_attributes(properties_attributes: properties) }
           subject          { resource.properties.first }
           its(:pending)    { should == true }
@@ -239,18 +239,18 @@ describe Device do
         its(:pending)    { should == false }
       end
 
-      describe 'when updates :expected_value' do
+      describe 'when updates :expected' do
 
-        let(:properties) { [ { id: property_id, expected_value: '100' } ] }
+        let(:properties) { [ { id: property_id, expected: '100' } ] }
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == false }
         its(:value)      { should == '100' }
       end
 
-      describe 'when updates :value and :expected_value' do
+      describe 'when updates :value and :expected' do
 
-        let(:properties) { [ { id: property_id, value: '50', expected_value: '100' } ] }
+        let(:properties) { [ { id: property_id, value: '50', expected: '100' } ] }
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == false }

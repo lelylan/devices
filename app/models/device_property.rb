@@ -6,7 +6,7 @@ class DeviceProperty
   field :_id, default: ->{ property_id }, type: Moped::BSON::ObjectId
   field :property_id, type: Moped::BSON::ObjectId
   field :value
-  field :expected_value
+  field :expected
   field :pending, type: Boolean, default: false
   field :suggested, type: Hash, default: {}
 
@@ -19,7 +19,7 @@ class DeviceProperty
   before_save :set_pending, :set_value
 
   def set_value
-    self.value = expected_value if device.physical == nil and expected_value_changed?
+    self.value = expected if device.physical == nil and expected_changed?
   end
 
   def set_pending
@@ -29,11 +29,11 @@ class DeviceProperty
 
   def auto_pending
     return false if device.physical == nil
-    return false if expected_value_changed? and value_changed? and value == expected_value
-    return true  if expected_value_changed? and value_changed? and value != expected_value
-    return true  if pending == true and value_changed? and value != expected_value
-    return false if pending == true and value_changed? and value == expected_value
-    return true  if expected_value_changed?
+    return false if expected_changed? and value_changed? and value == expected
+    return true  if expected_changed? and value_changed? and value != expected
+    return true  if pending == true and value_changed? and value != expected
+    return false if pending == true and value_changed? and value == expected
+    return true  if expected_changed?
     return false
   end
 end

@@ -13,7 +13,7 @@ module HelpersViewMethods
       property.uri.should   == device_property.uri
       property.id.should    == device_property.id.to_s
       property.value.should == device_property.value
-      property.expected_value.should == device_property.expected_value
+      property.expected.should == device_property.expected
       property.pending.should == device_property.pending
     end
 

@@ -21,14 +21,14 @@ shared_examples_for 'a forwardable physical request resource' do
     end
   end
 
-  describe 'when the there is only :expected_value' do
+  describe 'when the there is only :expected' do
 
-    let(:properties) { [ { uri: a_uri(status), expected_value: 'updated' } ] }
+    let(:properties) { [ { uri: a_uri(status), expected: 'updated' } ] }
     before           { update }
     subject          { Hashie::Mash.new Physical.last.data['properties'].last }
 
     its(:value) { should == 'updated' }
-    its(:expected_value) { should == 'updated' }
+    its(:expected) { should == 'updated' }
   end
 
   describe 'when there is only :value' do
@@ -37,17 +37,17 @@ shared_examples_for 'a forwardable physical request resource' do
     subject          { Hashie::Mash.new Physical.last.data['properties'].last }
 
     its(:value) { should == 'updated' }
-    its(:expected_value) { should == nil }
+    its(:expected) { should == nil }
   end
 
-  describe 'when there are :value and :expected_value' do
+  describe 'when there are :value and :expected' do
 
-    let(:properties) { [ { uri: a_uri(status), value: 'updated', expected_value: 'expected_updated' } ] }
+    let(:properties) { [ { uri: a_uri(status), value: 'updated', expected: 'expected_updated' } ] }
     before           { update }
     subject          { Hashie::Mash.new Physical.last.data['properties'].last }
 
     its(:value) { should == 'updated' }
-    its(:expected_value) { should == 'expected_updated' }
+    its(:expected) { should == 'expected_updated' }
   end
 
   describe 'when the request comes from the physical' do

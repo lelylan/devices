@@ -15,7 +15,7 @@ class DeviceSerializer < ApplicationSerializer
   def properties
     device.properties.map do |property|
       property = DevicePropertyDecorator.decorate property
-      { uri: property.uri, id: property.id, value: property.value, expected_value: property.expected_value, pending: property.pending }
+      { uri: property.uri, id: property.id, value: property.value, expected: property.expected, pending: property.pending }
     end
   end
 

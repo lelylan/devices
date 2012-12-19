@@ -43,7 +43,7 @@ class FunctionsController < ApplicationController
 
   def create_physical_request
     if (!physical_request and @device.physical)
-      properties = properties_attributes.tap { |p| p.map { |p| p[:value] = p[:expected_value] unless p[:value] } }
+      properties = properties_attributes.tap { |p| p.map { |p| p[:value] = p[:expected] unless p[:value] } }
       Physical.create(resource_id: @device.id, data: { properties: properties })
     end
   end
