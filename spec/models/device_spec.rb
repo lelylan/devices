@@ -65,6 +65,7 @@ describe Device do
         its(:value)          { should == 'off' }
         its(:expected_value) { should == 'off' }
         its(:pending)        { should == false }
+        its(:suggested)      { should == { 'on' => 'On', 'off' => 'Off' } }
         its(:property_id)    { should_not be_nil }
         its(:id)             { should == resource.properties.first.property_id }
       end
@@ -77,6 +78,7 @@ describe Device do
         its(:expected_value) { should == '0' }
         its(:pending)        { should == false }
         its(:property_id)    { should_not be_nil }
+        its(:suggested)      { should == { '0' => 'min', '50' => 'half', '100' => 'max' } }
         its(:id)             { should == resource.properties.last.property_id }
       end
     end
@@ -84,7 +86,7 @@ describe Device do
     describe 'when updates the resource properties' do
 
       describe 'when updates the status value' do
-        let(:properties) { [ { id: resource.properties.first.id, value: 'on', expected_value: 'off', pending: true } ] }
+        let(:properties) { [ { id: resource.properties.first.id, value: 'on', expected_value: 'off', pending: true, suggested: { 'updated' => 'updated' } } ] }
 
         before  { resource.update_attributes(properties_attributes: properties) }
 
@@ -100,12 +102,16 @@ describe Device do
           resource.properties.first.pending.should == true
         end
 
+        it 'updates its suggested values' do
+          resource.properties.first.suggested.should == { 'updated' => 'updated' }
+        end
+
         it 'does not create new properties' do
           resource.properties.should have(2).items
         end
       end
 
-      describe 'when updates a not existing property value' do
+      describe 'when updates a not existing property' do
         let(:properties) { [ { id: Settings.resource_id, value: 'on'} ] }
         let(:update)     { resource.properties_attributes = properties }
 
@@ -122,7 +128,7 @@ describe Device do
     let!(:type_id)  { resource.type_id }
     before          { resource.update_attributes(type: a_uri(FactoryGirl.create :type)) }
 
-    it 'does not let the type being updated' do
+    it 'does not apply the type update' do
       resource.reload.type_id.should == type_id
     end
   end

@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe DeviceProperty do
 
-  its(:pending) { should == false }
+  its(:pending)   { should == false }
+  its(:suggested) { should == {} }
 
   it { should validate_presence_of :property_id }
 

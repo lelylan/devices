@@ -8,6 +8,7 @@ class DeviceProperty
   field :value
   field :expected_value
   field :pending, type: Boolean, default: false
+  field :suggested, type: Hash, default: {}
 
   index({ property_id: 1, value: 1 }, { background: true })
 
@@ -15,14 +16,18 @@ class DeviceProperty
 
   validates :property_id, presence: true
 
-  before_save :set_pending, :auto_set_value
+  before_save :set_pending, :set_value
+
+  def set_value
+    self.value = expected_value if device.physical == nil and expected_value_changed?
+  end
 
   def set_pending
-    self.pending = auto_set_pending if not pending_changed?
+    self.pending = auto_pending if not pending_changed?
     return true
   end
 
-  def auto_set_pending
+  def auto_pending
     return false if device.physical == nil
     return false if expected_value_changed? and value_changed? and value == expected_value
     return true  if expected_value_changed? and value_changed? and value != expected_value
@@ -30,9 +35,5 @@ class DeviceProperty
     return false if pending == true and value_changed? and value == expected_value
     return true  if expected_value_changed?
     return false
-  end
-
-  def auto_set_value
-    self.value = expected_value if device.physical == nil and expected_value_changed?
   end
 end
