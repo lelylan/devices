@@ -16,10 +16,14 @@ class DeviceProperty
 
   validates :property_id, presence: true
 
-  before_save :set_pending, :set_value
+  before_save :set_pending, :set_value, :set_expected
 
   def set_value
-    self.value = expected if device.physical == nil and expected_changed?
+    self.value = expected if device.physical == nil and expected_changed? and !value_changed?
+  end
+
+  def set_expected
+    self.expected = value if pending == false and value_changed? and !expected_changed?
   end
 
   def set_pending
@@ -31,8 +35,8 @@ class DeviceProperty
     return false if device.physical == nil
     return false if expected_changed? and value_changed? and value == expected
     return true  if expected_changed? and value_changed? and value != expected
-    return true  if pending == true and value_changed? and value != expected
-    return false if pending == true and value_changed? and value == expected
+    return true  if pending == true   and value_changed? and value != expected
+    return false if pending == true   and value_changed? and value == expected
     return true  if expected_changed?
     return false
   end

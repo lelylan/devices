@@ -148,6 +148,8 @@ describe Device do
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == false }
+        its(:expected)   { should == '100' }
+        its(:value)      { should == '100' }
       end
 
       describe 'when updates :expected' do
@@ -157,6 +159,7 @@ describe Device do
         subject          { resource.properties.first }
         its(:pending)    { should == true }
         its(:value)      { should == 'off' }
+        its(:expected)   { should == '100' }
       end
 
       describe 'when updates :value and :expected' do
@@ -166,6 +169,8 @@ describe Device do
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == false }
+        its(:value)      { should == '100' }
+        its(:expected)   { should == '100' }
         end
 
         describe 'when they are different' do
@@ -173,6 +178,8 @@ describe Device do
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == true }
+        its(:value)      { should == '50' }
+        its(:expected)   { should == '100' }
         end
       end
     end
@@ -189,6 +196,8 @@ describe Device do
           before           { resource.update_attributes(properties_attributes: properties) }
           subject          { resource.properties.first }
           its(:pending)    { should == false }
+          its(:value)      { should == '100' }
+          its(:expected)   { should == '100' }
         end
 
         describe 'when :value and :expected are not equal' do
@@ -197,6 +206,8 @@ describe Device do
           before           { resource.update_attributes(properties_attributes: properties) }
           subject          { resource.properties.first }
           its(:pending)    { should == true }
+          its(:value)      { should == '50' }
+          its(:expected)   { should == '100' }
         end
       end
 
@@ -207,6 +218,7 @@ describe Device do
         subject          { resource.properties.first }
         its(:pending)    { should == true }
         its(:value)      { should == 'off' }
+        its(:expected)   { should == '50' }
       end
 
       describe 'when updates :value and :expected' do
@@ -216,6 +228,8 @@ describe Device do
           before           { resource.update_attributes(properties_attributes: properties) }
           subject          { resource.properties.first }
           its(:pending)    { should == false }
+          its(:value)      { should == '100' }
+          its(:expected)   { should == '100' }
         end
 
         describe 'when they are different' do
@@ -223,6 +237,8 @@ describe Device do
           before           { resource.update_attributes(properties_attributes: properties) }
           subject          { resource.properties.first }
           its(:pending)    { should == true }
+          its(:value)      { should == '50' }
+          its(:expected)   { should == '100' }
         end
       end
     end
@@ -237,6 +253,8 @@ describe Device do
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == false }
+        its(:value)      { should == '100' }
+        its(:expected)   { should == '100' }
       end
 
       describe 'when updates :expected' do
@@ -246,6 +264,7 @@ describe Device do
         subject          { resource.properties.first }
         its(:pending)    { should == false }
         its(:value)      { should == '100' }
+        its(:expected)   { should == '100' }
       end
 
       describe 'when updates :value and :expected' do
@@ -254,6 +273,8 @@ describe Device do
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
         its(:pending)    { should == false }
+        its(:value)      { should == '50' }
+        its(:expected)   { should == '100' }
       end
     end
   end
