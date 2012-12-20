@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '1.9.3'
 
-gem 'rails', '~> 3.2.6'
+gem 'rails', '~> 3.2.9'
 gem 'unicorn'
 gem 'mongoid'
 gem 'doorkeeper', '~> 0.6.1'
@@ -22,7 +22,7 @@ group :development, :test do
   gem 'foreman'
   gem 'rspec-rails', '~> 2.6'
   gem 'shoulda'
-  gem 'capybara'
+  gem 'capybara', '~> 1.1.4'
   gem 'capybara-json'
   gem 'mock_redis'
   gem 'factory_girl_rails', require: false
