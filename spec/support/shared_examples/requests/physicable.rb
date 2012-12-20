@@ -27,10 +27,10 @@ shared_examples_for 'a forwardable physical request resource' do
     before           { update }
     subject          { Hashie::Mash.new Physical.last.data['properties'].last }
 
-    its(:value) { should == 'updated' }
-    its(:expected) { should == 'updated' }
+    its(:value)    { should == 'updated' }
+    its(:expected) { should == nil }
 
-    it 'does not change :value' do
+    it 'does not change resource :value' do
       property = resource.reload.properties.first
       property.value.should_not == property.expected
     end
@@ -41,7 +41,7 @@ shared_examples_for 'a forwardable physical request resource' do
     before           { update }
     subject          { Hashie::Mash.new Physical.last.data['properties'].last }
 
-    its(:value) { should == 'updated' }
+    its(:value)    { should == 'updated' }
     its(:expected) { should == nil }
   end
 
@@ -51,8 +51,8 @@ shared_examples_for 'a forwardable physical request resource' do
     before           { update }
     subject          { Hashie::Mash.new Physical.last.data['properties'].last }
 
-    its(:value) { should == 'updated' }
-    its(:expected) { should == 'expected_updated' }
+    its(:value)    { should == 'expected_updated' }
+    its(:expected) { should == nil }
   end
 
   describe 'when the request comes from the physical' do

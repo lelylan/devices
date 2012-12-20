@@ -43,9 +43,7 @@ class FunctionsController < ApplicationController
 
   def create_physical_request
     if (!physical_request and @device.physical)
-      properties = MessagePack.unpack(MessagePack.pack(properties_attributes))
-      properties.tap { |p| p.map { |p| p[:value] = p[:expected] unless p[:value] } }
-      Physical.create(resource_id: @device.id, data: { properties: properties })
+      Physical.create(resource_id: @device.id, data: { properties: physical_properties })
     end
   end
 
@@ -80,6 +78,14 @@ class FunctionsController < ApplicationController
   def params_properties
     params[:properties] ||= []
     params[:properties].tap { |p| p.map { |p| p[:id] = find_id p[:uri] } }
+  end
+
+  def physical_properties
+    properties_attributes.map do |p|
+      result = { id: p[:id], uri: p[:uri], value: p[:value] }
+      result[:value] = p[:expected] if p[:expected]
+      result
+    end
   end
 
   def document_not_found(e)

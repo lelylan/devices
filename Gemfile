@@ -17,7 +17,6 @@ gem 'dalli'
 gem 'rails-api'
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
 gem 'redis-throttle', git: 'git://github.com/andreareginato/redis-throttle.git'
-gem 'msgpack'
 
 group :development, :test do
   gem 'foreman'
