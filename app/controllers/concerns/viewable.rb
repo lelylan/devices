@@ -14,15 +14,7 @@ module Viewable
 
   def render_422(code, description)
     self.class.serialization_scope :request
-    resource = { code: code, description: description, body: json_body }
+    resource = { code: code, description: description, body: request.request_parameters }
     render json: resource, status: 422, serializer: ::NotValidSerializer and return
-  end
-
-  private
-
-  def json_body
-    key  = request.path_parameters[:controller].singularize
-    json = request.request_parameters
-    json[key]
   end
 end
