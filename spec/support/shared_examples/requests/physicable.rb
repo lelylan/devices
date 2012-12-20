@@ -29,6 +29,11 @@ shared_examples_for 'a forwardable physical request resource' do
 
     its(:value) { should == 'updated' }
     its(:expected) { should == 'updated' }
+
+    it 'does not change :value' do
+      property = resource.reload.properties.first
+      property.value.should_not == property.expected
+    end
   end
 
   describe 'when there is only :value' do

@@ -29,7 +29,7 @@ class PropertiesController < ApplicationController
   end
 
   def find_filtered_resources
-    # TODO there is a bag in mongoid that does not let you use the #in method
+    # TODO there is a bug in mongoid that does not let you use the #in method
     doorkeeper_token.device_ids.each { |id| @devices = @devices.or(id: id) } if !doorkeeper_token.device_ids.empty?
   end
 
@@ -43,7 +43,8 @@ class PropertiesController < ApplicationController
 
   def create_physical_request
     if (!physical_request and @device.physical)
-      properties = properties_attributes.tap { |p| p.map { |p| p[:value] = p[:expected] unless p[:value] } }
+      properties = MessagePack.unpack(MessagePack.pack(properties_attributes))
+      properties.tap { |p| p.map { |p| p[:value] = p[:expected] unless p[:value] } }
       Physical.create(resource_id: @device.id, data: { properties: properties })
     end
   end
