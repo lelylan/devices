@@ -36,11 +36,8 @@ class ActivationsController < ApplicationController
   end
 
   def find_filtered_resources
-    # TODO solution that temporarly solve the bug that should let you use
-    #@devices.in(id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
-    if not doorkeeper_token.device_ids.empty?
-      doorkeeper_token.device_ids.each {|id| @devices = @devices.or(id: id) }
-    end
+    # TODO there is a bug in mongoid that does not let you use the #in method
+    doorkeeper_token.device_ids.each { |id| @devices = @devices.or(id: id) } if !doorkeeper_token.device_ids.empty?
   end
 
   def find_resource_by_activation_code
@@ -48,9 +45,8 @@ class ActivationsController < ApplicationController
   end
 
   def already_activated
-    error   = 'notifications.resource.already_activated'
-    message = "#{I18n.t(error)} by user #{@device.resource_owner_id}"
-    render_422(error, message) if @device.activated_at
+    error = 'notifications.resource.already_activated'
+    render_422(error, I18n.t(error)) if @device.activated_at
   end
 
   def document_not_found

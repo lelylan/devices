@@ -47,7 +47,6 @@ feature 'ActivationsController' do
         page.status_code.should == 422
         page.should have_content 'notifications.resource.already_activated'
         page.should have_content 'Resource is already activated'
-        page.should have_content resource.resource_owner_id.to_s
       end
     end
   end

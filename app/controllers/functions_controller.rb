@@ -9,10 +9,10 @@ class FunctionsController < ApplicationController
   before_filter :find_resource,           if: -> { not physical_request }
   before_filter :create_physical_request
   after_filter  :create_event
+  after_filter  :create_history
 
   def update
     @device.update_attributes(properties_attributes: properties_attributes)
-    create_history
     render json: @device, status: status_code
   end
 

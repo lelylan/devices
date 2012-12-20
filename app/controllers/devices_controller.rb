@@ -16,7 +16,7 @@ class DevicesController < ApplicationController
 
 
   def index
-    @devices = @devices.limit(params[:per])
+    @devices = @devices.desc(:id).limit(params[:per])
     render json: @devices
   end
 
@@ -66,7 +66,7 @@ class DevicesController < ApplicationController
   end
 
   def find_filtered_resources
-    # TODO there is a bag in mongoid that does not let you use the #in method
+    # TODO there is a bug in mongoid that does not let you use the #in method
     doorkeeper_token.device_ids.each { |id| @devices = @devices.or(id: id) } if !doorkeeper_token.device_ids.empty?
   end
 

@@ -9,7 +9,7 @@ class HistoriesController < ApplicationController
   before_filter :pagination,        only: %w(index)
 
   def index
-    @histories = @histories.limit(params[:per])
+    @histories = @histories.desc(:id).limit(params[:per])
     render json: @histories
   end
 

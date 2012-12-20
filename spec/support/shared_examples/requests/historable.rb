@@ -9,6 +9,10 @@ shared_examples_for 'a historable resource' do
     before        { update }
     let(:history) { History.last }
 
+    it 'saves the device properties' do
+      history.device_id.should == resource.id
+    end
+
     it 'saves the new status value' do
       history.properties.first.value.should == 'on'
     end

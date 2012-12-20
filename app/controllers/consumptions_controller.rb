@@ -12,7 +12,7 @@ class ConsumptionsController < ApplicationController
   after_filter  :create_event,  only: %w(create)
 
   def index
-    @consumptions = @consumptions.limit(params[:per])
+    @consumptions = @consumptions.desc(:id).limit(params[:per])
     render json: @consumptions
   end
 
