@@ -2,7 +2,7 @@ class HistoriesController < ApplicationController
   doorkeeper_for :index, :show, scopes: Settings.scopes.history_read.map(&:to_sym)
 
   before_filter :find_owned_resources
-  before_filter :find_filtered_resources
+  before_filter :find_accessible_resources
   before_filter :find_resource,     only: %w(show)
   before_filter :search_params,     only: %w(index)
   before_filter :search_properties, only: %w(index)
@@ -23,7 +23,7 @@ class HistoriesController < ApplicationController
     @histories = History.where(resource_owner_id: current_user.id)
   end
 
-  def find_filtered_resources
+  def find_accessible_resources
     @histories = @histories.in(device_id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
   end
 

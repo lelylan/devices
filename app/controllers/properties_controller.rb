@@ -5,7 +5,7 @@ class PropertiesController < ApplicationController
 
   before_filter :find_from_physical,      if: -> { physical_request }
   before_filter :find_owned_resources,    if: -> { not physical_request }
-  before_filter :find_filtered_resources, if: -> { not physical_request }
+  before_filter :find_accessible_resources, if: -> { not physical_request }
   before_filter :find_resource,           if: -> { not physical_request }
   before_filter :create_physical_request
   after_filter  :create_event
@@ -28,7 +28,7 @@ class PropertiesController < ApplicationController
     @devices = Device.where(resource_owner_id: current_user.id)
   end
 
-  def find_filtered_resources
+  def find_accessible_resources
     # TODO there is a bug in mongoid that does not let you use the #in method
     doorkeeper_token.device_ids.each { |id| @devices = @devices.or(id: id) } if !doorkeeper_token.device_ids.empty?
   end

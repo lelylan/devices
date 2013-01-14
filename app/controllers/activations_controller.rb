@@ -5,7 +5,7 @@ class ActivationsController < ApplicationController
 
   before_filter :find_all_resources, only: %w(create)
   before_filter :find_owned_resources, only: %w(destroy)
-  before_filter :find_filtered_resources, only: %w(destroy)
+  before_filter :find_accessible_resources, only: %w(destroy)
   before_filter :find_resource_by_activation_code
   before_filter :already_activated, only: %w(create)
 
@@ -35,7 +35,7 @@ class ActivationsController < ApplicationController
     @devices = Device.where(resource_owner_id: current_user.id)
   end
 
-  def find_filtered_resources
+  def find_accessible_resources
     # TODO there is a bug in mongoid that does not let you use the #in method
     doorkeeper_token.device_ids.each { |id| @devices = @devices.or(id: id) } if !doorkeeper_token.device_ids.empty?
   end

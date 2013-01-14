@@ -5,7 +5,7 @@ class ConsumptionsController < ApplicationController
 
   before_filter :find_from_physical,      if: -> { physical_request }
   before_filter :find_owned_resources,    if: -> { not physical_request }
-  before_filter :find_filtered_resources, if: -> { not physical_request }
+  before_filter :find_accessible_resources, if: -> { not physical_request }
   before_filter :find_resource, only: %w(show update destroy), if: -> { not physical_request }
   before_filter :search_params, only: %w(index)
   before_filter :pagination,    only: %w(index)
@@ -55,7 +55,7 @@ class ConsumptionsController < ApplicationController
     @consumptions = Consumption.where(resource_owner_id: current_user.id)
   end
 
-  def find_filtered_resources
+  def find_accessible_resources
     @consumptions = @consumptions.in(device_id: doorkeeper_token.device_ids) if not doorkeeper_token.device_ids.empty?
   end
 
