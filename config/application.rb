@@ -67,5 +67,13 @@ module Devices
 
     # Set the default Logger in application.rb to STDOUT, otherwise logging with unicorn doesn't work
     config.logger = Logger.new(STDOUT) unless Rails.env.test?
+
+    # Enable CORS to accept requests from any resource for any verb
+    config.middleware.use Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :put, :delete, :options]
+      end
+    end
   end
 end
