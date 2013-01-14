@@ -1,4 +1,4 @@
-shared_examples_for 'a proxiable service' do
+shared_examples_for 'a proxiable resource' do
 
   let(:decorator)  { "#{controller.classify}Decorator".constantize }
   let(:changeable) { decorator.decorate(resource) }

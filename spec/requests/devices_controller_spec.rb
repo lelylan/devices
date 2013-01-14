@@ -30,8 +30,8 @@ feature 'DevicesController' do
     let(:uri)       { "/devices/#{resource.id}" }
 
     it_behaves_like 'a showable resource'
-    it_behaves_like 'a proxiable service'
-    it_behaves_like 'a corsable request'
+    it_behaves_like 'a proxiable resource'
+    it_behaves_like 'a crossable resource'
     it_behaves_like 'a not owned resource', 'page.driver.get(uri)'
     it_behaves_like 'a not found resource', 'page.driver.get(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.get(uri)'
@@ -92,7 +92,8 @@ feature 'DevicesController' do
     let!(:resource) { FactoryGirl.create :device, resource_owner_id: user.id }
     let(:uri)       { "/devices/#{resource.id}/privates" }
 
-    it_behaves_like 'a proxiable service'
+    it_behaves_like 'a proxiable resource'
+    it_behaves_like 'a crossable resource'
     it_behaves_like 'a filterable resource', 'page.driver.get(uri)'
 
     it 'shows the private device information' do

@@ -41,8 +41,8 @@ feature 'ConsumptionsController' do
       it     { has_resource resource }
     end
 
-    it_behaves_like 'a proxiable service'
-    it_behaves_like 'a corsable request'
+    it_behaves_like 'a proxiable resource'
+    it_behaves_like 'a crossable resource'
     it_behaves_like 'a not owned resource', 'page.driver.get(uri)'
     it_behaves_like 'a not found resource', 'page.driver.get(uri)'
     it_behaves_like 'a filterable resource', 'page.driver.get(uri)'

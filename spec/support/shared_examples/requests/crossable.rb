@@ -1,4 +1,4 @@
-shared_examples_for 'a corsable request' do
+shared_examples_for 'a crossable resource' do
 
   before  { page.driver.header 'Origin', 'http://test.com' }
   before  { page.driver.header 'Access-Control-Request-Method', 'POST' }
