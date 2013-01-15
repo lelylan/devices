@@ -40,7 +40,7 @@ feature 'Scope' do
     end
   end
 
-  %w(resources-read).each do |scope|
+  %w(resources:read).each do |scope|
 
     context "with scope #{scope}" do
 
@@ -109,7 +109,7 @@ feature 'Scope' do
     end
   end
 
-  %w(devices-control).each do |scope|
+  %w(devices:control).each do |scope|
 
     context "with scope #{scope}" do
 
@@ -144,7 +144,7 @@ feature 'Scope' do
     end
   end
 
-  %w(devices-read).each do |scope|
+  %w(devices:read).each do |scope|
 
     context "with scope #{scope}" do
 
@@ -248,7 +248,7 @@ feature 'Scope' do
     end
   end
 
-  %w(consumptions-read).each do |scope|
+  %w(consumptions:read).each do |scope|
 
     context "with scope #{scope}" do
 
@@ -283,7 +283,7 @@ feature 'Scope' do
     end
   end
 
-  %w(histories-read).each do |scope|
+  %w(histories:read).each do |scope|
 
     context "with scope #{scope}" do
 

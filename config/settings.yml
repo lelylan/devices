@@ -4,26 +4,26 @@ pagination:
 scopes:
   read:
     - resources
-    - resources-read
+    - resources:read
     - devices
-    - devices-control
-    - devices-read
+    - devices:control
+    - devices:read
   write:
     - resources
     - devices
   control:
     - resources
     - devices
-    - devices-control
+    - devices:control
   history_read:
     - resources
-    - resources-read
-    - histories-read
+    - resources:read
+    - histories:read
   consumptions:
     - resources
     - consumptions
   consumptions_read:
     - resources
-    - resources-read
+    - resources:read
     - consumptions
-    - consumptions-read
+    - consumptions:read
