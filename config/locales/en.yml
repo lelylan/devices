@@ -11,7 +11,7 @@ en:
     json:
       not_valid: "Not valid JSON"
     access:
-      not_authorized: "Token not Valid"
+      not_authorized: "Token not valid"
       rate_limit: "Rate limit exceeded"
     activation:
       not_found: "Activation code not found"
