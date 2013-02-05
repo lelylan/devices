@@ -19,7 +19,7 @@ class Device
   index({ pending: 1 }, { background: true })
 
   attr_accessor  :type
-  attr_protected :resource_owner_id, :creator_id, :type_id, :activated_at, :activation_code, :pending
+  attr_protected :resource_owner_id, :creator_id, :type_id, :activated_at, :activation_code, :pending, :secret
 
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
 

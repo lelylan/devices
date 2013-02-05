@@ -12,6 +12,7 @@ class DevicesController < ApplicationController
   before_filter :search_params,     only: %w(index)
   before_filter :search_properties, only: %w(index)
   before_filter :pagination,        only: %w(index)
+  before_filter :clean_params
   after_filter  :create_event,      only: %w(create update destroy)
 
 
@@ -101,5 +102,11 @@ class DevicesController < ApplicationController
 
   def create_event
     Event.create(resource_id: @device.id, resource: 'devices', event: params[:action], data: JSON.parse(response.body), resource_owner_id: current_user.id) if @device.valid?
+  end
+
+  # TODO Used to not raise error on Angular resource library. Remove this
+  # and use strong parameters (use the gem or upgrade to Rails 4)
+  def clean_params
+    params.delete(:properties)
   end
 end
