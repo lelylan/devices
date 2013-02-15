@@ -105,8 +105,11 @@ class DevicesController < ApplicationController
   end
 
   # TODO Used to not raise error on Angular resource library. Remove this
-  # and use strong parameters (use the gem or upgrade to Rails 4)
+  # and use strong parameters (use the gem or upgrade to Rails 4). Even
+  # more we should make consistent the JSON structure of the resource
+  # with what we can change.
   def clean_params
     params.delete(:properties)
+    params.delete(:physical) if params[:physical].is_a? Hash
   end
 end
