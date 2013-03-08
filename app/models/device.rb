@@ -18,10 +18,10 @@ class Device
   index({ type_id: 1 }, { background: true })
   index({ pending: 1 }, { background: true })
 
-  attr_accessor  :type
-  #attr_protected :resource_owner_id, :creator_id, :type_id, :activated_at, :activation_code, :pending, :secret
-
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
+
+  attr_accessor  :type
+  attr_accessible :name, :type, :physical, :properties_attributes
 
   validates :resource_owner_id, presence: true
   validates :creator_id,  presence: true
