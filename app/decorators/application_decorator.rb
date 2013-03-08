@@ -1,6 +1,8 @@
-class ApplicationDecorator < Draper::Base
+class ApplicationDecorator < Draper::Decorator
+  delegate_all
+
   def default_options
-    {only_path: false, host: h.request.host}
+    { only_path: false, host: h.request.host }
   end
 
   def types_host

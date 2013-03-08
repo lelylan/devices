@@ -5,25 +5,25 @@ class DeviceSerializer < ApplicationSerializer
              :activated, :created_at, :updated_at
 
   def uri
-    DeviceDecorator.decorate(device).uri
+    object.decorate.uri
   end
 
   def type
-    { uri: DeviceDecorator.decorate(device).type_uri }
+    { uri: object.decorate.type_uri }
   end
 
   def properties
-    device.properties.map do |property|
-      property = DevicePropertyDecorator.decorate property
+    object.properties.map do |property|
+      property = property.decorate
       { uri: property.uri, id: property.id, value: property.value, expected: property.expected, pending: property.pending }
     end
   end
 
   def physical
-    { uri: device.physical }
+    { uri: object.physical }
   end
 
   def activated
-    device.activated_at ? true : false
+    object.activated_at ? true : false
   end
 end

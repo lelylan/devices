@@ -12,7 +12,6 @@ class DevicesController < ApplicationController
   before_filter :search_params,     only: %w(index)
   before_filter :search_properties, only: %w(index)
   before_filter :pagination,        only: %w(index)
-  before_filter :clean_params
   after_filter  :create_event,      only: %w(create update destroy)
 
 
@@ -26,17 +25,17 @@ class DevicesController < ApplicationController
   end
 
   def create
-    @device = Device.new(params)
+    @device = Device.new(device_params)
     @device.resource_owner_id = current_user.id
     if @device.save
-      render json: @device, status: 201, location: DeviceDecorator.decorate(@device).uri
+      render json: @device, status: 201, location: @device.decorate.uri
     else
       render_422 'notifications.resource.not_valid', @device.errors
     end
   end
 
   def update
-    if @device.update_attributes(params)
+    if @device.update_attributes(device_params)
       render json: @device
     else
       render_422 'notifications.resource.not_valid', @device.errors
@@ -50,7 +49,7 @@ class DevicesController < ApplicationController
 
   # TODO: understand why if you use @device it does not work.
   def privates
-    resource = { id: @device.id, name: @device.name, secret: @device.secret, activation_code: @device.activation_code, uri: DeviceDecorator.decorate(@device).uri }
+    resource = { id: @device.id, name: @device.name, secret: @device.secret, activation_code: @device.activation_code, uri: @device.decorate.uri }
     render json: resource, serializer: PrivateSerializer
   end
 
@@ -104,12 +103,10 @@ class DevicesController < ApplicationController
     Event.create(resource_id: @device.id, resource: 'devices', event: params[:action], data: JSON.parse(response.body), resource_owner_id: current_user.id) if @device.valid?
   end
 
-  # TODO Used to not raise error on Angular resource library. Remove this
-  # and use strong parameters (use the gem or upgrade to Rails 4). Even
-  # more we should make consistent the JSON structure of the resource
-  # with what we can change.
-  def clean_params
+  def device_params
+    # TODO permit method is not recognized, so I can't use strong parameters
     params.delete(:properties)
     params.delete(:physical) if params[:physical].is_a? Hash
+    return params
   end
 end

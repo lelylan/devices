@@ -17,12 +17,6 @@ describe Device do
   it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:type) } }
   it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:type) } }
 
-  it { should_not allow_mass_assignment_of :resource_owner_id }
-  it { should_not allow_mass_assignment_of :creator_id }
-  it { should_not allow_mass_assignment_of :type_id }
-  it { should_not allow_mass_assignment_of :activated_at }
-  it { should_not allow_mass_assignment_of :activation_code }
-
   it_behaves_like 'a boolean' do
     let(:field)       { 'pending' }
     let(:accepts_nil) { 'false' }

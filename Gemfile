@@ -2,11 +2,11 @@ source 'https://rubygems.org'
 
 ruby '1.9.3'
 
-gem 'rails', '~> 3.2.9'
+gem 'rails'
 gem 'unicorn'
 gem 'mongoid'
-gem 'doorkeeper', '~> 0.6.1'
-gem 'draper', '~> 0.15.0'
+gem 'doorkeeper'
+gem 'draper'
 gem 'yajl-ruby'
 gem 'rails_config'
 gem 'addressable'
@@ -18,7 +18,6 @@ gem 'rails-api'
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
 gem 'redis-throttle', git: 'git://github.com/andreareginato/redis-throttle.git'
 gem 'rack-cors', require: 'rack/cors'
-gem 'strong_parameters'
 
 group :development, :test do
   gem 'foreman'
@@ -46,7 +45,4 @@ group :test do
 end
 
 group :assets do
-  gem 'sass-rails', '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-  gem 'uglifier', '~> 1.0.3'
 end
