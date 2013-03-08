@@ -33,7 +33,7 @@ feature 'PropertiesController' do
     it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)', nil, 'devices', 'property-update'
 
     it 'touches the device' do
-      resource.update_attributes(updated_at: Time.now - 60)
+      resource.updated_at = Time.now - 60; resource.save
       expect { update }.to change { resource.reload.updated_at.to_i }
     end
 
