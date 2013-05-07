@@ -6,6 +6,7 @@ class Device
   field :resource_owner_id, type: Moped::BSON::ObjectId
   field :creator_id, type: Moped::BSON::ObjectId
   field :name
+  field :categories, type: Array, default: []
   field :secret
   field :type_id, type: Moped::BSON::ObjectId
   field :physical
@@ -21,7 +22,7 @@ class Device
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
 
   attr_accessor  :type
-  attr_accessible :name, :type, :physical, :properties_attributes
+  attr_accessible :name, :type, :categories, :physical, :properties_attributes
 
   validates :resource_owner_id, presence: true
   validates :creator_id,  presence: true
@@ -42,17 +43,32 @@ class Device
   before_validation(on: 'create') { set_secret }
   before_validation(on: 'create') { set_activation_code }
 
-  def set_type_uri; self.type_id = find_id type; end
-  def set_creator_id; self.creator_id = resource_owner_id; end
-  def set_secret; self.secret = Doorkeeper::OAuth::Helpers::UniqueToken.generate; end
-  def set_activation_code; self.activation_code = Signature.sign(id, secret); end
-  def active_model_serializer; DeviceSerializer; end
+  def active_model_serializer
+    DeviceSerializer
+  end
+
+  def set_type_uri
+    self.type_id = find_id type
+  end
+
+  def set_creator_id
+    self.creator_id = resource_owner_id
+  end
+
+  def set_secret
+    self.secret = Doorkeeper::OAuth::Helpers::UniqueToken.generate
+  end
+
+  def set_activation_code
+    self.activation_code = Signature.sign(id, secret)
+  end
 
   def set_device_properties
     type       = Type.find(type_id)
     properties = Property.in(id: type.property_ids)
-    entries    = properties.map { |p| { property_id: p.id, value: p.default, expected: p.default, suggested: p.suggested } }
+    entries    = properties.map { |p| { property_id: p.id, value: p.default, expected: p.default } }
     self.properties_attributes = entries
+    self.categories = type.categories;
   end
 
   def set_pending

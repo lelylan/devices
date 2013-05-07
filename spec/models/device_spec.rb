@@ -42,6 +42,15 @@ describe Device do
     end
   end
 
+  describe '#categories' do
+
+    let(:resource) { FactoryGirl.create :device }
+
+    it 'sets the categories field' do
+      resource.categories.should == ['lights']
+    end
+  end
+
   describe '#set_type_properties' do
 
     let(:resource) { FactoryGirl.create :device }
@@ -59,7 +68,6 @@ describe Device do
         its(:value)       { should == 'off' }
         its(:expected)    { should == 'off' }
         its(:pending)     { should == false }
-        its(:suggested)   { should == { 'on' => 'On', 'off' => 'Off' } }
         its(:property_id) { should_not be_nil }
         its(:id)          { should == resource.properties.first.property_id }
       end
@@ -72,7 +80,6 @@ describe Device do
         its(:expected)    { should == '0' }
         its(:pending)     { should == false }
         its(:property_id) { should_not be_nil }
-        its(:suggested)   { should == { '0' => 'min', '50' => 'half', '100' => 'max' } }
         its(:id)          { should == resource.properties.last.property_id }
       end
     end
@@ -80,7 +87,7 @@ describe Device do
     describe 'when updates the resource properties' do
 
       describe 'when updates the status value' do
-        let(:properties) { [ { id: resource.properties.first.id, value: 'on', expected: 'off', pending: true, suggested: { 'updated' => 'updated' } } ] }
+        let(:properties) { [ { id: resource.properties.first.id, value: 'on', expected: 'off', pending: true, accepted: { 'updated' => 'updated' } } ] }
 
         before  { resource.update_attributes(properties_attributes: properties) }
 
@@ -96,8 +103,8 @@ describe Device do
           resource.properties.first.pending.should == true
         end
 
-        it 'updates its suggested values' do
-          resource.properties.first.suggested.should == { 'updated' => 'updated' }
+        it 'updates its accepted values' do
+          resource.properties.first.accepted.should == { 'updated' => 'updated' }
         end
 
         it 'does not create new properties' do
@@ -207,6 +214,8 @@ describe Device do
 
       describe 'when updates :expected' do
 
+        let(:properties) { [ { id: property_id, expected: '50' } ] }
+        before           { resource.update_attributes(properties_attributes: properties) }
         let(:properties) { [ { id: property_id, expected: '50' } ] }
         before           { resource.update_attributes(properties_attributes: properties) }
         subject          { resource.properties.first }
