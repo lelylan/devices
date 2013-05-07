@@ -3,7 +3,7 @@ FactoryGirl.define do
     resource_owner_id { FactoryGirl.create(:user).id }
     type { { id: FactoryGirl.create(:type).id } }
     name 'Closet dimmer'
-    physical { "http://arduino.casa.com/#{id}" }
+    physical { {uri: "http://arduino.casa.com/#{id}" } }
   end
 
   trait :with_no_physical do

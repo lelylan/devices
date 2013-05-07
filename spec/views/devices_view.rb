@@ -17,7 +17,9 @@ module HelpersViewMethods
       property.pending.should == device_property.pending
     end
 
-    json.physical.uri.should == device.physical
+    physical = HashWithIndifferentAccess.new device.physical if json.physical
+    json.physical.uri.should == physical[:uri]  if json.physical
+    json.physical == nil if not json.physical
   end
 end
 

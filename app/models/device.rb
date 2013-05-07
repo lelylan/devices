@@ -9,7 +9,7 @@ class Device
   field :categories, type: Array, default: []
   field :secret
   field :type_id, type: Moped::BSON::ObjectId
-  field :physical
+  field :physical, type: Hash
   field :pending, type: Boolean, default: false
   field :activated_at, type: DateTime, default: ->{ Time.now }
   field :activation_code
@@ -30,7 +30,6 @@ class Device
   validates :secret, presence: true
   validates :activation_code, presence: true
   validates :type, presence: true, on: :create
-  validates :physical, uri: true
 
   accepts_nested_attributes_for :properties
 

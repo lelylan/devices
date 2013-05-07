@@ -76,8 +76,7 @@ class DevicesController < ApplicationController
 
   def search_params
     @devices = @devices.where('name' => /.*#{params[:name]}.*/i) if params[:name]
-    @devices = @devices.where('physical' => /.*#{params[:physical]}.*/i) if params[:physical]
-    @devices = @devices.where(type_id: find_id(params[:type])) if params[:type]
+    @devices = @devices.where(type: params[:type]) if params[:type]
     @devices = @devices.where(pending: params[:pending].to_bool) if params[:pending]
   end
 

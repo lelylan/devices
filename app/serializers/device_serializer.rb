@@ -19,10 +19,6 @@ class DeviceSerializer < ApplicationSerializer
     end
   end
 
-  def physical
-    { uri: object.physical }
-  end
-
   def activated
     object.activated_at ? true : false
   end

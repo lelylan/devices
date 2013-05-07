@@ -5,13 +5,8 @@ describe Device do
   it { should validate_presence_of :resource_owner_id }
   it { should validate_presence_of :name }
   it { should validate_presence_of :creator_id }
-  #it { should validate_presence_of :secret }
-  #it { should validate_presence_of :activation_code }
 
   its(:pending) { should == false }
-
-  it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:physical) } }
-  it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:physical) } }
 
   it_behaves_like 'a boolean' do
     let(:field)       { 'pending' }
@@ -26,6 +21,15 @@ describe Device do
 
     it 'sets the type_id field' do
       resource.type_id.should == type.id
+    end
+  end
+
+  describe '#physical' do
+
+    let(:resource) { FactoryGirl.create :device }
+
+    it 'sets the physical field' do
+      resource.physical[:uri].should == "http://arduino.casa.com/#{resource.id}"
     end
   end
 
