@@ -21,8 +21,7 @@ shared_examples_for 'a historable resource' do
       history.source.should == 'lelylan'
     end
 
-    let(:signature) { Signature.sign(params, resource.secret) }
-    before { page.driver.header 'X-Physical-Signature', signature }
+    before { page.driver.header 'X-Physical-Secret', resource.secret }
 
     describe 'with a physical request' do
 

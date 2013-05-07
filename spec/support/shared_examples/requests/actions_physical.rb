@@ -4,11 +4,9 @@ shared_examples_for 'an updatable resource from physical' do
 
     before { page.driver.header 'Authorization', nil }
 
-    describe 'with valid signature' do
+    describe 'with valid secret' do
 
-      let(:signature) { Signature.sign(params, resource.secret) }
-
-      before { page.driver.header 'X-Physical-Signature', signature }
+      before { page.driver.header 'X-Physical-Secret', resource.secret }
       before { page.driver.put uri, params.to_json }
 
       it 'gets a 200 response' do
@@ -16,11 +14,9 @@ shared_examples_for 'an updatable resource from physical' do
       end
     end
 
-    describe 'with an invalid signature' do
+    describe 'with an invalid secret' do
 
-      let(:signature) { Signature.sign(params, 'not-valid-secret') }
-
-      before { page.driver.header 'X-Physical-Signature', signature }
+      before { page.driver.header 'X-Physical-Secret', 'not-valid-secret' }
       before { page.driver.put uri, params.to_json }
 
       it 'gets a 401 response' do
@@ -28,7 +24,7 @@ shared_examples_for 'an updatable resource from physical' do
       end
     end
 
-    describe 'with no signature' do
+    describe 'with no secret' do
 
       before { page.driver.put uri, params.to_json }
 
@@ -45,11 +41,9 @@ shared_examples_for 'a creatable resource from physical' do |action|
 
     before { page.driver.header 'Authorization', nil }
 
-    describe 'with valid signature' do
+    describe 'with valid secret' do
 
-      let(:signature) { Signature.sign(params, device.secret) }
-
-      before { page.driver.header 'X-Physical-Signature', signature }
+      before { page.driver.header 'X-Physical-Secret', device.secret }
       before { page.driver.post uri, params.to_json }
 
       it 'gets a 201 response' do
@@ -57,11 +51,9 @@ shared_examples_for 'a creatable resource from physical' do |action|
       end
     end
 
-    describe 'with an invalid signature' do
+    describe 'with an invalid secret' do
 
-      let(:signature) { Signature.sign(params, 'not-valid-secret') }
-
-      before { page.driver.header 'X-Physical-Signature', signature }
+      before { page.driver.header 'X-Physical-Secret', 'not-valid-secret' }
       before { page.driver.post uri, params.to_json }
 
       it 'gets a 401 response' do
@@ -69,7 +61,7 @@ shared_examples_for 'a creatable resource from physical' do |action|
       end
     end
 
-    describe 'with no signature' do
+    describe 'with no secret' do
 
       before { page.driver.post uri, params.to_json }
 

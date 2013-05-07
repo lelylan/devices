@@ -21,7 +21,7 @@ class PropertiesController < ApplicationController
 
   def find_from_physical
     @device = Device.find(params[:id])
-    verify_signature
+    verify_secret
   end
 
   def find_owned_resources

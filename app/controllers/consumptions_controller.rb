@@ -48,7 +48,7 @@ class ConsumptionsController < ApplicationController
   def find_from_physical
     device_id    = find_id params[:device] if params[:device]
     @device      = Device.find(device_id || 0)
-    verify_signature
+    verify_secret
   end
 
   def find_owned_resources

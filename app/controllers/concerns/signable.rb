@@ -14,4 +14,11 @@ module Signable
       render_401 if @device and !Signature.valid?(signature, payload, @device.secret)
     end
   end
+
+  def verify_secret
+    if request.headers['X-Physical-Secret']
+      secret = request.headers['X-Physical-Secret']
+      render_401 if @device and @device.secret != secret
+    end
+  end
 end

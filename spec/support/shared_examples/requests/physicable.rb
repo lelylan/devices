@@ -21,15 +21,6 @@ shared_examples_for 'a forwardable physical request resource' do
     end
   end
 
-  describe 'when sends #value' do
-    let(:properties) { [ { uri: a_uri(status), value: 'updated' } ] }
-    before           { update }
-    subject          { Hashie::Mash.new Physical.last.data['properties'].last }
-
-    its(:value)   { should == 'updated' }
-    #its(:pending) { should == nil }
-  end
-
   describe 'when sends #value and #pending' do
 
     let(:properties) { [ { uri: a_uri(status), value: 'updated', pending: true } ] }
@@ -37,14 +28,11 @@ shared_examples_for 'a forwardable physical request resource' do
     subject          { Hashie::Mash.new Physical.last.data['properties'].last }
 
     its(:value)   { should == 'updated' }
-    #its(:pending) { should == true }
   end
-
 
   describe 'when the request comes from the physical' do
 
-    let(:signature) { Signature.sign(params, resource.secret) }
-    before  { page.driver.header 'X-Physical-Signature', signature }
+    before  { page.driver.header 'X-Physical-Secret', resource.secret }
 
     it 'does not create a physical request' do
       expect { update }.to_not change { Physical.last.id }
@@ -55,7 +43,6 @@ shared_examples_for 'a forwardable physical request resource' do
       page.status_code.should == 200
     end
   end
-
 
   describe 'when the resource has not physical connection' do
 
