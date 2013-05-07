@@ -82,9 +82,7 @@ class FunctionsController < ApplicationController
 
   def physical_properties
     properties_attributes.map do |p|
-      result = { id: p[:id], uri: p[:uri], value: p[:value] }
-      result[:value] = p[:expected] if p[:expected]
-      result
+      { id: p[:id], uri: p[:uri], value: p[:value], pending: p[:pending] }
     end
   end
 

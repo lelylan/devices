@@ -21,39 +21,25 @@ shared_examples_for 'a forwardable physical request resource' do
     end
   end
 
-  describe 'when the there is only :expected' do
-
-    let(:properties) { [ { uri: a_uri(status), expected: 'updated' } ] }
-    before           { update }
-    subject          { Hashie::Mash.new Physical.last.data['properties'].last }
-
-    its(:value)    { should == 'updated' }
-    its(:expected) { should == nil }
-
-    it 'does not change resource :value' do
-      property = resource.reload.properties.first
-      property.value.should_not == property.expected
-    end
-  end
-
-  describe 'when there is only :value' do
+  describe 'when sends #value' do
     let(:properties) { [ { uri: a_uri(status), value: 'updated' } ] }
     before           { update }
     subject          { Hashie::Mash.new Physical.last.data['properties'].last }
 
-    its(:value)    { should == 'updated' }
-    its(:expected) { should == nil }
+    its(:value)   { should == 'updated' }
+    its(:pending) { should == nil }
   end
 
-  describe 'when there are :value and :expected' do
+  describe 'when sends #value and #pending' do
 
-    let(:properties) { [ { uri: a_uri(status), value: 'updated', expected: 'expected_updated' } ] }
+    let(:properties) { [ { uri: a_uri(status), value: 'updated', pending: true } ] }
     before           { update }
     subject          { Hashie::Mash.new Physical.last.data['properties'].last }
 
-    its(:value)    { should == 'expected_updated' }
-    its(:expected) { should == nil }
+    its(:value)   { should == 'updated' }
+    its(:pending) { should == true }
   end
+
 
   describe 'when the request comes from the physical' do
 
@@ -69,6 +55,7 @@ shared_examples_for 'a forwardable physical request resource' do
       page.status_code.should == 200
     end
   end
+
 
   describe 'when the resource has not physical connection' do
 
