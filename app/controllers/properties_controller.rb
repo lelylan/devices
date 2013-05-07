@@ -3,10 +3,10 @@ class PropertiesController < ApplicationController
 
   doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym), if: -> { not physical_request }
 
-  before_filter :find_from_physical,      if: -> { physical_request }
-  before_filter :find_owned_resources,    if: -> { not physical_request }
+  before_filter :find_from_physical,        if: -> { physical_request }
+  before_filter :find_owned_resources,      if: -> { not physical_request }
   before_filter :find_accessible_resources, if: -> { not physical_request }
-  before_filter :find_resource,           if: -> { not physical_request }
+  before_filter :find_resource,             if: -> { not physical_request }
   before_filter :create_physical_request
   after_filter  :create_event
   after_filter  :create_history
