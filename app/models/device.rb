@@ -29,12 +29,12 @@ class Device
   validates :name, presence: true
   validates :secret, presence: true
   validates :activation_code, presence: true
-  validates :type, presence: true, uri: true, on: :create
+  validates :type, presence: true, on: :create
   validates :physical, uri: true
 
   accepts_nested_attributes_for :properties
 
-  before_create :set_type_uri
+  before_create :set_type_id
   before_create :set_device_properties
   before_save   :set_pending
   before_save   :touch_locations
@@ -47,8 +47,8 @@ class Device
     DeviceSerializer
   end
 
-  def set_type_uri
-    self.type_id = find_id type
+  def set_type_id
+    self.type_id = type[:id]
   end
 
   def set_creator_id

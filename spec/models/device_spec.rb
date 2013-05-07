@@ -4,8 +4,7 @@ describe Device do
 
   it { should validate_presence_of :resource_owner_id }
   it { should validate_presence_of :name }
-  it { should validate_presence_of :type }
-  #it { should validate_presence_of :creator_id }
+  it { should validate_presence_of :creator_id }
   #it { should validate_presence_of :secret }
   #it { should validate_presence_of :activation_code }
 
@@ -13,9 +12,6 @@ describe Device do
 
   it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:physical) } }
   it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:physical) } }
-
-  it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:type) } }
-  it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:type) } }
 
   it_behaves_like 'a boolean' do
     let(:field)       { 'pending' }
