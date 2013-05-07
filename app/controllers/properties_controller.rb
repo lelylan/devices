@@ -75,7 +75,7 @@ class PropertiesController < ApplicationController
 
   def physical_properties
     properties_attributes.map do |p|
-      { id: p[:id], uri: p[:uri], value: p[:value], pending: p[:pending] }
+      { id: p[:id], uri: p[:uri], value: p[:value] }
     end
   end
 
