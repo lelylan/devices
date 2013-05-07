@@ -23,7 +23,7 @@ shared_examples_for 'a forwardable physical request resource' do
 
   describe 'when sends #value and #pending' do
 
-    let(:properties) { [ { uri: a_uri(status), value: 'updated', pending: true } ] }
+    let(:properties) { [ { id: status.id, value: 'updated', pending: true } ] }
     before           { update }
     subject          { Hashie::Mash.new Physical.last.data['properties'].last }
 

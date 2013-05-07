@@ -70,7 +70,7 @@ class PropertiesController < ApplicationController
 
   def params_properties
     params[:properties] ||= []
-    params[:properties].tap { |p| p.map { |p| p[:id] = find_id p[:uri] } }
+    params[:properties].tap { |p| p.map { |p| p[:id] = p[:id] } }
   end
 
   def physical_properties

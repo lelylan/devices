@@ -63,22 +63,24 @@ class FunctionsController < ApplicationController
   # Properties normalization
 
   def properties_attributes
-    @properties_attributes ||= merge_properties(params[:function], params_properties)
+    @properties_attributes ||= merge_properties(params[:function], params_properties) || []
   end
 
   def merge_properties(function, params_properties)
-    @function = Function.find(find_id function)
-    override_ids = params_properties.map { |p| p[:id] }
-    function_properties = @function.properties.nin(property_id: override_ids)
-    function_properties = function_properties.map { |p|  DevicePropertyDecorator.decorate(p) }
-    function_properties = function_properties.map { |p| { uri: p.uri, id: p.property_id.to_s, value: p.value, pending: true } }
-    params_properties   = params_properties.each  { |p| p[:pending] = true }
-    properties = (function_properties + params_properties).flatten
+    if function
+      @function = Function.find(function[:id])
+      override_ids = params_properties.map { |p| p[:id] }
+      function_properties = @function.properties.nin(property_id: override_ids)
+      function_properties = function_properties.map { |p|  DevicePropertyDecorator.decorate(p) }
+      function_properties = function_properties.map { |p| { uri: p.uri, id: p.property_id.to_s, value: p.value, pending: true } }
+      params_properties   = params_properties.each  { |p| p[:pending] = true }
+      return (function_properties + params_properties).flatten
+    end
   end
 
   def params_properties
     params[:properties] ||= []
-    params[:properties].tap { |p| p.map { |p| p[:id] = find_id p[:uri] } }
+    params[:properties].tap { |p| p.map { |p| p[:id] = p[:id] } }
   end
 
   def physical_properties

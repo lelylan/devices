@@ -25,7 +25,7 @@ feature 'Scope' do
       it { should authorize "put    /devices/#{device.id}" }
       it { should authorize "delete /devices/#{device.id}" }
       it { should authorize "put    /devices/#{device.id}/properties" }
-      it { should authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should authorize "put    /devices/#{device.id}/functions" }
       it { should authorize 'post   /activations' }
       it { should authorize "delete /activations/#{device.id}" }
       it { should authorize 'get    /histories' }
@@ -94,7 +94,7 @@ feature 'Scope' do
       it { should authorize "put    /devices/#{device.id}" }
       it { should authorize "delete /devices/#{device.id}" }
       it { should authorize "put    /devices/#{device.id}/properties" }
-      it { should authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should authorize "put    /devices/#{device.id}/functions" }
       it { should authorize 'post   /activations' }
       it { should authorize "delete /activations/#{device.id}" }
 
@@ -127,7 +127,7 @@ feature 'Scope' do
       it { should authorize "get    /devices/#{device.id}" }
       it { should authorize "put    /devices/#{device.id}" }
       it { should authorize "put    /devices/#{device.id}/properties" }
-      it { should authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should authorize "put    /devices/#{device.id}/functions" }
 
       it { should_not authorize 'post   /devices' }
       it { should_not authorize "delete /devices/#{device.id}" }
@@ -200,7 +200,7 @@ feature 'Scope' do
       it { should_not authorize "put    /devices/#{device.id}" }
       it { should_not authorize "delete /devices/#{device.id}" }
       it { should_not authorize "put    /devices/#{device.id}/properties" }
-      it { should_not authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should_not authorize "put    /devices/#{device.id}/functions" }
       it { should_not authorize 'post   /activations' }
       it { should_not authorize "delete /activations/#{device.id}" }
       it { should_not authorize 'get    /histories' }
@@ -239,7 +239,7 @@ feature 'Scope' do
       it { should_not authorize "put    /devices/#{device.id}" }
       it { should_not authorize "delete /devices/#{device.id}" }
       it { should_not authorize "put    /devices/#{device.id}/properties" }
-      it { should_not authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should_not authorize "put    /devices/#{device.id}/functions" }
       it { should_not authorize "get    /devices/#{device.id}/privates" }
       it { should_not authorize 'post   /activations' }
       it { should_not authorize "delete /activations/#{device.id}" }
@@ -271,7 +271,7 @@ feature 'Scope' do
       it { should_not authorize "put    /devices/#{device.id}" }
       it { should_not authorize "delete /devices/#{device.id}" }
       it { should_not authorize "put    /devices/#{device.id}/properties" }
-      it { should_not authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should_not authorize "put    /devices/#{device.id}/functions" }
       it { should_not authorize "get    /devices/#{device.id}/privates" }
       it { should_not authorize 'post   /activations' }
       it { should_not authorize "delete /activations/#{device.id}" }
@@ -306,7 +306,7 @@ feature 'Scope' do
       it { should_not authorize "put    /devices/#{device.id}" }
       it { should_not authorize "delete /devices/#{device.id}" }
       it { should_not authorize "put    /devices/#{device.id}/properties" }
-      it { should_not authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should_not authorize "put    /devices/#{device.id}/functions" }
       it { should_not authorize "get    /devices/#{device.id}/privates" }
       it { should_not authorize 'post   /activations' }
       it { should_not authorize "delete /activations/#{device.id}" }
