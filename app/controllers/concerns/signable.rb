@@ -7,14 +7,6 @@
 module Signable
   extend ActiveSupport::Concern
 
-  def verify_signature
-    if request.headers['X-Physical-Signature']
-      signature = request.headers['X-Physical-Signature']
-      payload   = request.request_parameters
-      render_401 if @device and !Signature.valid?(signature, payload, @device.secret)
-    end
-  end
-
   def verify_secret
     if request.headers['X-Physical-Secret']
       secret = request.headers['X-Physical-Secret']

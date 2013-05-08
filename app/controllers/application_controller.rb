@@ -1,8 +1,6 @@
 class ApplicationController < ActionController::API
   include Resourceable
   include Rescueable
-  include Viewable
-  include Signable
 
   private
 
@@ -14,5 +12,12 @@ class ApplicationController < ActionController::API
 
   def physical_request
     request.headers['X-Physical-Secret']
+  end
+
+  def verify_secret
+    if request.headers['X-Physical-Secret']
+      secret = request.headers['X-Physical-Secret']
+      render_401 if @device and @device.secret != secret
+    end
   end
 end
