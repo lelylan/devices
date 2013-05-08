@@ -13,7 +13,7 @@ module HelpersViewMethods
     json.owner.id.should  == device.resource_owner_id.to_s
     json.maker.uri.should == device.maker_uri
     json.maker.id.should  == device.maker_id.to_s
-    json.source.should    == device[:source]
+    json.updated_from.should == device.updated_from
 
     json.properties.each_with_index do |property, i|
       device_property = DevicePropertyDecorator.decorate(device.properties[i])

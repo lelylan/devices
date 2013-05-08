@@ -8,12 +8,12 @@ class PropertiesController < ApplicationController
   before_filter :find_accessible_resources, if: -> { not physical_request }
   before_filter :find_resource,             if: -> { not physical_request }
   before_filter :create_physical_request
-  before_filter :create_source
+  before_filter :updated_from
   after_filter  :create_event
   after_filter  :create_history
 
   def update
-    @device.update_attributes(properties_attributes: properties_attributes, source: params[:source])
+    @device.update_attributes(properties_attributes: properties_attributes, updated_from: params[:updated_from])
     render json: @device, status: status_code
   end
 
@@ -48,9 +48,9 @@ class PropertiesController < ApplicationController
     end
   end
 
-  def create_source
-    if not params[:source]
-      params[:source] = physical_request ? 'physical' : current_user.full_name || current_user.username || current_user.email
+  def updated_from
+    if not params[:updated_from]
+      params[:updated_from] = physical_request ? 'physical' : current_user.full_name || current_user.username || current_user.email
     end
   end
 

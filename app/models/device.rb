@@ -13,7 +13,7 @@ class Device
   field :pending, type: Boolean, default: false
   field :activated_at, type: DateTime, default: ->{ Time.now }
   field :activation_code
-  field :source
+  field :updated_from
 
   index({ resource_owner_id: 1 }, { background: true })
   index({ maker_id: 1 }, { background: true })
@@ -23,7 +23,7 @@ class Device
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
 
   attr_accessor  :type
-  attr_accessible :name, :type, :categories, :source, :physical, :properties_attributes
+  attr_accessible :name, :type, :categories, :updated_from, :physical, :properties_attributes
 
   validates :resource_owner_id, presence: true
   validates :maker_id,  presence: true

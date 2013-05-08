@@ -1,8 +1,8 @@
 class DeviceSerializer < ApplicationSerializer
   cached true
 
-  attributes :uri, :id, :name, :type, :categories, :physical, :pending,
-             :activated, :properties, :owner, :maker, :source, :created_at, :updated_at
+  attributes :uri, :id, :name, :type, :categories, :physical, :pending, :activated,
+    :properties, :owner, :maker, :created_at, :updated_at, :updated_from
 
   def uri
     object.decorate.uri
