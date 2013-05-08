@@ -78,6 +78,7 @@ class DevicesController < ApplicationController
     @devices = @devices.where('name' => /.*#{params[:name]}.*/i) if params[:name]
     @devices = @devices.where(type: params[:type]) if params[:type]
     @devices = @devices.where(pending: params[:pending].to_bool) if params[:pending]
+    @devices = @devices.in(categories: params[:categories])      if params[:categories]
   end
 
   # TODO see if you are able to build a query to match multiple properties.
@@ -87,6 +88,7 @@ class DevicesController < ApplicationController
       match.merge!({ value: params[:properties][:value] }) if params[:properties][:value]
       match.merge!({ expected: params[:properties][:expected] }) if params[:properties][:expected]
       match.merge!({ pending: params[:properties][:pending].to_bool }) if params[:properties][:pending]
+
       @devices = @devices.where('properties' => { '$elemMatch' => match })
     end
   end
