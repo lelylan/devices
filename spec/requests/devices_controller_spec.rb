@@ -19,7 +19,7 @@ feature 'DevicesController' do
 
     it_behaves_like 'a listable resource'
     it_behaves_like 'a paginable resource'
-    it_behaves_like 'a searchable resource', { name: 'My name is resource', type: a_uri(FactoryGirl.create :type), physical: 'http://arduino.house.com/search' }
+    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
     it_behaves_like 'a searchable resource on properties'
     it_behaves_like 'a filterable list'
   end
@@ -48,7 +48,7 @@ feature 'DevicesController' do
     let(:uri)    { '/devices' }
     let(:device) { FactoryGirl.create 'device' }
     let(:type)   { FactoryGirl.create 'type' }
-    let(:params) { { name: 'Dimmer', type: a_uri(type) } }
+    let(:params) { { name: 'Dimmer', type: { id: type.id } } }
 
     before         { page.driver.post uri, params.to_json }
     let(:resource) { Device.last }

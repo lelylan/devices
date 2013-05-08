@@ -17,7 +17,7 @@ feature 'PropertiesController' do
     let(:resource)   { FactoryGirl.create :device, :with_no_physical, resource_owner_id: user.id }
     let(:status)     { Property.find resource.properties.first.id }
     let(:intensity)  { Property.find resource.properties.last.id }
-    let(:properties) { [ { uri: a_uri(status), value: 'on' }, { uri: a_uri(intensity), value: 'updated' } ] }
+    let(:properties) { [ { id: status.id, value: 'on' }, { id: intensity.id, value: 'updated' } ] }
     let(:params)     { { properties: properties } }
     let(:update)     { page.driver.put uri, params.to_json }
 
@@ -25,6 +25,7 @@ feature 'PropertiesController' do
 
     it_behaves_like 'an updatable resource'
     it_behaves_like 'an updatable resource from physical'
+    it_behaves_like 'a sourceable resource'
     it_behaves_like 'a forwardable physical request resource'
     it_behaves_like 'a historable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
@@ -53,7 +54,7 @@ feature 'PropertiesController' do
     describe 'when updates a not existing property' do
 
       let(:another) { FactoryGirl.create :property }
-      let(:params)  { { properties: [ { uri: a_uri(another), value: 'not-valid' } ] } }
+      let(:params)  { { properties: [ { id: another.id, value: 'not-valid' } ] } }
 
       it 'raises a not found property' do
         page.driver.put(uri, params.to_json)

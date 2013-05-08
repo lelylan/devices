@@ -2,13 +2,12 @@ shared_examples_for 'a functionable resource' do
 
   describe 'when executes a pre-defined function like turn on' do
 
-    let(:properties)   { [ { uri: a_uri(status), value: 'on' } ] }
+    let(:properties)   { [ { id: status.id, value: 'on' } ] }
     let(:function)     { FactoryGirl.create :function, properties: properties }
-    let(:function_uri) { a_uri function }
 
     describe 'when does not override any function property value' do
 
-      let(:params) { { pending: true, properties: nil, function: function_uri } }
+      let(:params) { { pending: true, properties: nil, function: { id: function.id } } }
 
       before { update }
 
@@ -19,8 +18,8 @@ shared_examples_for 'a functionable resource' do
 
     describe 'when overrides a function property value' do
 
-      let(:override) { [ uri: a_uri(status), value: 'override' ]  }
-      let(:params)   { { pending: true, properties: override, function: function_uri } }
+      let(:override) { [ id: status.id, value: 'override' ]  }
+      let(:params)   { { pending: true, properties: override, function: { id: function.id } } }
 
       before { update }
 
@@ -32,14 +31,13 @@ shared_examples_for 'a functionable resource' do
 
   describe 'with executes not pre-defined function like set intensity' do
 
-    let(:properties)   { [ { uri: a_uri(status), value: 'on' }, { uri: a_uri(intensity) } ] }
+    let(:properties)   { [ { id: status.id, value: 'on' }, { id: intensity.id } ] }
     let(:function)     { FactoryGirl.create :function, properties: properties }
-    let(:function_uri) { a_uri function }
 
     describe 'when sends missing function property values' do
 
-      let(:override) { [ { uri: a_uri(intensity), value: '20' } ] }
-      let(:params)   { { pending: true, properties: override, function: function_uri } }
+      let(:override) { [ { id: intensity.id, value: '20' } ] }
+      let(:params)   { { pending: true, properties: override, function: { id: function.id } } }
 
       before { update }
 
@@ -66,9 +64,9 @@ shared_examples_for 'a functionable resource' do
     end
   end
 
-  context 'with not valid function uri' do
+  context 'with not valid function id' do
 
-    let(:params) { { pending: true, properties: properties, function: 'not-valid' } }
+    let(:params) { { pending: true, properties: properties, function: { id: 'not-valid' } } }
 
     before { update }
 

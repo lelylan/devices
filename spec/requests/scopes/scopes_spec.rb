@@ -16,7 +16,7 @@ feature 'Scope' do
       let(:consumption) { FactoryGirl.create :consumption, resource_owner_id: user.id }
       let(:function)    { FactoryGirl.create :function }
 
-      before { stub_request(:put, device.physical) }
+      before { stub_request(:put, device.physical[:uri]) }
       before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
       it { should authorize 'get    /devices' }
@@ -25,7 +25,7 @@ feature 'Scope' do
       it { should authorize "put    /devices/#{device.id}" }
       it { should authorize "delete /devices/#{device.id}" }
       it { should authorize "put    /devices/#{device.id}/properties" }
-      it { should authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should authorize "put    /devices/#{device.id}/functions" }
       it { should authorize 'post   /activations' }
       it { should authorize "delete /activations/#{device.id}" }
       it { should authorize 'get    /histories' }
@@ -50,7 +50,7 @@ feature 'Scope' do
       let(:history)     { FactoryGirl.create :history, resource_owner_id: user.id }
       let(:consumption) { FactoryGirl.create :consumption, resource_owner_id: user.id }
 
-      before { stub_request(:put, device.physical) }
+      before { stub_request(:put, device.physical[:uri]) }
       before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
       it { should authorize 'get /devices' }
@@ -85,7 +85,7 @@ feature 'Scope' do
       let(:consumption) { FactoryGirl.create :consumption, resource_owner_id: user.id }
       let(:function)    { FactoryGirl.create :function }
 
-      before { stub_request(:put, device.physical) }
+      before { stub_request(:put, device.physical[:uri]) }
       before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
       it { should authorize 'get    /devices' }
@@ -94,7 +94,7 @@ feature 'Scope' do
       it { should authorize "put    /devices/#{device.id}" }
       it { should authorize "delete /devices/#{device.id}" }
       it { should authorize "put    /devices/#{device.id}/properties" }
-      it { should authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should authorize "put    /devices/#{device.id}/functions" }
       it { should authorize 'post   /activations' }
       it { should authorize "delete /activations/#{device.id}" }
 
@@ -113,7 +113,7 @@ feature 'Scope' do
 
     context "with scope #{scope}" do
 
-      before { stub_request(:put, device.physical) }
+      before { stub_request(:put, device.physical[:uri]) }
       let!(:access_token) { FactoryGirl.create :access_token, scopes: scope, resource_owner_id: user.id }
 
       let(:device)      { FactoryGirl.create :device, resource_owner_id: user.id }
@@ -127,7 +127,7 @@ feature 'Scope' do
       it { should authorize "get    /devices/#{device.id}" }
       it { should authorize "put    /devices/#{device.id}" }
       it { should authorize "put    /devices/#{device.id}/properties" }
-      it { should authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should authorize "put    /devices/#{device.id}/functions" }
 
       it { should_not authorize 'post   /devices' }
       it { should_not authorize "delete /devices/#{device.id}" }
@@ -154,7 +154,7 @@ feature 'Scope' do
       let(:history)     { FactoryGirl.create :history, resource_owner_id: user.id }
       let(:consumption) { FactoryGirl.create :consumption, resource_owner_id: user.id }
 
-      before { stub_request(:put, device.physical) }
+      before { stub_request(:put, device.physical[:uri]) }
       before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
       it { should authorize 'get /devices' }
@@ -189,7 +189,7 @@ feature 'Scope' do
       let(:consumption) { FactoryGirl.create :consumption, resource_owner_id: user.id }
       let(:function)    { FactoryGirl.create :function }
 
-      before { stub_request(:put, device.physical) }
+      before { stub_request(:put, device.physical[:uri]) }
       before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
       it { should authorize "get /devices/#{device.id}/privates" }
@@ -200,7 +200,7 @@ feature 'Scope' do
       it { should_not authorize "put    /devices/#{device.id}" }
       it { should_not authorize "delete /devices/#{device.id}" }
       it { should_not authorize "put    /devices/#{device.id}/properties" }
-      it { should_not authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should_not authorize "put    /devices/#{device.id}/functions" }
       it { should_not authorize 'post   /activations' }
       it { should_not authorize "delete /activations/#{device.id}" }
       it { should_not authorize 'get    /histories' }
@@ -224,7 +224,7 @@ feature 'Scope' do
       let(:consumption) { FactoryGirl.create :consumption, resource_owner_id: user.id }
       let(:function)    { FactoryGirl.create :function }
 
-      before { stub_request(:put, device.physical) }
+      before { stub_request(:put, device.physical[:uri]) }
       before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
       it { should authorize 'get    /consumptions' }
@@ -239,7 +239,7 @@ feature 'Scope' do
       it { should_not authorize "put    /devices/#{device.id}" }
       it { should_not authorize "delete /devices/#{device.id}" }
       it { should_not authorize "put    /devices/#{device.id}/properties" }
-      it { should_not authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should_not authorize "put    /devices/#{device.id}/functions" }
       it { should_not authorize "get    /devices/#{device.id}/privates" }
       it { should_not authorize 'post   /activations' }
       it { should_not authorize "delete /activations/#{device.id}" }
@@ -259,7 +259,7 @@ feature 'Scope' do
       let(:consumption) { FactoryGirl.create :consumption, resource_owner_id: user.id }
       let(:function)    { FactoryGirl.create :function }
 
-      before { stub_request(:put, device.physical) }
+      before { stub_request(:put, device.physical[:uri]) }
       before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
       it { should authorize 'get    /consumptions' }
@@ -271,7 +271,7 @@ feature 'Scope' do
       it { should_not authorize "put    /devices/#{device.id}" }
       it { should_not authorize "delete /devices/#{device.id}" }
       it { should_not authorize "put    /devices/#{device.id}/properties" }
-      it { should_not authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should_not authorize "put    /devices/#{device.id}/functions" }
       it { should_not authorize "get    /devices/#{device.id}/privates" }
       it { should_not authorize 'post   /activations' }
       it { should_not authorize "delete /activations/#{device.id}" }
@@ -294,7 +294,7 @@ feature 'Scope' do
       let(:consumption) { FactoryGirl.create :consumption, resource_owner_id: user.id }
       let(:function)    { FactoryGirl.create :function }
 
-      before { stub_request(:put, device.physical) }
+      before { stub_request(:put, device.physical[:uri]) }
       before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
       it { should authorize 'get    /histories' }
@@ -306,7 +306,7 @@ feature 'Scope' do
       it { should_not authorize "put    /devices/#{device.id}" }
       it { should_not authorize "delete /devices/#{device.id}" }
       it { should_not authorize "put    /devices/#{device.id}/properties" }
-      it { should_not authorize "put    /devices/#{device.id}/functions?function=#{a_uri(function)}" }
+      it { should_not authorize "put    /devices/#{device.id}/functions" }
       it { should_not authorize "get    /devices/#{device.id}/privates" }
       it { should_not authorize 'post   /activations' }
       it { should_not authorize "delete /activations/#{device.id}" }

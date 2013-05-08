@@ -3,16 +3,17 @@ class FunctionsController < ApplicationController
 
   doorkeeper_for :update, scopes: Settings.scopes.control.map(&:to_sym), if: -> { not physical_request }
 
-  before_filter :find_from_physical,      if: -> { physical_request }
-  before_filter :find_owned_resources,    if: -> { not physical_request }
+  before_filter :find_from_physical,        if: -> { physical_request }
+  before_filter :find_owned_resources,      if: -> { not physical_request }
   before_filter :find_accessible_resources, if: -> { not physical_request }
-  before_filter :find_resource,           if: -> { not physical_request }
+  before_filter :find_resource,             if: -> { not physical_request }
   before_filter :create_physical_request
+  before_filter :updated_from
   after_filter  :create_event
   after_filter  :create_history
 
   def update
-    @device.update_attributes(properties_attributes: properties_attributes)
+    @device.update_attributes(properties_attributes: properties_attributes, updated_from: params[:updated_from])
     render json: @device, status: status_code
   end
 
@@ -21,7 +22,7 @@ class FunctionsController < ApplicationController
 
   def find_from_physical
     @device = Device.find(params[:id])
-    verify_signature
+    verify_secret
   end
 
   def find_owned_resources
@@ -47,6 +48,16 @@ class FunctionsController < ApplicationController
     end
   end
 
+  def updated_from
+    if not params[:updated_from]
+      params[:updated_from] = physical_request ? 'physical' : current_user.full_name || current_user.username || current_user.email
+    end
+  end
+
+  def create_event
+    Event.create(resource_id: @device.id, resource: 'devices', event: 'property-update', data: JSON.parse(response.body), resource_owner_id: current_user.id) if @device.valid?
+  end
+
   def create_history
     @device = DeviceDecorator.decorate @device
     source  = physical_request ? 'physical' : 'lelylan'
@@ -55,36 +66,33 @@ class FunctionsController < ApplicationController
     end
   end
 
-  def create_event
-    Event.create(resource_id: @device.id, resource: 'devices', event: 'property-update', data: JSON.parse(response.body), resource_owner_id: current_user.id) if @device.valid?
-  end
-
 
   # Properties normalization
 
   def properties_attributes
-    @properties_attributes ||= merge_properties(params[:function], params_properties)
+    @properties_attributes ||= merge_properties(params[:function], params_properties) || []
   end
 
   def merge_properties(function, params_properties)
-    @function = Function.find(find_id function)
-    override_ids = params_properties.map { |p| p[:id] }
-    function_properties = @function.properties.nin(property_id: override_ids)
-    function_properties = function_properties.map { |p|  DevicePropertyDecorator.decorate(p) }
-    function_properties = function_properties.map { |p| { uri: p.uri, id: p.property_id.to_s, value: p.value } }
-    (function_properties + params_properties).flatten
+    if function
+      @function = Function.find(function[:id])
+      override_ids = params_properties.map { |p| p[:id] }
+      function_properties = @function.properties.nin(property_id: override_ids)
+      function_properties = function_properties.map { |p|  DevicePropertyDecorator.decorate(p) }
+      function_properties = function_properties.map { |p| { uri: p.uri, id: p.property_id.to_s, value: p.value, pending: true } }
+      params_properties   = params_properties.each  { |p| p[:pending] = true }
+      return (function_properties + params_properties).flatten
+    end
   end
 
   def params_properties
     params[:properties] ||= []
-    params[:properties].tap { |p| p.map { |p| p[:id] = find_id p[:uri] } }
+    params[:properties].tap { |p| p.map { |p| p[:id] = p[:id] } }
   end
 
   def physical_properties
     properties_attributes.map do |p|
-      result = { id: p[:id], uri: p[:uri], value: p[:value] }
-      result[:value] = p[:expected] if p[:expected]
-      result
+      { id: p[:id], uri: p[:uri], value: p[:value] }
     end
   end
 

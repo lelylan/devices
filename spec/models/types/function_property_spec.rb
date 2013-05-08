@@ -7,8 +7,4 @@ describe Function do
   it 'connects to type database' do
     Type.database_name.should == 'types_test'
   end
-
-  it 'creates a function' do
-    resource.id.should_not be_nil
-  end
 end

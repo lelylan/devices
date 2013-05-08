@@ -5,7 +5,8 @@ class FunctionProperty
   field :value
   field :property_id, type: Moped::BSON::ObjectId
 
-  attr_accessor :uri
+  attr_accessor :id
+  attr_accessible :id, :value, :pending
 
   embedded_in :function
 
@@ -14,6 +15,6 @@ class FunctionProperty
   private
 
   def set_property_id
-    self.property_id = find_id(uri)
+    self.property_id = id
   end
 end

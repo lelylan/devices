@@ -16,28 +16,21 @@ class DeviceProperty
 
   validates :property_id, presence: true
 
-  before_save :set_pending, :set_value, :set_expected
+  before_save :set_property
 
-  def set_value
-    self.value = expected if device.physical == nil and expected_changed? and !value_changed?
-  end
+  def set_property
+    # if pending does not change set it to false by default
+    # ...
 
-  def set_expected
-    self.expected = value if pending == false and value_changed? and !expected_changed?
-  end
+    # set always to value unless you do not set the desired value
+    self.expected = value if not expected_changed?
 
-  def set_pending
-    self.pending = auto_pending if not pending_changed?
+    # set the old values only when pending is set to true and there is a physical device connectio and there is a physical device connectionn
+    self.value = value_was if pending == true and device.physical
+
+    # set always to false when there is no physical device
+    self.pending = false if not device.physical
+
     return true
-  end
-
-  def auto_pending
-    return false if device.physical == nil
-    return false if expected_changed? and value_changed? and value == expected
-    return true  if expected_changed? and value_changed? and value != expected
-    return true  if pending == true   and value_changed? and value != expected
-    return false if pending == true   and value_changed? and value == expected
-    return true  if expected_changed?
-    return false
   end
 end
