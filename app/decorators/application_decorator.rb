@@ -8,4 +8,8 @@ class ApplicationDecorator < Draper::Decorator
   def types_host
     host = h.request.env['HTTP_X_HOST'] || ENV['LELYLAN_TYPES_URL'] || h.request.host
   end
+
+  def people_host
+    host = h.request.env['HTTP_X_HOST'] || ENV['LELYLAN_PEOPLE_URL'] || h.request.host
+  end
 end

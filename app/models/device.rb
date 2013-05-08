@@ -4,7 +4,7 @@ class Device
   include Resourceable
 
   field :resource_owner_id, type: Moped::BSON::ObjectId
-  field :creator_id, type: Moped::BSON::ObjectId
+  field :maker_id, type: Moped::BSON::ObjectId
   field :name
   field :categories, type: Array, default: []
   field :secret
@@ -13,19 +13,20 @@ class Device
   field :pending, type: Boolean, default: false
   field :activated_at, type: DateTime, default: ->{ Time.now }
   field :activation_code
+  field :source
 
   index({ resource_owner_id: 1 }, { background: true })
-  index({ creator_id: 1 }, { background: true })
+  index({ maker_id: 1 }, { background: true })
   index({ type_id: 1 }, { background: true })
   index({ pending: 1 }, { background: true })
 
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
 
   attr_accessor  :type
-  attr_accessible :name, :type, :categories, :physical, :properties_attributes
+  attr_accessible :name, :type, :categories, :source, :physical, :properties_attributes
 
   validates :resource_owner_id, presence: true
-  validates :creator_id,  presence: true
+  validates :maker_id,  presence: true
   validates :name, presence: true
   validates :secret, presence: true
   validates :activation_code, presence: true
@@ -38,7 +39,7 @@ class Device
   before_save   :set_pending
   before_save   :touch_locations
 
-  before_validation(on: 'create') { set_creator_id }
+  before_validation(on: 'create') { set_maker_id }
   before_validation(on: 'create') { set_secret }
   before_validation(on: 'create') { set_activation_code }
 
@@ -50,8 +51,8 @@ class Device
     self.type_id = type[:id]
   end
 
-  def set_creator_id
-    self.creator_id = resource_owner_id
+  def set_maker_id
+    self.maker_id = resource_owner_id
   end
 
   def set_secret

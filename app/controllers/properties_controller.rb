@@ -8,11 +8,12 @@ class PropertiesController < ApplicationController
   before_filter :find_accessible_resources, if: -> { not physical_request }
   before_filter :find_resource,             if: -> { not physical_request }
   before_filter :create_physical_request
+  before_filter :create_source
   after_filter  :create_event
   after_filter  :create_history
 
   def update
-    @device.update_attributes(properties_attributes: properties_attributes)
+    @device.update_attributes(properties_attributes: properties_attributes, source: params[:source])
     render json: @device, status: status_code
   end
 
@@ -47,17 +48,23 @@ class PropertiesController < ApplicationController
     end
   end
 
-  def create_history
-    @device = DeviceDecorator.decorate @device
-    source  = physical_request ? 'physical' : 'lelylan'
-    History.create!(device: @device.uri, properties: @device.properties, source: source) do |history|
-      history.resource_owner_id = current_user.id
+  def create_source
+    if not params[:source]
+      params[:source] = physical_request ? 'physical' : current_user.full_name || current_user.username || current_user.email
     end
   end
 
   def create_event
     if @device.valid?
       Event.create(resource_id: @device.id, resource: 'devices', event: 'property-update', data: JSON.parse(response.body), resource_owner_id: current_user.id)
+    end
+  end
+
+  def create_history
+    @device = DeviceDecorator.decorate @device
+    source  = physical_request ? 'physical' : 'lelylan'
+    History.create!(device: @device.uri, properties: @device.properties, source: source) do |history|
+      history.resource_owner_id = current_user.id
     end
   end
 

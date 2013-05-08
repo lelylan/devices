@@ -1,3 +1,5 @@
+#save_and_open_page
+
 shared_examples_for 'a listable resource' do
 
   let!(:not_owned) { FactoryGirl.create factory }

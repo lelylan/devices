@@ -4,9 +4,16 @@ module HelpersViewMethods
     json.id.should        == device.id.to_s
     json.name.should      == device.name
     json.type.uri.should  == device.type_uri
+    json.type.id.should   == device.type_id.to_s
     json.pending.should   == device.pending
     json.activated.should == (device.activated_at ? true : false)
     json.secret.should    == nil
+
+    json.owner.uri.should == device.owner_uri
+    json.owner.id.should  == device.resource_owner_id.to_s
+    json.maker.uri.should == device.maker_uri
+    json.maker.id.should  == device.maker_id.to_s
+    json.source.should    == device[:source]
 
     json.properties.each_with_index do |property, i|
       device_property = DevicePropertyDecorator.decorate(device.properties[i])
@@ -15,6 +22,7 @@ module HelpersViewMethods
       property.value.should == device_property.value
       property.expected.should == device_property.expected
       property.pending.should == device_property.pending
+      property.accepted.should == device_property.accepted
     end
 
     physical = HashWithIndifferentAccess.new device.physical if json.physical
