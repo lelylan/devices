@@ -22,7 +22,7 @@ class Device
 
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
 
-  attr_accessor  :type
+  attr_accessor :type
   attr_accessible :name, :type, :categories, :updated_from, :physical, :properties_attributes
 
   validates :resource_owner_id, presence: true

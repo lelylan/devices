@@ -107,7 +107,6 @@ class DevicesController < ApplicationController
   def device_params
     # TODO permit method is not recognized, so I can't use strong parameters
     params.delete(:properties)
-    params.delete(:physical) if params[:physical].is_a? Hash
     return params
   end
 end
