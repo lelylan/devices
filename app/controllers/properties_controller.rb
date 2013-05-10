@@ -77,7 +77,7 @@ class PropertiesController < ApplicationController
 
   def params_properties
     params[:properties] ||= []
-    params[:properties].tap { |p| p.map { |p| p[:id] = p[:id] } }
+    params[:properties].each { |p| p[:pending] ||= false }
   end
 
   def physical_properties

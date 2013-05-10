@@ -19,18 +19,16 @@ class DeviceProperty
   before_save :set_property
 
   def set_property
-    # if pending does not change set it to false by default
-    # ...
-
-    # set always to value unless you do not set the desired value
-    self.expected = value if not expected_changed?
-
+    # set always expected to value also when expected is sent
+    self.expected = value
+    # when is already pending and send a new value the expected value is the old one
+    self.expected = expected_was if pending == true and pending_was == true  and device.physical
     # set the old values only when pending is set to true and there is a physical device connectio and there is a physical device connectionn
-    self.value = value_was if pending == true and device.physical
-
+    self.value = value_was if pending == true and pending_was == false and device.physical
+    # set the current values when keep being pending
+    self.value = value if pending == true and pending_was == true  and device.physical
     # set always to false when there is no physical device
     self.pending = false if not device.physical
-
     return true
   end
 end
