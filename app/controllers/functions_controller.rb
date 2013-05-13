@@ -79,7 +79,7 @@ class FunctionsController < ApplicationController
       override_ids = params_properties.map { |p| p[:id] }
       function_properties = @function.properties.nin(property_id: override_ids)
       function_properties = function_properties.map { |p|  DevicePropertyDecorator.decorate(p) }
-      function_properties = function_properties.map { |p| { uri: p.uri, id: p.property_id.to_s, value: p.value, pending: true } }
+      function_properties = function_properties.map { |p| { id: p.property_id.to_s, uri: p.uri, expected: p.value, pending: true } }
       params_properties   = params_properties.each  { |p| p[:pending] = true }
       return (function_properties + params_properties).flatten
     end
@@ -92,7 +92,7 @@ class FunctionsController < ApplicationController
 
   def physical_properties
     properties_attributes.map do |p|
-      { id: p[:id], uri: p[:uri], value: p[:value] }
+      { id: p[:id], value: p[:value] || p[:expected] }
     end
   end
 
