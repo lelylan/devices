@@ -72,54 +72,118 @@ feature 'PropertiesController' do
 
     describe '#pending' do
 
-      before { resource.update_attributes(physical: { uri: 'http://arduino.casa.com' }) }
       let(:property_id) { resource.properties.first.id }
 
-      describe 'when is false' do
+      describe 'with a connected physical device' do
 
-        before { resource.update_attributes(properties_attributes: [{ id: property_id, pending: false }]) }
+        before { resource.update_attributes(physical: { uri: 'http://arduino.casa.com' }) }
 
-        describe 'when updates #value' do
+        describe 'when is false' do
 
-          let(:params) { { properties: [{ id: property_id, value: 'on', expected: 'on' }] } }
-          before       { update }
-          subject      { resource.reload.properties.first }
+          before { resource.update_attributes(properties_attributes: [{ id: property_id, pending: false }]) }
 
-          its(:pending)  { should == false }
-          its(:value)    { should == 'on' }
-          its(:expected) { should == 'on' }
+          describe 'when updates #value' do
+
+            let(:params) { { properties: [{ id: property_id, value: 'on' }] } }
+            before       { update }
+            subject      { resource.reload.properties.first }
+
+            its(:pending)  { should == false }
+            its(:value)    { should == 'on' }
+            its(:expected) { should == 'on' }
+          end
+
+          describe 'when updates #value and #pending as true' do
+
+            let(:params) { { properties: [{ id: property_id, value: 'on', pending: true }] } }
+            before       { update }
+            subject      { resource.reload.properties.first }
+
+            its(:pending)  { should == true }
+            its(:value)    { should == 'on' }
+            its(:expected) { should == 'off' }
+          end
+
+          describe 'when updates #expected and #pending as true' do
+
+            let(:params) { { properties: [{ id: property_id, expected: 'on', pending: true }] } }
+            before       { update }
+            subject      { resource.reload.properties.first }
+
+            its(:pending)  { should == true }
+            its(:value)    { should == 'off' }
+            its(:expected) { should == 'on' }
+          end
+
+          describe 'when updates #value, #expected and #pending as true' do
+
+            let(:params) { { properties: [{ id: property_id, value: 'on', expected: 'off', pending: true }] } }
+            before       { update }
+            subject      { resource.reload.properties.first }
+
+            its(:pending)  { should == true }
+            its(:value)    { should == 'on' }
+            its(:expected) { should == 'off' }
+          end
         end
 
-        describe 'when updates #value and #pending as true' do
+        describe 'when is true' do
 
-          let(:params) { { properties: [{ id: property_id, value: 'on', pending: true, expected: 'off' }] } }
-          before       { update }
-          subject      { resource.reload.properties.first }
+          before { resource.update_attributes(properties_attributes: [{ id: property_id, pending: true }]) }
 
-          its(:pending)  { should == true }
-          its(:value)    { should == 'off' }
-          its(:expected) { should == 'on' }
-        end
+          describe 'when updates #value' do
 
-        describe 'when updates #value and #pending as false' do
+            let(:params) { { properties: [{ id: property_id, value: 'on' }] } }
+            before       { update }
+            subject      { resource.reload.properties.first }
 
-          let(:params) { { properties: [{ id: property_id, value: 'on', pending: false, expected: 'off' }] } }
-          before       { update }
-          subject      { resource.reload.properties.first }
+            its(:pending)  { should == false }
+            its(:value)    { should == 'on' }
+            its(:expected) { should == 'on' }
+          end
 
-          its(:pending)  { should == false }
-          its(:value)    { should == 'on' }
-          its(:expected) { should == 'on' }
+          # -> Physical - In this case we only update the physical device #value
+          describe 'when updates #value and #pending as true' do
+
+            let(:params) { { properties: [{ id: property_id, value: 'on', pending: true }] } }
+            before       { update }
+            subject      { resource.reload.properties.first }
+
+            its(:pending)  { should == true }
+            its(:value)    { should == 'on' }
+            its(:expected) { should == 'off' }
+          end
+
+          # -> UI - In this case we want to apply the new property changes
+          describe 'when updates #expected and #pending as true' do
+
+            let(:params) { { properties: [{ id: property_id, expected: 'on', pending: true }] } }
+            before       { update }
+            subject      { resource.reload.properties.first }
+
+            its(:pending)  { should == true }
+            its(:value)    { should == 'off' }
+            its(:expected) { should == 'on' }
+          end
+
+          describe 'when updates #value, #expected and #pending as false' do
+
+            let(:params) { { properties: [{ id: property_id, value: 'on', expected: 'on', pending: false }] } }
+            before       { update }
+            subject      { resource.reload.properties.first }
+
+            its(:pending)  { should == false }
+            its(:value)    { should == 'on' }
+            its(:expected) { should == 'on' }
+          end
         end
       end
 
-      describe 'when is true' do
-
-        before { resource.update_attributes(properties_attributes: [{ id: property_id, pending: true }]) }
+      describe 'with a not connected physical device' do
 
         describe 'when updates #value' do
 
-          let(:params) { { properties: [{ id: property_id, value: 'on', expected: 'on' }] } }
+          let(:params) { { properties: [{ id: property_id, value: 'on' }] } }
           before       { update }
           subject      { resource.reload.properties.first }
 
@@ -128,21 +192,31 @@ feature 'PropertiesController' do
           its(:expected) { should == 'on' }
         end
 
-        # In this case we only update #value as it keep being pending and we already have the expected value set
         describe 'when updates #value and #pending as true' do
 
-          let(:params) { { properties: [{ id: property_id, value: 'on', pending: true, expected: 'off' }] } }
+          let(:params) { { properties: [{ id: property_id, value: 'on', pending: true }] } }
           before       { update }
           subject      { resource.reload.properties.first }
 
           its(:pending)  { should == true }
           its(:value)    { should == 'on' }
-          its(:expected) { should == 'off' }
+          its(:expected) { should == 'on' }
         end
 
-        describe 'when updates #value and #pending as false' do
+        describe 'when updates #expected and #pending as true' do
 
-          let(:params) { { properties: [{ id: property_id, value: 'on', pending: false, expected: 'off' }] } }
+          let(:params) { { properties: [{ id: property_id, expected: 'on', pending: true }] } }
+          before       { update }
+          subject      { resource.reload.properties.first }
+
+          its(:pending)  { should == true }
+          its(:value)    { should == 'on' }
+          its(:expected) { should == 'on' }
+        end
+
+        describe 'when updates #value, #expected and #pending as false' do
+
+          let(:params) { { properties: [{ id: property_id, value: 'on', expected: 'off', pending: false }] } }
           before       { update }
           subject      { resource.reload.properties.first }
 
