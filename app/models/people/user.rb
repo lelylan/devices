@@ -9,6 +9,6 @@ class User
   field :rate_limit
 
   def description
-    current_user.full_name || current_user.username || current_user.email
+    full_name || username || email
   end
 end
