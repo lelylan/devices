@@ -19,9 +19,10 @@ class DeviceProperty
   before_save :set_property
 
   def set_property
-    self.expected = value if value_changed?    and not expected_changed? and pending == false
-    self.expected = value if value_changed?    and not device.physical
-    self.value = expected if expected_changed? and not device.physical
+    self.expected = value    if value_changed?    and not expected_changed? and pending == false
+    self.expected = value    if value_changed?    and not device.physical
+    self.value    = expected if expected_changed? and not device.physical
+    self.pending  = false    if not device.physical
 
     return true
   end

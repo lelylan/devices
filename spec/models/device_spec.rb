@@ -28,8 +28,17 @@ describe Device do
 
     let(:resource) { FactoryGirl.create :device }
 
-    it 'sets the physical field' do
-      resource.physical[:uri].should == "http://arduino.casa.com/#{resource.id}"
+    it 'sets the physical uri' do
+      resource.physical['uri'].should == "http://arduino.casa.com/#{resource.id}"
+    end
+
+    describe 'when delete the physical' do
+
+      before { resource.update_attributes(physical: { uri: '' }) }
+
+      it 'sets #physical to nil' do
+        resource.physical.should be_nil
+      end
     end
   end
 

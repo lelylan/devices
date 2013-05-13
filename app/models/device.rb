@@ -36,6 +36,7 @@ class Device
 
   before_create :set_type_id
   before_create :set_device_properties
+  before_save   :set_physical
   before_save   :set_pending
   before_save   :touch_locations
 
@@ -69,6 +70,10 @@ class Device
     entries    = properties.map { |p| { property_id: p.id, value: p.default, expected: p.default } }
     self.properties_attributes = entries
     self.categories = type.categories;
+  end
+
+  def set_physical
+    self.physical = nil if physical and physical['uri'].blank?
   end
 
   def set_pending
