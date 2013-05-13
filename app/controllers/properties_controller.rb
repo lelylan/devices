@@ -50,7 +50,7 @@ class PropertiesController < ApplicationController
 
   def updated_from
     if not params[:updated_from]
-      params[:updated_from] = physical_request ? 'physical' : current_user.full_name || current_user.username || current_user.email
+      params[:updated_from] = physical_request ? 'physical' : current_user.description
     end
   end
 

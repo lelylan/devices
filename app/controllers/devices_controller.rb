@@ -27,7 +27,7 @@ class DevicesController < ApplicationController
   def create
     @device = Device.new(device_params)
     @device.resource_owner_id = current_user.id
-    @device.updated_from = current_user.full_name
+    @device.updated_from = current_user.description
     if @device.save
       render json: @device, status: 201, location: @device.decorate.uri
     else
