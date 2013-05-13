@@ -1,7 +1,7 @@
 shared_examples_for 'a forwardable physical request resource' do
 
   before { FactoryGirl.create :physical } # not used but avoid test error on empty collection
-  before { resource.update_attributes(physical: { uri: 'http://arduino.casa.com/5cf372d4' }) }
+  before { resource.update_attributes(physical: { 'uri' => 'http://arduino.casa.com/1' }) }
 
   it 'creates a physical request' do
     expect { update }.to change { Physical.last.id }

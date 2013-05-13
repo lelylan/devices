@@ -82,7 +82,7 @@ class PropertiesController < ApplicationController
 
   def physical_properties
     properties_attributes.map do |p|
-      { id: p[:id], uri: p[:uri], value: p[:value] }
+      { id: p[:id], value: p[:value], expected: p[:expected] }
     end
   end
 

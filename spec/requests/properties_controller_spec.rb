@@ -76,7 +76,7 @@ feature 'PropertiesController' do
 
       describe 'with a connected physical device' do
 
-        before { resource.update_attributes(physical: { uri: 'http://arduino.casa.com' }) }
+        before { resource.update_attributes(physical: { 'uri' => 'http://arduino.casa.com/1' }) }
 
         describe 'when is false' do
 
@@ -198,7 +198,7 @@ feature 'PropertiesController' do
           before       { update }
           subject      { resource.reload.properties.first }
 
-          its(:pending)  { should == true }
+          its(:pending)  { should == false }
           its(:value)    { should == 'on' }
           its(:expected) { should == 'on' }
         end
@@ -209,7 +209,7 @@ feature 'PropertiesController' do
           before       { update }
           subject      { resource.reload.properties.first }
 
-          its(:pending)  { should == true }
+          its(:pending)  { should == false }
           its(:value)    { should == 'on' }
           its(:expected) { should == 'on' }
         end
