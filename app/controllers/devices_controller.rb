@@ -85,7 +85,7 @@ class DevicesController < ApplicationController
   # TODO see if you are able to build a query to match multiple properties.
   def search_properties(match = {})
     if params[:properties]
-      match.merge!({ property_id: Moped::BSON::ObjectId(find_id(params[:properties][:uri])) }) if params[:properties][:uri]
+      match.merge!({ property_id: Moped::BSON::ObjectId(params[:properties][:id]) }) if params[:properties][:id]
       match.merge!({ value: params[:properties][:value] }) if params[:properties][:value]
       match.merge!({ expected: params[:properties][:expected] }) if params[:properties][:expected]
       match.merge!({ pending: params[:properties][:pending].to_bool }) if params[:properties][:pending]

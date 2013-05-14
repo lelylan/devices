@@ -24,8 +24,7 @@ shared_examples_for 'a searchable resource on properties' do
 
   context 'when filters the property uri' do
 
-    let(:property_uri) { a_uri(result.properties.first, :property_id) }
-    let(:properties)   { { uri: property_uri } }
+    let(:properties)   { { id: result.properties.first.property_id } }
 
     it 'returns the searched resource' do
       page.driver.get uri, properties: properties
