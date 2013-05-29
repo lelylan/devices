@@ -2,10 +2,10 @@ source 'https://rubygems.org'
 
 ruby '1.9.3'
 
-gem 'rails'
-gem 'unicorn'
-gem 'mongoid'
+gem 'rails', '3.2.13'
+gem 'mongoid', '~> 3.1.4'
 gem 'doorkeeper'
+gem 'unicorn'
 gem 'draper'
 gem 'yajl-ruby'
 gem 'rails_config'
@@ -35,6 +35,7 @@ group :development, :test do
   gem 'hashie'
   gem 'rails_best_practices'
   gem 'debugger'
+  gem 'brakeman', :require => false
 end
 
 group :test do
