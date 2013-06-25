@@ -56,7 +56,8 @@ class FunctionsController < ApplicationController
 
   def create_event
     if @device.valid?
-      Event.create(resource_id: @device.id, resource: 'devices', event: 'property-update', data: JSON.parse(response.body), resource_owner_id: current_user.id, token: doorkeeper_token.token)
+      token = doorkeeper_token ? doorkeeper_token.token : nil
+      Event.create(resource_id: @device.id, resource: 'devices', event: 'property-update', data: JSON.parse(response.body), resource_owner_id: current_user.id, token: token)
     end
   end
 
