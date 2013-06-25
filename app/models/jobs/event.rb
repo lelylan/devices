@@ -9,9 +9,10 @@ class Event
   field :resource_id, type: Moped::BSON::ObjectId
   field :resource
   field :event
+  field :token
   field :data, type: Hash
   field :callback_processed, type: Boolean, default: false
-  field :realtime_processed, type: Boolean, default: false
+  field :websocket_processed, type: Boolean, default: false
 
   index({ resource: 1, event: 1 })
 
