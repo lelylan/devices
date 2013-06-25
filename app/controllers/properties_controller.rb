@@ -13,7 +13,8 @@ class PropertiesController < ApplicationController
   after_filter  :create_history
 
   def update
-    @device.update_attributes(properties_attributes: properties_attributes, updated_at: Time.now, updated_from: params[:updated_from])
+    @device.touch
+    @device.update_attributes(properties_attributes: properties_attributes, updated_from: params[:updated_from])
     render json: @device, status: status_code
   end
 
