@@ -13,7 +13,7 @@ class PropertiesController < ApplicationController
   after_filter  :create_history
 
   def update
-    @device.touch
+    @device.touch # when the default device function is clicked really fast the sent properties are the same than the actual and without the update the cache is not updated
     @device.update_attributes(properties_attributes: properties_attributes, updated_from: params[:updated_from])
     render json: @device, status: status_code
   end
