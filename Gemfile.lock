@@ -162,6 +162,7 @@ GEM
     moped (1.5.0)
     multi_json (1.7.4)
     multipart-post (1.2.0)
+    newrelic_rpm (3.6.7.152)
     nokogiri (1.5.9)
     origin (1.1.0)
     polyglot (0.3.3)
@@ -315,6 +316,7 @@ DEPENDENCIES
   launchy
   mock_redis
   mongoid (~> 3.1.4)
+  newrelic_rpm
   rack-cors
   rails (= 3.2.13)
   rails-api
