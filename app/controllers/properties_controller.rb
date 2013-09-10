@@ -10,7 +10,9 @@ class PropertiesController < ApplicationController
   before_filter :create_physical_request
   before_filter :updated_from
   after_filter  :create_event
-  after_filter  :create_history
+
+  # temporary disabled
+  # after_filter  :create_history
 
   def update
     @device.touch # when the default device function is clicked really fast the sent properties are the same than the actual and without the update the cache is not updated
