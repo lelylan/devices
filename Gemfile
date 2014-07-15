@@ -19,6 +19,7 @@ gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_se
 gem 'redis-throttle', git: 'git://github.com/andreareginato/redis-throttle.git'
 gem 'rack-cors', require: 'rack/cors'
 gem 'newrelic_rpm'
+gem 'rails_12factor'
 
 group :development, :test do
   gem 'foreman'

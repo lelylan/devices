@@ -193,6 +193,9 @@ GEM
       actionpack (>= 3.2.11)
       railties (>= 3.2.11)
       tzinfo (~> 0.3.31)
+    rails_12factor (0.0.2)
+      rails_serve_static_assets
+      rails_stdout_logging
     rails_best_practices (1.13.5)
       activesupport
       awesome_print
@@ -203,6 +206,8 @@ GEM
       ruby-progressbar
     rails_config (0.3.3)
       activesupport (>= 3.0)
+    rails_serve_static_assets (0.0.2)
+    rails_stdout_logging (0.0.3)
     railties (3.2.13)
       actionpack (= 3.2.13)
       activesupport (= 3.2.13)
@@ -320,6 +325,7 @@ DEPENDENCIES
   rack-cors
   rails (= 3.2.13)
   rails-api
+  rails_12factor
   rails_best_practices
   rails_config
   rb-fsevent
