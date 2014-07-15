@@ -79,7 +79,7 @@ class DevicesController < ApplicationController
     @devices = @devices.where('name' => /.*#{params[:name]}.*/i) if params[:name]
     @devices = @devices.where(type: params[:type]) if params[:type]
     @devices = @devices.where(pending: params[:pending].to_bool) if params[:pending]
-    @devices = @devices.in(categories: params[:categories])      if params[:categories]
+    @devices = @devices.where(category: params[:category])       if params[:category]
   end
 
   # TODO see if you are able to build a query to match multiple properties.

@@ -51,12 +51,12 @@ describe Device do
     end
   end
 
-  describe '#categories' do
+  describe '#category' do
 
     let(:resource) { FactoryGirl.create :device }
 
-    it 'sets the categories field' do
-      resource.categories.should == ['lights']
+    it 'sets the category field' do
+      resource.category.should == 'lights'
     end
   end
 

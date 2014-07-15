@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :type, traits: %w(with_properties) do
     name 'Dimmer'
-    categories ['lights']
+    category 'lights'
   end
 
   trait :with_properties do

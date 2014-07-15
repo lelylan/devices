@@ -6,7 +6,7 @@ shared_examples_for 'a searchable resource' do |searchable|
 
       let!(:result) { FactoryGirl.create factory, key => value, resource_owner_id: user.id }
       # HACK - the category is inherited and overridden by the type
-      before { result.update_attributes(categories: value) if key == :categories }
+      before { result.update_attributes(category: value) if key == :category }
 
       it 'returns the searched resource' do
         value = value.first if value.is_a? Array

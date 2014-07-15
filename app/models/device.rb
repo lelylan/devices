@@ -6,7 +6,7 @@ class Device
   field :resource_owner_id, type: Moped::BSON::ObjectId
   field :maker_id, type: Moped::BSON::ObjectId
   field :name
-  field :categories, type: Array, default: []
+  field :category
   field :secret
   field :type_id, type: Moped::BSON::ObjectId
   field :physical, type: Hash
@@ -23,7 +23,7 @@ class Device
   embeds_many :properties, class_name: 'DeviceProperty', cascade_callbacks: true
 
   attr_accessor :type
-  attr_accessible :name, :type, :categories, :updated_from, :physical, :properties_attributes
+  attr_accessible :name, :type, :category, :updated_from, :physical, :properties_attributes
 
   validates :resource_owner_id, presence: true
   validates :maker_id,  presence: true
@@ -69,7 +69,7 @@ class Device
     properties = Property.in(id: type.property_ids)
     entries    = properties.map { |p| { property_id: p.id, value: p.default, expected: p.default } }
     self.properties_attributes = entries
-    self.categories = type.categories;
+    self.category = type.category;
   end
 
   def set_physical
