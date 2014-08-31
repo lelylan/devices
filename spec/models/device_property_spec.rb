@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DeviceProperty do
 
   its(:pending)  { should == false }
-  its(:accepted) { should be_nil }
+  its(:accepted) { should == [] }
 
   it { should validate_presence_of :property_id }
 

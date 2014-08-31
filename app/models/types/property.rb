@@ -5,5 +5,5 @@ class Property
   field :resource_owner_id
   field :name
   field :default, default: ''
-  field :suggested, type: Hash, default: {}
+  field :accepted, type: Array, default: []
 end

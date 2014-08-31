@@ -8,7 +8,7 @@ class DeviceProperty
   field :value
   field :expected
   field :pending, type: Boolean, default: false
-  field :accepted, type: Hash
+  field :accepted, type: Array, default: []
 
   index({ property_id: 1, value: 1 }, { background: true })
 

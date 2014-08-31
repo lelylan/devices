@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 ruby '1.9.3'
 
 gem 'rails', '3.2.13'
+gem 'rails-api'
 gem 'mongoid', '~> 3.1.4'
 gem 'doorkeeper'
 gem 'unicorn'
@@ -14,12 +15,10 @@ gem 'bcrypt-ruby', require: 'bcrypt'
 gem 'bundler'
 gem 'faraday'
 gem 'dalli'
-gem 'rails-api'
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
 gem 'redis-throttle', git: 'git://github.com/andreareginato/redis-throttle.git'
 gem 'rack-cors', require: 'rack/cors'
 gem 'newrelic_rpm'
-gem 'rails_12factor'
 
 group :development, :test do
   gem 'foreman'
@@ -45,4 +44,8 @@ group :test do
   gem 'growl'
   gem 'rb-fsevent'
   gem 'launchy'
+end
+
+group :production do
+  gem 'rails_12factor'
 end

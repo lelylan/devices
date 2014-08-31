@@ -57,7 +57,7 @@ class Device
   end
 
   def set_secret
-    self.secret = Doorkeeper::OAuth::Helpers::UniqueToken.generate
+    self.secret = SecureRandom.base64(32);
   end
 
   def set_activation_code
