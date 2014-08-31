@@ -57,7 +57,8 @@ class Device
   end
 
   def set_secret
-    self.secret = SecureRandom.base64(32);
+    # generates a 32 chars secret
+    self.secret = SecureRandom.base64(24);
   end
 
   def set_activation_code
