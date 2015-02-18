@@ -30,6 +30,7 @@ feature 'DevicesController' do
     let(:uri)       { "/devices/#{resource.id}" }
 
     it_behaves_like 'a showable resource'
+    it_behaves_like 'a showable resource from physical'
     it_behaves_like 'a proxiable resource'
     it_behaves_like 'a crossable resource'
     it_behaves_like 'a not owned resource', 'page.driver.get(uri)'

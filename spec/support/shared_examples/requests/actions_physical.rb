@@ -72,3 +72,39 @@ shared_examples_for 'a creatable resource from physical' do |action|
   end
 end
 
+shared_examples_for 'a showable resource from physical' do |action|
+
+  describe 'when the request comes from the physical device' do
+
+    before { page.driver.header 'Authorization', nil }
+
+    describe 'with valid secret' do
+
+      before { page.driver.header 'X-Physical-Secret', resource.secret }
+      before { page.driver.get uri }
+
+      it 'gets a 200 response' do
+        page.status_code.should == 200
+      end
+    end
+
+    describe 'with an invalid secret' do
+
+      before { page.driver.header 'X-Physical-Secret', 'not-valid-secret' }
+      before { page.driver.get uri }
+
+      it 'gets a 401 response' do
+        page.status_code.should == 401
+      end
+    end
+
+    describe 'with no secret' do
+
+      before { page.driver.get uri }
+
+      it 'gets a 401 response' do
+        page.status_code.should == 401
+      end
+    end
+  end
+end
