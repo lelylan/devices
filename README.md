@@ -1,6 +1,6 @@
 # Devices API
 
-Devices API for Lelylan. [Learn more](http://dev.lelylan.com/api/devices/)
+Devices API to control and monitor physical devices.
 
 
 ## Requirements
@@ -17,8 +17,8 @@ Clone the repository.
 
 ## Resources
 
+* [Lelylan Devices API](http://dev.lelylan.com/developers#devices-api)
 * [Lelylan API](http://dev.lelylan.com)
-* [Lelylan Devices API](http://dev.lelylan.com/api/devices/)
 
 
 ## Contributing
@@ -47,8 +47,8 @@ Follow [github](https://github.com/styleguide/) guidelines.
 
 ## Feedback
 
-Use the [issue tracker](http://github.com/lelylan/devices/issues) for bugs.
-[Mail](mailto:touch@lelylan.com) or [Tweet](http://twitter.com/lelylan) us for any idea that can improve the project.
+Use the [issue tracker](http://github.com/lelylan/devices/issues) for bugs or [stack overflow](http://stackoverflow.com/questions/tagged/lelylan) for questions.
+[Mail](mailto:dev@lelylan.com) or [Tweet](http://twitter.com/lelylan) us for any idea that can improve the project.
 
 
 ## Links
@@ -60,19 +60,19 @@ Use the [issue tracker](http://github.com/lelylan/devices/issues) for bugs.
 
 ## Authors
 
-[Andrea Reginato](http://twitter.com/andreareginato)
+[Andrea Reginato](https://www.linkedin.com/in/andreareginato)
 
 
 ## Contributors
 
-Special thanks to the following people for submitting patches.
+Special thanks to [all people](https://github.com/lelylan/devices/graphs/contributors) helping to make the project real.
 
 
 ## Changelog
 
-See [CHANGELOG](devices/blob/master/CHANGELOG.md)
+See [CHANGELOG](https://github.com/lelylan/devices/blob/master/CHANGELOG.md)
 
 
-## Copyright
+## License
 
-Copyright (c) 2013 [Lelylan](http://lelylan.com). See [LICENSE](devices/blob/master/LICENSE.md) for details.
+Lelylan is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
