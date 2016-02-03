@@ -10,10 +10,10 @@ Devices API is tested against MRI 1.9.3.
 
 ## Installation 
 
-        $ git clone git@github.com:lelylan/devices.git && cd devices
-        $ gem install bundler
-        $ bundle install 
-        $ foreman start
+    $ git clone git@github.com:lelylan/devices.git && cd devices
+    $ gem install bundler
+    $ bundle install 
+    $ foreman start
 
 When installing the service in production set [lelylan environment variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
 
@@ -31,9 +31,9 @@ Do not forget to provide specs to your contribution.
 
 ### Running specs
 
-        $ gem install bundler
-        $ bundle install 
-        $ bundle exec guard
+    $ gem install bundler
+    $ bundle install 
+    $ bundle exec guard
 
 Press enter to execute all specs.
 
