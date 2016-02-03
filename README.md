@@ -10,14 +10,12 @@ Devices API is tested against MRI 1.9.3.
 
 ## Installation 
 
-To install the service locally follow these steps
-
         $ git clone git@github.com:lelylan/devices.git && cd $_
         $ gem install bundler
         $ bundle install 
         $ foreman start
 
-To install the service in production set the [ENV variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
+When installing the service in production you need to set [Lelylan environment variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
 
 
 ## Resources
