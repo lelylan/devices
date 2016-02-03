@@ -72,8 +72,6 @@ production:
       uri: <%= ENV['MONGOLAB_PEOPLE_URL'] %>
     types:
       uri: <%= ENV['MONGOLAB_TYPES_URL'] %>
-    locations:
-      uri: <%= ENV['MONGOLAB_LOCATIONS_URL'] %>
     jobs:
       uri: <%= ENV['MONGOLAB_JOBS_URL'] %>
   options:
