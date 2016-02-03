@@ -1,6 +1,6 @@
 # Devices API
 
-Devices API to control and monitor physical devices.
+Device monitoring and control API.
 
 
 ## Requirements
@@ -8,11 +8,16 @@ Devices API to control and monitor physical devices.
 Devices API is tested against MRI 1.9.3.
 
 
-## Installation
+## Installation 
 
-Clone the repository.
+To install the service locally follow these steps
 
-    git clone git@github.com:lelylan/devices.git
+        $ git clone git@github.com:lelylan/devices.git && cd $_
+        $ gem install bundler
+        $ bundle install 
+        $ foreman start
+
+To install the service in production set the [ENV variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
 
 
 ## Resources
