@@ -32,11 +32,11 @@ provide specs to your contribution.
 
 ### Running specs
 
-* Fork and clone the repository.
-* Run `gem install bundler` to get the latest for the gemset.
-* Run `bundle install` for dependencies.
-* Run `bundle exec guard` and press enter to execute all specs.
-
+        $ git clone git@github.com:lelylan/devices.git && cd $_
+        $ gem install bundler
+        $ bundle install 
+        $ bundle exec guard
+        
 
 ## Spec guidelines
 
