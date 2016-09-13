@@ -15,6 +15,11 @@ Devices API is tested against MRI 1.9.3.
     $ bundle install 
     $ foreman start
 
+## Install with docker
+
+    $ docker build --tag=devices .
+    $ docker run -d -it --name devices devices
+
 When installing the service in production set [lelylan environment variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
 
 
