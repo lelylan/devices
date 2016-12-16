@@ -10,10 +10,30 @@ Devices API is tested against MRI 1.9.3.
 
 ## Installation 
 
-    $ git clone git@github.com:lelylan/devices.git && cd devices
-    $ gem install bundler
-    $ bundle install 
-    $ foreman start
+```bash
+$ git clone git@github.com:lelylan/devices.git && cd devices
+$ gem install bundler
+$ bundle install 
+$ foreman start
+```
+
+## Install with docker
+
+#### Badges
+Docker image: [lelylanlab/api-proxy](https://hub.docker.com/r/lelylanlab/devices/)
+
+[![](https://images.microbadger.com/badges/version/lelylanlab/devices:latest.svg)](http://microbadger.com/images/lelylanlab/devices:latest "Get your own version badge on microbadger.com")  [![](https://images.microbadger.com/badges/image/lelylanlab/devices:latest.svg)](http://microbadger.com/images/lelylanlab/devices:latest "Get your own image badge on microbadger.com")
+
+### Use docker hub image
+```bash
+$ docker run -d -it --name api-proxy lelylanlab/devices
+```
+
+### Generate local image
+```bash
+$ docker build --tag=devices .
+$ docker run -d -it --name devices devices
+```
 
 When installing the service in production set [lelylan environment variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
 
@@ -31,9 +51,11 @@ Do not forget to provide specs to your contribution.
 
 ### Running specs
 
-    $ gem install bundler
-    $ bundle install 
-    $ bundle exec guard
+```bash
+$ gem install bundler
+$ bundle install 
+$ bundle exec guard
+```
 
 Press enter to execute all specs.
 
