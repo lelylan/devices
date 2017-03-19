@@ -6,8 +6,6 @@ development:
       uri: <%= ENV['MONGOLAB_PEOPLE_URL'] || 'mongodb://localhost:27017/people_development' %>
     types:
       uri: <%= ENV['MONGOLAB_TYPES_URL'] || 'mongodb://localhost:27017/types_development' %>
-    locations:
-      uri: <%= ENV['MONGOLAB_LOCATIONS_URL'] || 'mongodb://localhost:27017/locations_development' %>
     jobs:
       uri: <%= ENV['MONGOLAB_JOBS_URL'] || 'mongodb://localhost:27017/jobs_development' %>
   options:
@@ -31,12 +29,6 @@ test:
         - localhost:27017
       options:
         consistency: :strong
-    locations:
-      database: locations_test
-      hosts:
-        - localhost:27017
-      options:
-        consistency: :strong
     jobs:
       database: jobs_test
       hosts:
@@ -54,6 +46,4 @@ production:
       uri: <%= ENV['MONGOLAB_TYPES_URL'] %>
     jobs:
       uri: <%= ENV['MONGOLAB_JOBS_URL'] %>
-    locations:
-      uri: <%= ENV['MONGOLAB_LOCATIONS_URL'] %>
   options:

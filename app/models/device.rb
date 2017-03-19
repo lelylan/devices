@@ -38,7 +38,6 @@ class Device
   before_create :set_device_properties
   before_save   :set_physical
   before_save   :set_pending
-  before_save   :touch_locations
 
   before_validation(on: 'create') { set_maker_id }
   before_validation(on: 'create') { set_secret }
@@ -80,10 +79,6 @@ class Device
   def set_pending
     self.pending = properties.map(&:pending).inject(:|) || false
     return true
-  end
-
-  def touch_locations
-    Location.in(device_ids: id).update_all(updated_at: Time.now) if name_changed?
   end
 
   def synchronize_function_properties(function, properties = [])
